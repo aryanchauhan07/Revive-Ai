@@ -88,38 +88,77 @@ router.post('/cases/:id/execute', async (req, res) => {
   }
 });
 
-// 5. Demo Trigger Generators
+// 5. Demo Trigger Generators (Generates 1 Incident -> Cohort of 5 Different Customers)
 router.post('/demo/trigger-incident', (req, res) => {
-  const { bank = "HDFC Bank", method = "upi", severity = "HIGH" } = req.body;
+  const { bank = "HDFC Bank", method = "upi" } = req.body;
 
   const incident = {
-    id: `INC-${Math.floor(Math.random() * 900) + 100}`,
+    id: "INC-901",
     merchant_id: "merchant_razor_01",
     title: `${bank} ${method.toUpperCase()} Authorization Degradation`,
     status: "OPEN",
-    severity,
+    severity: "HIGH",
     started_at: new Date().toISOString(),
     dimensions: { method, issuer: bank, step: "authorization", reason: "gateway_technical_error" },
     baseline_success_rate: 0.88,
     current_success_rate: 0.38,
     z_score: -4.2,
-    affected_count: 58,
-    revenue_at_risk_paise: 4950000, // ₹49,500
+    affected_count: 5,
+    revenue_at_risk_paise: 5924900, // ₹59,249
     root_cause: `${bank} ${method.toUpperCase()} partner gateway timeouts detected. Direct retries failing at 84%.`,
+    recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp.",
     evidence: [
       { key: "Rolling Success Rate", value: "88% -> 38% Z-score -4.2" },
-      { key: "Razorpay Downtime Correlated", value: `Status API corroborates ${bank} PSP downtime` }
+      { key: "Razorpay Downtime Match", value: `Status API corroborates ${bank} PSP downtime` },
+      { key: "Method Concentration", value: `92% of failures localized to ${method.toUpperCase()} rail` }
     ]
   };
 
   db.addIncident(incident);
+
+  // Realistic cohort of different customers with distinct recovery plans
+  const demoCohort = [
+    { name: "Ananya Roy", phone: "+919876543210", amount: 4850, reason: "gateway_technical_error" },
+    { name: "Rahul Sharma", phone: "+919812345678", amount: 7200, reason: "gateway_technical_error" },
+    { name: "Priya Patel", phone: "+919898989898", amount: 28500, reason: "gateway_technical_error" },
+    { name: "Sneha Mehta", phone: "+919877766554", amount: 6499, reason: "payment_cancelled_by_user" },
+    { name: "Vikram Singh", phone: "+919866655443", amount: 12200, reason: "gateway_technical_error" }
+  ];
+
+  demoCohort.forEach((cust, idx) => {
+    const caseId = `CASE-10${idx + 1}`;
+    const newCase = {
+      id: caseId,
+      incident_id: incident.id,
+      merchant_id: "merchant_razor_01",
+      provider_payment_id: `pay_demo_${Date.now()}_${idx}`,
+      customer_name: cust.name,
+      customer_email: `${cust.name.toLowerCase().replace(/\s+/g, '.')}@example.com`,
+      customer_phone: cust.phone,
+      amount_paise: cust.amount * 100,
+      currency: "INR",
+      status: cust.amount >= 25000 ? "APPROVAL_REQUIRED" : "PLANNED",
+      eligibility: "ELIGIBLE",
+      failure_reason: {
+        error_code: cust.reason === 'payment_cancelled_by_user' ? 'BAD_REQUEST_ERROR' : 'GATEWAY_ERROR',
+        error_source: cust.reason === 'payment_cancelled_by_user' ? 'customer' : 'issuer_bank',
+        error_step: 'payment_authorization',
+        error_reason: cust.reason,
+        method,
+        issuer: bank
+      },
+      created_at: new Date().toISOString()
+    };
+    db.addCase(newCase);
+    diagnoseAndPlanCase(newCase, incident);
+  });
 
   db.addAuditEvent({
     actor_type: 'system',
     actor_id: 'health_detector_v1',
     action: 'INCIDENT_OPENED',
     correlation_id: incident.id,
-    details: `Opened degradation incident for ${bank} ${method.toUpperCase()}. Revenue at risk: ₹49,500.`
+    details: `Simulated ${bank} ${method.toUpperCase()} degradation. 5 affected customer cases ingested.`
   });
 
   broadcastSSE({ type: 'INCIDENT_OPENED', data: incident });
