@@ -8,6 +8,7 @@
     "dev": "vite",
     "server": "node server/index.js",
     "start": "node server/index.js",
+    "test": "node tests/suite.test.js",
     "build": "vite build"
   },
   "dependencies": {
