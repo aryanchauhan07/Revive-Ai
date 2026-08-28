@@ -1,72 +1,20 @@
 # RECOVEROPS (Revive AI) — Payment SRE & AI Revenue Recovery Engine
 ### Razorpay AI Buildathon — Track 03: AI Revenue Recovery
 
-> **Target Submission:** A payment incident + revenue rescue agent that detects degradation across a batch, diagnoses likely root causes, chooses least-cost safe interventions, executes only within policy, recovers affected customer cohorts, and measures incremental net revenue with an auditable trail.
+RECOVEROPS is an autonomous, compliant **AI Revenue Recovery Platform** that closes the loop from detecting payment degradation to diagnosing root causes, choosing least-cost interventions, executing bounded recovery workflows, and proving measured money recovered across batches with an audit trail.
 
 ---
 
-## 1. Production System Architecture
+## Quickstart
 
-```
-                               ┌──────────────────────────────────────────────┐
-                               │            NEXT.JS / REACT UI CONTROL        │
-                               │   - Command Center   - Incident Inspector    │
-                               │   - Approval Queue   - Trust & Reliability   │
-                               └──────────────────────┬───────────────────────┘
-                                                      │ REST APIs / SSE Stream
- ┌────────────────────────────────────────────────────▼───────────────────────────────────────────────────┐
- │                                   NODE.JS ENGINE & BACKGROUND WORKERS                                 │
- │                                                                                                       │
- │ ┌─────────────────────────────────┐   ┌───────────────────────────────┐   ┌─────────────────────────┐ │
- │ │     Raw HMAC Ingress (401)      │   │   Statistical Health Detector │   │  AI Recovery Planner    │ │
- │ │ (Raw Bytes HMAC + Dedupe)       │   │   (5m Rolling Z-Score Anomaly)│   │  (LLM + Fallback Rules) │ │
- │ └────────────────┬────────────────┘   └───────────────┬───────────────┘   └────────────┬────────────┘ │
- │                  │                                    │                                │              │
- │ ┌────────────────▼────────────────────────────────────▼────────────────────────────────▼────────────┐ │
- │ │                             Deterministic Action-Level Policy Engine                                │ │
- │ │   (Per-Action Decisions • Technical Outage ₹0 Discount • Quiet Hours • High-Value Floor • Kill Switch) │ │
- │ └─────────────────────────────────────────────────┬───────────────────────────────────────────────────┘ │
- │                                                   │                                                     │
- │ ┌─────────────────────────────────────────────────▼───────────────────────────────────────────────────┐ │
- │ │                      Stable Idempotency Execution Adapters & Recheck                                │ │
- │ │   (Razorpay Live Test Mode API • WhatsApp Outreach • Mandate Scheduler • Self-Recovery Cancel)         │ │
- │ └───────────────────────────────────────────────────────────────────────────────────────────────────────┘ │
- └────────────────────────────────────────────────────┬───────────────────────────────────────────────────┘
-                                                      │
- ┌────────────────────────────────────────────────────▼───────────────────────────────────────────────────┐
- │                            PERSISTENCE & AUDIT TRAIL LAYER                                            │
- │  - PostgreSQL / SQLite (Canonical Events, Cases, Action-Level Decisions, Audit Trail)                 │
- └────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 2. Real vs. Simulated Matrix
-
-| Component / Layer | Production Real Path | Demo / Simulation Mode Path |
-| :--- | :--- | :--- |
-| **Razorpay Webhooks** | Real raw-body HMAC signature validation (`request.rawBody`) with `RAZORPAY_WEBHOOK_SECRET` | Synthetic event generator with automatic signature fallback |
-| **Razorpay Payment Links** | Live Razorpay API (`/v1/payment_links`) when `RAZORPAY_KEY_ID` & `SECRET` set | Interactive Razorpay Checkout Sandbox Modal |
-| **Customer Messaging** | Live WhatsApp Business API / Twilio SMS | Interactive WhatsApp Chat Sandbox & Hinglish Voice Call Drawer |
-| **AI Diagnosis Engine** | OpenAI / Gemini structured JSON Schema validation | `FallbackRecoveryPlanner` deterministic rules engine |
-| **Batch Benchmark** | Seeded LCG PRNG (`seed=20260828`) producing byte-for-byte reproducible metrics | Live interactive 2,000-event benchmark simulation |
-
----
-
-## 3. Quickstart & Testing
-
-### Running the Application
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Run automated principal-engineer test suite
-npm test
-
-# 3. Start backend API server (Port 3001)
+# 2. Run backend API & webhook server (Port 3001)
 npm run server
 
-# 4. In a second terminal, start frontend dev server (Port 5175)
+# 3. In a new terminal, run frontend UI (Port 5175)
 npm run dev
 ```
 
@@ -74,29 +22,20 @@ Open **[http://localhost:5175](http://localhost:5175)** in your browser.
 
 ---
 
-## 4. Final 5-Minute Demo Script (Section 14 Specification)
-
-| Time | Scenario / Feature | Demo Beat & Judge Takeaway |
-| :--- | :--- | :--- |
-| **0:00–0:35** | **Problem & Live Feed** | Explain same 'failed payment' requires opposite actions. *This is an incident orchestration problem, not a messaging bot.* |
-| **0:35–1:35** | **UPI Issuer Degradation** | Trigger HDFC UPI Anomaly $\rightarrow$ Statistical Z-score drop $\rightarrow$ ₹0 discount recommendation (margin protected) $\rightarrow$ switch rail. |
-| **1:35–2:20** | **Insufficient Balance / Mandate** | No incident opened; schedule salary window retry. *Contextual per-case recovery.* |
-| **2:20–3:05** | **High-Value Case (Priya Patel ₹28,500)** | Policy flags order for manager approval. Manager approves $\rightarrow$ action executes. *Bounded autonomy.* |
-| **3:05–3:40** | **Reliability & Security Boundary** | Send invalid HMAC webhook $\rightarrow$ 401 rejected. Send duplicate event $\rightarrow$ 200 `DUPLICATE_IGNORED`. *Graceful production failure handling.* |
-| **3:40–4:25** | **Seeded 2k Batch Evaluation** | Run deterministic benchmark (Seed 20260828) comparing Baseline A, Baseline B, and RECOVEROPS. *Measured incremental money recovered.* |
-| **4:25–5:00** | **Architecture & Audit Explorer** | Show live SSE audit stream tracing Event $\rightarrow$ Diagnosis $\rightarrow$ Action-level Policy $\rightarrow$ Execution. |
+## Documentation
+- [PLATFORM_GUIDE.md](file:///c:/Users/User/OneDrive/Revive%20AI/PLATFORM_GUIDE.md) — Comprehensive step-by-step user & judge guide.
+- [PROBLEM_STATEMENT.md](file:///c:/Users/User/OneDrive/Revive%20AI/PROBLEM_STATEMENT.md) — Problem breakdown, Razorpay ecosystem touchpoints, and technical architecture.
 
 ---
 
-## 5. Verification Results
-Run `npm test` to execute the automated verification test suite:
-- ✅ Raw Webhook HMAC Signature Validation
-- ✅ Invalid Signature Rejection Boundary (HTTP 401)
-- ✅ Webhook Event-ID Deduplication (No-Op)
-- ✅ Technical Outage Zero Discount Policy Enforcement
-- ✅ Customer Self-Recovery Cancels Queued Actions
-- ✅ Seeded Benchmark Determinism & Byte-for-Byte Reproducibility
-- ✅ Stable Idempotency Key & Action Execution Authorization
+## Key Features
+
+1. **Statistical Anomaly Detector:** 5-minute rolling window Z-score detector for payment rail degradation.
+2. **Error Model Normalization:** Classifies Razorpay failure parameters (`GATEWAY_ERROR`, `insufficient_funds`, `issuer_bank`, `checkout_abandoned`).
+3. **Prioritized Action Ladder:** `WAIT` $\rightarrow$ `RETRY` $\rightarrow$ `SWITCH_METHOD` $\rightarrow$ `CREATE_LINK` $\rightarrow$ `MESSAGE` $\rightarrow$ `INCENTIVE` $\rightarrow$ `HUMAN_ESCALATION` $\rightarrow$ `STOP`.
+4. **Deterministic Policy Engine:** Fail-closed governance enforcing DND Quiet Hours (22:00–08:00 IST), max retry caps, discount floors, and human escalation gates ($\ge$ ₹25,000).
+5. **2,000-Event Benchmark Evaluator:** Measures incremental money recovered and policy compliance against control baselines.
+6. **Zero API Key Requirement:** Built-in Razorpay Checkout & WhatsApp sandboxes so it runs 100% out-of-the-box!
 
 ---
-*RECOVEROPS — Final Specification & Architecture Baseline • Razorpay Track 03*
+*Built for Razorpay AI Buildathon 2026 — Track 03*

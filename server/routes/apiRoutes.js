@@ -4,6 +4,7 @@ import { processIncomingWebhook } from '../core/webhookIngress.js';
 import { diagnoseAndPlanCase } from '../core/recoveryPlanner.js';
 import { executeCaseAction } from '../core/actionExecutor.js';
 import { runBatchEvaluation } from '../simulation/batchSimulator.js';
+import { SCENARIO_LIBRARY, runScenarioSimulation } from '../simulation/scenarioLibrary.js';
 
 const router = express.Router();
 
@@ -17,11 +18,12 @@ export function broadcastSSE(data) {
   }
 }
 
-// 1. Webhook Ingestion Endpoint
+// 1. Webhook Ingestion Endpoint (with Raw Body HMAC Verification)
 router.post('/webhooks/razorpay', (req, res) => {
-  const result = processIncomingWebhook(req.body, req.headers);
+  const rawBodyBuffer = req.rawBody || Buffer.from(JSON.stringify(req.body || {}));
+  const result = processIncomingWebhook(req.body, req.headers, rawBodyBuffer);
   broadcastSSE({ type: 'WEBHOOK_RECEIVED', data: result });
-  res.status(200).json(result);
+  res.status(result.statusCode || 200).json(result);
 });
 
 // 2. Merchant & Policy Management
@@ -88,7 +90,18 @@ router.post('/cases/:id/execute', async (req, res) => {
   }
 });
 
-// 5. Demo Trigger Generators (Generates 1 Incident -> Cohort of 5 Different Customers)
+// 5. Scenarios & Real-World Library
+router.get('/scenarios', (req, res) => {
+  res.json(SCENARIO_LIBRARY);
+});
+
+router.post('/scenarios/:id/run', (req, res) => {
+  const scenario = runScenarioSimulation(req.params.id);
+  broadcastSSE({ type: 'SCENARIO_RUN', data: scenario });
+  res.json(scenario);
+});
+
+// 6. Demo Trigger Generators (Generates 1 Incident -> Cohort of 5 Different Customers)
 router.post('/demo/trigger-incident', (req, res) => {
   const { bank = "HDFC Bank", method = "upi" } = req.body;
 
@@ -165,48 +178,7 @@ router.post('/demo/trigger-incident', (req, res) => {
   res.json(incident);
 });
 
-router.post('/demo/trigger-payment-failure', (req, res) => {
-  const {
-    customerName = "Ananya Roy",
-    customerPhone = "+919876543210",
-    amountRupees = 4850,
-    reason = "gateway_technical_error",
-    method = "upi",
-    bank = "HDFC Bank"
-  } = req.body;
-
-  const openIncident = db.getIncidents().find(i => i.status === 'OPEN');
-
-  const newCase = {
-    id: `CASE-${Math.floor(Math.random() * 9000) + 1000}`,
-    incident_id: openIncident ? openIncident.id : null,
-    merchant_id: "merchant_razor_01",
-    provider_payment_id: `pay_demo_${Date.now()}`,
-    customer_name: customerName,
-    customer_email: `${customerName.toLowerCase().replace(/\s+/g, '.')}@example.com`,
-    customer_phone: customerPhone,
-    amount_paise: amountRupees * 100,
-    currency: "INR",
-    status: "PLANNED",
-    eligibility: "ELIGIBLE",
-    failure_reason: {
-      error_code: reason === 'payment_cancelled_by_user' ? 'BAD_REQUEST_ERROR' : 'GATEWAY_ERROR',
-      error_source: reason === 'payment_cancelled_by_user' ? 'customer' : 'issuer_bank',
-      error_step: 'payment_authorization',
-      error_reason: reason,
-      method,
-      issuer: bank
-    },
-    created_at: new Date().toISOString()
-  };
-
-  db.addCase(newCase);
-  const plannedCase = diagnoseAndPlanCase(newCase, openIncident);
-  broadcastSSE({ type: 'CASE_CREATED', data: plannedCase });
-  res.json(plannedCase);
-});
-
-// 6. Audit & SSE Stream
+// 7. Audit & SSE Stream
 router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
 });
@@ -224,10 +196,10 @@ router.get('/events/stream', (req, res) => {
   });
 });
 
-// 7. Batch Evaluation Benchmark
+// 8. Batch Evaluation Benchmark
 router.post('/evaluation/run', (req, res) => {
-  const { batchSize = 2000 } = req.body;
-  const result = runBatchEvaluation(batchSize);
+  const { batchSize = 2000, seed = 20260828 } = req.body;
+  const result = runBatchEvaluation(batchSize, seed);
   broadcastSSE({ type: 'BATCH_EVALUATION_COMPLETED', data: result });
   res.json(result);
 });

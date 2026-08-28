@@ -42,7 +42,6 @@ export default function Navbar({
     { id: 'cases', label: 'Recovery Cases', icon: Layers },
     { id: 'approvals', label: 'Approval Queue', icon: CheckSquare },
     { id: 'policy', label: 'Autonomy & Policy', icon: Sliders },
-    { id: 'trust', label: 'Trust & Reliability', icon: Lock },
     { id: 'batch', label: '2k Batch Evaluation', icon: FileSpreadsheet },
   ];
 

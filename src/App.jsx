@@ -6,7 +6,6 @@ import IncidentInspector from './pages/IncidentInspector';
 import CaseTimeline from './pages/CaseTimeline';
 import ApprovalCenter from './pages/ApprovalCenter';
 import AutonomyPolicy from './pages/AutonomyPolicy';
-import SystemHealth from './pages/SystemHealth';
 import BatchEvaluator from './pages/BatchEvaluator';
 
 import RazorpayCheckoutModal from './components/RazorpayCheckoutModal';
@@ -234,10 +233,6 @@ export default function App() {
             onSavePolicy={handleSavePolicy}
             onToggleKillSwitch={handleToggleKillSwitch}
           />
-        )}
-
-        {activeTab === 'trust' && (
-          <SystemHealth auditEvents={auditEvents} />
         )}
 
         {activeTab === 'batch' && (
