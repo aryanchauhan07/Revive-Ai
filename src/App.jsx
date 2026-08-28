@@ -133,7 +133,10 @@ export default function App() {
         {activeTab === 'health' && (
           <PaymentHealth
             incidents={incidents}
+            cases={cases}
+            setActiveTab={setActiveTab}
             onTriggerDemo={handleTriggerDemo}
+            onOpenCheckout={setSelectedCheckoutCase}
           />
         )}
 

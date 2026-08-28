@@ -48,6 +48,126 @@
   "healthBuckets": [],
   "incidents": [
     {
+      "id": "INC-312",
+      "merchant_id": "merchant_razor_01",
+      "title": "HDFC Bank UPI Authorization Degradation",
+      "status": "OPEN",
+      "severity": "HIGH",
+      "started_at": "2026-08-28T07:34:05.056Z",
+      "dimensions": {
+        "method": "upi",
+        "issuer": "HDFC Bank",
+        "step": "authorization",
+        "reason": "gateway_technical_error"
+      },
+      "baseline_success_rate": 0.88,
+      "current_success_rate": 0.38,
+      "z_score": -4.2,
+      "affected_count": 58,
+      "revenue_at_risk_paise": 4950000,
+      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+      "evidence": [
+        {
+          "key": "Rolling Success Rate",
+          "value": "88% -> 38% Z-score -4.2"
+        },
+        {
+          "key": "Razorpay Downtime Correlated",
+          "value": "Status API corroborates HDFC Bank PSP downtime"
+        }
+      ]
+    },
+    {
+      "id": "INC-460",
+      "merchant_id": "merchant_razor_01",
+      "title": "HDFC Bank UPI Authorization Degradation",
+      "status": "OPEN",
+      "severity": "HIGH",
+      "started_at": "2026-08-28T07:34:03.553Z",
+      "dimensions": {
+        "method": "upi",
+        "issuer": "HDFC Bank",
+        "step": "authorization",
+        "reason": "gateway_technical_error"
+      },
+      "baseline_success_rate": 0.88,
+      "current_success_rate": 0.38,
+      "z_score": -4.2,
+      "affected_count": 58,
+      "revenue_at_risk_paise": 4950000,
+      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+      "evidence": [
+        {
+          "key": "Rolling Success Rate",
+          "value": "88% -> 38% Z-score -4.2"
+        },
+        {
+          "key": "Razorpay Downtime Correlated",
+          "value": "Status API corroborates HDFC Bank PSP downtime"
+        }
+      ]
+    },
+    {
+      "id": "INC-979",
+      "merchant_id": "merchant_razor_01",
+      "title": "HDFC Bank UPI Authorization Degradation",
+      "status": "OPEN",
+      "severity": "HIGH",
+      "started_at": "2026-08-28T06:18:15.705Z",
+      "dimensions": {
+        "method": "upi",
+        "issuer": "HDFC Bank",
+        "step": "authorization",
+        "reason": "gateway_technical_error"
+      },
+      "baseline_success_rate": 0.88,
+      "current_success_rate": 0.38,
+      "z_score": -4.2,
+      "affected_count": 58,
+      "revenue_at_risk_paise": 4950000,
+      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+      "evidence": [
+        {
+          "key": "Rolling Success Rate",
+          "value": "88% -> 38% Z-score -4.2"
+        },
+        {
+          "key": "Razorpay Downtime Correlated",
+          "value": "Status API corroborates HDFC Bank PSP downtime"
+        }
+      ]
+    },
+    {
+      "id": "INC-415",
+      "merchant_id": "merchant_razor_01",
+      "title": "HDFC Bank UPI Authorization Degradation",
+      "status": "OPEN",
+      "severity": "HIGH",
+      "started_at": "2026-08-28T06:17:55.276Z",
+      "dimensions": {
+        "method": "upi",
+        "issuer": "HDFC Bank",
+        "step": "authorization",
+        "reason": "gateway_technical_error"
+      },
+      "baseline_success_rate": 0.88,
+      "current_success_rate": 0.38,
+      "z_score": -4.2,
+      "affected_count": 58,
+      "revenue_at_risk_paise": 4950000,
+      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+      "evidence": [
+        {
+          "key": "Rolling Success Rate",
+          "value": "88% -> 38% Z-score -4.2"
+        },
+        {
+          "key": "Razorpay Downtime Correlated",
+          "value": "Status API corroborates HDFC Bank PSP downtime"
+        }
+      ]
+    },
+    {
       "id": "INC-239",
       "merchant_id": "merchant_razor_01",
       "title": "HDFC Bank UPI Authorization Degradation",
@@ -503,6 +623,354 @@
     }
   ],
   "recoveryCases": [
+    {
+      "id": "CASE-6718",
+      "incident_id": "INC-312",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_demo_1787902445102",
+      "customer_name": "Ananya Roy",
+      "customer_email": "ananya.roy@example.com",
+      "customer_phone": "+919876543210",
+      "amount_paise": 485000,
+      "currency": "INR",
+      "status": "PLANNED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
+        "error_reason": "gateway_technical_error",
+        "method": "upi",
+        "issuer": "HDFC Bank"
+      },
+      "created_at": "2026-08-28T07:34:05.102Z",
+      "current_plan": {
+        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
+        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.88,
+          "confidenceBand": "HIGH"
+        },
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 485000,
+          "actionCostPaise": 50,
+          "expectedNetValuePaise": 426750
+        },
+        "actions": [
+          {
+            "action": "WAIT",
+            "params": {
+              "waitMinutes": 15
+            },
+            "reasonCodes": [
+              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+            ]
+          },
+          {
+            "action": "SWITCH_METHOD",
+            "params": {
+              "suggestedMethod": "card_or_netbanking"
+            },
+            "reasonCodes": [
+              "BYPASS_DEGRADED_RAIL"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 120
+            },
+            "reasonCodes": [
+              "PROVIDE_CLEAN_RECOVERY_SURFACE"
+            ]
+          },
+          {
+            "action": "MESSAGE",
+            "params": {
+              "channel": "whatsapp",
+              "template": "recovery_alt_method"
+            },
+            "reasonCodes": [
+              "INFORM_CUSTOMER_OPTION"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "ALLOW",
+        "matched_rules": [
+          "ALL_STANDARD_GUARDRAILS_PASSED"
+        ],
+        "requires_approval": false,
+        "reason": "All policy checks passed."
+      }
+    },
+    {
+      "id": "CASE-1455",
+      "incident_id": "INC-460",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_demo_1787902443613",
+      "customer_name": "Ananya Roy",
+      "customer_email": "ananya.roy@example.com",
+      "customer_phone": "+919876543210",
+      "amount_paise": 485000,
+      "currency": "INR",
+      "status": "PLANNED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
+        "error_reason": "gateway_technical_error",
+        "method": "upi",
+        "issuer": "HDFC Bank"
+      },
+      "created_at": "2026-08-28T07:34:03.613Z",
+      "current_plan": {
+        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
+        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.88,
+          "confidenceBand": "HIGH"
+        },
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 485000,
+          "actionCostPaise": 50,
+          "expectedNetValuePaise": 426750
+        },
+        "actions": [
+          {
+            "action": "WAIT",
+            "params": {
+              "waitMinutes": 15
+            },
+            "reasonCodes": [
+              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+            ]
+          },
+          {
+            "action": "SWITCH_METHOD",
+            "params": {
+              "suggestedMethod": "card_or_netbanking"
+            },
+            "reasonCodes": [
+              "BYPASS_DEGRADED_RAIL"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 120
+            },
+            "reasonCodes": [
+              "PROVIDE_CLEAN_RECOVERY_SURFACE"
+            ]
+          },
+          {
+            "action": "MESSAGE",
+            "params": {
+              "channel": "whatsapp",
+              "template": "recovery_alt_method"
+            },
+            "reasonCodes": [
+              "INFORM_CUSTOMER_OPTION"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "ALLOW",
+        "matched_rules": [
+          "ALL_STANDARD_GUARDRAILS_PASSED"
+        ],
+        "requires_approval": false,
+        "reason": "All policy checks passed."
+      }
+    },
+    {
+      "id": "CASE-9225",
+      "incident_id": "INC-979",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_demo_1787897895762",
+      "customer_name": "Ananya Roy",
+      "customer_email": "ananya.roy@example.com",
+      "customer_phone": "+919876543210",
+      "amount_paise": 485000,
+      "currency": "INR",
+      "status": "CONTACTED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
+        "error_reason": "gateway_technical_error",
+        "method": "upi",
+        "issuer": "HDFC Bank"
+      },
+      "created_at": "2026-08-28T06:18:15.762Z",
+      "current_plan": {
+        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
+        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.88,
+          "confidenceBand": "HIGH"
+        },
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 485000,
+          "actionCostPaise": 50,
+          "expectedNetValuePaise": 426750
+        },
+        "actions": [
+          {
+            "action": "WAIT",
+            "params": {
+              "waitMinutes": 15
+            },
+            "reasonCodes": [
+              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+            ]
+          },
+          {
+            "action": "SWITCH_METHOD",
+            "params": {
+              "suggestedMethod": "card_or_netbanking"
+            },
+            "reasonCodes": [
+              "BYPASS_DEGRADED_RAIL"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 120
+            },
+            "reasonCodes": [
+              "PROVIDE_CLEAN_RECOVERY_SURFACE"
+            ]
+          },
+          {
+            "action": "MESSAGE",
+            "params": {
+              "channel": "whatsapp",
+              "template": "recovery_alt_method"
+            },
+            "reasonCodes": [
+              "INFORM_CUSTOMER_OPTION"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "ALLOW",
+        "matched_rules": [
+          "ALL_STANDARD_GUARDRAILS_PASSED"
+        ],
+        "requires_approval": false,
+        "reason": "All policy checks passed."
+      },
+      "last_execution": {
+        "id": "EXEC-1787899999343",
+        "case_id": "CASE-9225",
+        "idempotency_key": "action:CASE-9225:PAYMENT_CAPTURED:1787899999343",
+        "action": "PAYMENT_CAPTURED",
+        "params": {
+          "method": "card"
+        },
+        "result": {
+          "provider": "internal_escalation_workflow",
+          "reviewer_id": "customer",
+          "status": "HANDLED"
+        },
+        "executed_at": "2026-08-28T06:53:19.343Z",
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "id": "CASE-3884",
+      "incident_id": "INC-415",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_demo_1787897875361",
+      "customer_name": "Ananya Roy",
+      "customer_email": "ananya.roy@example.com",
+      "customer_phone": "+919876543210",
+      "amount_paise": 485000,
+      "currency": "INR",
+      "status": "PLANNED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
+        "error_reason": "gateway_technical_error",
+        "method": "upi",
+        "issuer": "HDFC Bank"
+      },
+      "created_at": "2026-08-28T06:17:55.361Z",
+      "current_plan": {
+        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
+        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.88,
+          "confidenceBand": "HIGH"
+        },
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 485000,
+          "actionCostPaise": 50,
+          "expectedNetValuePaise": 426750
+        },
+        "actions": [
+          {
+            "action": "WAIT",
+            "params": {
+              "waitMinutes": 15
+            },
+            "reasonCodes": [
+              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+            ]
+          },
+          {
+            "action": "SWITCH_METHOD",
+            "params": {
+              "suggestedMethod": "card_or_netbanking"
+            },
+            "reasonCodes": [
+              "BYPASS_DEGRADED_RAIL"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 120
+            },
+            "reasonCodes": [
+              "PROVIDE_CLEAN_RECOVERY_SURFACE"
+            ]
+          },
+          {
+            "action": "MESSAGE",
+            "params": {
+              "channel": "whatsapp",
+              "template": "recovery_alt_method"
+            },
+            "reasonCodes": [
+              "INFORM_CUSTOMER_OPTION"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "ALLOW",
+        "matched_rules": [
+          "ALL_STANDARD_GUARDRAILS_PASSED"
+        ],
+        "requires_approval": false,
+        "reason": "All policy checks passed."
+      }
+    },
     {
       "id": "CASE-9382",
       "incident_id": "INC-239",
@@ -1806,7 +2274,7 @@
       "customer_phone": "+919812345678",
       "amount_paise": 2850000,
       "currency": "INR",
-      "status": "APPROVAL_REQUIRED",
+      "status": "CONTACTED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "BAD_REQUEST_ERROR",
@@ -1857,10 +2325,296 @@
         ],
         "requires_approval": true
       },
-      "created_at": "2026-08-27T05:11:24.161Z"
+      "created_at": "2026-08-27T05:11:24.161Z",
+      "last_execution": {
+        "id": "EXEC-1787902363690",
+        "case_id": "CASE-102",
+        "idempotency_key": "action:CASE-102:REJECT:1787902363690",
+        "action": "REJECT",
+        "params": {},
+        "result": {
+          "provider": "internal_escalation_workflow",
+          "reviewer_id": "human_manager",
+          "status": "HANDLED"
+        },
+        "executed_at": "2026-08-28T07:32:43.690Z",
+        "status": "COMPLETED"
+      }
     }
   ],
   "actionExecutions": [
+    {
+      "id": "EXEC-1787902363690",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902363690",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:43.690Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902363487",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902363487",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:43.487Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902363269",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902363269",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:43.269Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902363093",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902363093",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:43.093Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902362911",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902362911",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:42.911Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902362732",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902362732",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:42.732Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902362057",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902362057",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:42.057Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902335407",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902335407",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:15.407Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902335203",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902335203",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:15.203Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902334987",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902334987",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:14.987Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902334769",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902334769",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:14.769Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902334568",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902334568",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:14.568Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902334349",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902334349",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:14.349Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902333423",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:REJECT:1787902333423",
+      "action": "REJECT",
+      "params": {},
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T07:32:13.423Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902332389",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:INCENTIVE:1787902332389",
+      "action": "INCENTIVE",
+      "params": {
+        "discountPct": 3,
+        "code": "REVIVE3"
+      },
+      "result": {
+        "provider": "razorpay_payment_link",
+        "payment_link_id": "plink_razor_1787902332389",
+        "payment_url": "http://localhost:5173/?link=plink_razor_1787902332389&case=CASE-102&amt=27645&disc=3",
+        "discount_applied_pct": 3,
+        "final_amount_rupees": 27645,
+        "status": "ACTIVE"
+      },
+      "executed_at": "2026-08-28T07:32:12.389Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902330568",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:INCENTIVE:1787902330568",
+      "action": "INCENTIVE",
+      "params": {
+        "discountPct": 3,
+        "code": "REVIVE3"
+      },
+      "result": {
+        "provider": "razorpay_payment_link",
+        "payment_link_id": "plink_razor_1787902330568",
+        "payment_url": "http://localhost:5173/?link=plink_razor_1787902330568&case=CASE-102&amt=27645&disc=3",
+        "discount_applied_pct": 3,
+        "final_amount_rupees": 27645,
+        "status": "ACTIVE"
+      },
+      "executed_at": "2026-08-28T07:32:10.568Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787902328188",
+      "case_id": "CASE-102",
+      "idempotency_key": "action:CASE-102:INCENTIVE:1787902328188",
+      "action": "INCENTIVE",
+      "params": {
+        "discountPct": 3,
+        "code": "REVIVE3"
+      },
+      "result": {
+        "provider": "razorpay_payment_link",
+        "payment_link_id": "plink_razor_1787902328188",
+        "payment_url": "http://localhost:5173/?link=plink_razor_1787902328188&case=CASE-102&amt=27645&disc=3",
+        "discount_applied_pct": 3,
+        "final_amount_rupees": 27645,
+        "status": "ACTIVE"
+      },
+      "executed_at": "2026-08-28T07:32:08.188Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1787899999343",
+      "case_id": "CASE-9225",
+      "idempotency_key": "action:CASE-9225:PAYMENT_CAPTURED:1787899999343",
+      "action": "PAYMENT_CAPTURED",
+      "params": {
+        "method": "card"
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "customer",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-28T06:53:19.343Z",
+      "status": "COMPLETED"
+    },
     {
       "id": "EXEC-1787824269673",
       "case_id": "CASE-4039",
@@ -1911,6 +2665,336 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1787902445111-431",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:34:05.111Z",
+      "actor_type": "model",
+      "actor_id": "recovery_planner_v1",
+      "action": "PLAN_PROPOSED",
+      "correlation_id": "CASE-6718",
+      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
+    },
+    {
+      "id": "AUDIT-1787902445105-42",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:34:05.105Z",
+      "actor_type": "system",
+      "actor_id": "policy_engine_v1",
+      "action": "POLICY_EVALUATED",
+      "correlation_id": "CASE-6718",
+      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
+    },
+    {
+      "id": "AUDIT-1787902445061-318",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:34:05.061Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-312",
+      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
+    },
+    {
+      "id": "AUDIT-1787902443649-512",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:34:03.649Z",
+      "actor_type": "model",
+      "actor_id": "recovery_planner_v1",
+      "action": "PLAN_PROPOSED",
+      "correlation_id": "CASE-1455",
+      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
+    },
+    {
+      "id": "AUDIT-1787902443627-849",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:34:03.627Z",
+      "actor_type": "system",
+      "actor_id": "policy_engine_v1",
+      "action": "POLICY_EVALUATED",
+      "correlation_id": "CASE-1455",
+      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
+    },
+    {
+      "id": "AUDIT-1787902443559-529",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:34:03.559Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-460",
+      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
+    },
+    {
+      "id": "AUDIT-1787902383220-944",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:33:03.220Z",
+      "actor_type": "system",
+      "actor_id": "batch_evaluator_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1787902383214",
+      "details": "Executed 2,000-event benchmark batch. Revenue at risk: ₹1,00,51,400. Recovered: ₹73,48,600 (73.1% Recovery Rate). Violations: 0."
+    },
+    {
+      "id": "AUDIT-1787902363696-119",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:43.696Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363690. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902363494-409",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:43.495Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363487. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902363274-209",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:43.274Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363269. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902363099-214",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:43.099Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363093. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902362917-171",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:42.917Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362911. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902362737-336",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:42.737Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362732. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902362064-821",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:42.064Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362057. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902335413-128",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:15.414Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902335407. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902335209-257",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:15.209Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902335203. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902334990-130",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:14.990Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334987. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902334771-177",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:14.771Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334769. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902334576-384",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:14.576Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334568. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902334353-424",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:14.353Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334349. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902333429-395",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:13.429Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902333423. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902332395-81",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:12.395Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action INCENTIVE with Idempotency Key action:CASE-102:INCENTIVE:1787902332389. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902330573-273",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:10.573Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action INCENTIVE with Idempotency Key action:CASE-102:INCENTIVE:1787902330568. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787902328193-178",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T07:32:08.193Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-102",
+      "details": "Executed action INCENTIVE with Idempotency Key action:CASE-102:INCENTIVE:1787902328188. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787899999351-617",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:53:19.351Z",
+      "actor_type": "user",
+      "actor_id": "customer",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-9225",
+      "details": "Executed action PAYMENT_CAPTURED with Idempotency Key action:CASE-9225:PAYMENT_CAPTURED:1787899999343. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1787897948736-362",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:19:08.736Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "KILL_SWITCH_TOGGLED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Emergency Kill Switch DEACTIVATED"
+    },
+    {
+      "id": "AUDIT-1787897939935-405",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:18:59.935Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "KILL_SWITCH_TOGGLED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Emergency Kill Switch ACTIVATED"
+    },
+    {
+      "id": "AUDIT-1787897895780-247",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:18:15.780Z",
+      "actor_type": "model",
+      "actor_id": "recovery_planner_v1",
+      "action": "PLAN_PROPOSED",
+      "correlation_id": "CASE-9225",
+      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
+    },
+    {
+      "id": "AUDIT-1787897895768-261",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:18:15.768Z",
+      "actor_type": "system",
+      "actor_id": "policy_engine_v1",
+      "action": "POLICY_EVALUATED",
+      "correlation_id": "CASE-9225",
+      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
+    },
+    {
+      "id": "AUDIT-1787897895715-232",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:18:15.715Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-979",
+      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
+    },
+    {
+      "id": "AUDIT-1787897875379-662",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:17:55.379Z",
+      "actor_type": "model",
+      "actor_id": "recovery_planner_v1",
+      "action": "PLAN_PROPOSED",
+      "correlation_id": "CASE-3884",
+      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
+    },
+    {
+      "id": "AUDIT-1787897875367-903",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:17:55.367Z",
+      "actor_type": "system",
+      "actor_id": "policy_engine_v1",
+      "action": "POLICY_EVALUATED",
+      "correlation_id": "CASE-3884",
+      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
+    },
+    {
+      "id": "AUDIT-1787897875282-291",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T06:17:55.282Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-415",
+      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
+    },
     {
       "id": "AUDIT-1787831060076-994",
       "merchant_id": "merchant_razor_01",
@@ -2413,6 +3497,23 @@
     }
   ],
   "batchRuns": [
+    {
+      "id": "RUN-1787902383214",
+      "batch_size": 2000,
+      "executed_at": "2026-08-28T07:33:03.214Z",
+      "total_revenue_at_risk_paise": 1005140000,
+      "baselineA_recovered_paise": 166670000,
+      "baselineB_recovered_paise": 422440000,
+      "recoverOps_gross_recovered_paise": 734860000,
+      "recoverOps_net_recovered_paise": 731072900,
+      "incentive_cost_paise": 3770700,
+      "comms_cost_paise": 16400,
+      "recovery_rate_pct": 73.1,
+      "incremental_lift_pct": 31.1,
+      "policy_violations": 0,
+      "human_escalations": 96,
+      "safe_stops": 106
+    },
     {
       "id": "RUN-1787827429993",
       "batch_size": 2000,
