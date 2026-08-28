@@ -48,6 +48,36 @@
   "healthBuckets": [],
   "incidents": [
     {
+      "id": "INC-431",
+      "merchant_id": "merchant_razor_01",
+      "title": "HDFC Bank UPI Authorization Degradation",
+      "status": "OPEN",
+      "severity": "HIGH",
+      "started_at": "2026-08-28T08:43:18.030Z",
+      "dimensions": {
+        "method": "upi",
+        "issuer": "HDFC Bank",
+        "step": "authorization",
+        "reason": "gateway_technical_error"
+      },
+      "baseline_success_rate": 0.88,
+      "current_success_rate": 0.38,
+      "z_score": -4.2,
+      "affected_count": 58,
+      "revenue_at_risk_paise": 4950000,
+      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+      "evidence": [
+        {
+          "key": "Rolling Success Rate",
+          "value": "88% -> 38% Z-score -4.2"
+        },
+        {
+          "key": "Razorpay Downtime Correlated",
+          "value": "Status API corroborates HDFC Bank PSP downtime"
+        }
+      ]
+    },
+    {
       "id": "INC-312",
       "merchant_id": "merchant_razor_01",
       "title": "HDFC Bank UPI Authorization Degradation",
@@ -2665,6 +2695,16 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1787906598039-492",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-28T08:43:18.039Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-431",
+      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
+    },
     {
       "id": "AUDIT-1787902445111-431",
       "merchant_id": "merchant_razor_01",

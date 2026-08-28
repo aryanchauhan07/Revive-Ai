@@ -12,14 +12,19 @@ import {
   CreditCard,
   QrCode,
   Landmark,
-  RefreshCw
+  Phone,
+  Calendar,
+  Clock,
+  Sparkles
 } from 'lucide-react';
 
 export default function CaseTimeline({ 
   cases = [], 
   onOpenCheckout = () => {}, 
   onOpenWhatsApp = () => {}, 
-  onExecuteAction = () => {} 
+  onOpenVoiceCall = () => {},
+  onExecuteAction = () => {},
+  onSetPtpDate = () => {}
 }) {
   // Deduplicate cases by ID
   const uniqueCases = Array.from(
@@ -30,6 +35,7 @@ export default function CaseTimeline({
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [railFilter, setRailFilter] = useState('ALL');
   const [selectedCaseId, setSelectedCaseId] = useState(uniqueCases[0]?.id || 'CASE-101');
+  const [ptpDateInput, setPtpDateInput] = useState('');
 
   // Filtered Cases
   const filteredCases = uniqueCases.filter(c => {
@@ -44,6 +50,13 @@ export default function CaseTimeline({
 
   const selectedCase = uniqueCases.find(c => c.id === selectedCaseId) || filteredCases[0] || uniqueCases[0];
 
+  const handlePtpSubmit = (e) => {
+    e.preventDefault();
+    if (!ptpDateInput || !selectedCase) return;
+    onSetPtpDate(selectedCase.id, ptpDateInput);
+    setPtpDateInput('');
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
@@ -51,7 +64,7 @@ export default function CaseTimeline({
         <div>
           <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Recovery Case Manager & Lifecycle</h2>
           <p className="text-xs text-slate-500 mt-0.5 font-medium">
-            Individualized payment failure diagnosis, customer economics, and policy audit
+            Individualized payment failure diagnosis, customer economics, Promise-to-Pay (PTP) tracker, and omnichannel recovery
           </p>
         </div>
 
@@ -64,7 +77,7 @@ export default function CaseTimeline({
               placeholder="Search customer..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="pl-8 pr-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-blue-500 shadow-2xs w-36 sm:w-44"
+              className="pl-8 pr-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-blue-500 shadow-2xs w-36 sm:w-44 font-medium"
             />
           </div>
 
@@ -77,6 +90,7 @@ export default function CaseTimeline({
             <option value="PLANNED">PLANNED</option>
             <option value="CONTACTED">CONTACTED</option>
             <option value="APPROVAL_REQUIRED">APPROVAL_REQUIRED</option>
+            <option value="PTP_PAUSED">PTP_PAUSED</option>
             <option value="RECOVERED">RECOVERED</option>
           </select>
 
@@ -100,7 +114,7 @@ export default function CaseTimeline({
             <h3 className="font-extrabold text-slate-500 text-xs uppercase tracking-wider">Unique Recovery Cases ({filteredCases.length})</h3>
           </div>
 
-          <div className="space-y-2 overflow-y-auto max-h-[560px] custom-scrollbar pr-1">
+          <div className="space-y-2 overflow-y-auto max-h-[580px] custom-scrollbar pr-1">
             {filteredCases.length === 0 ? (
               <p className="text-xs text-slate-400 py-8 text-center">No cases matching filters.</p>
             ) : (
@@ -127,6 +141,7 @@ export default function CaseTimeline({
                       <span className="text-slate-400 font-mono">{c.id}</span>
                       <span className={`px-2.5 py-0.5 rounded-full border text-[9px] font-bold ${
                         c.status === 'RECOVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                        c.status === 'PTP_PAUSED' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
                         c.status === 'APPROVAL_REQUIRED' ? 'bg-amber-50 text-amber-800 border-amber-200' :
                         'bg-blue-50 text-blue-700 border-blue-200'
                       }`}>
@@ -181,6 +196,38 @@ export default function CaseTimeline({
               </div>
             </div>
 
+            {/* Promise-To-Pay (PTP) Date Tracker Widget */}
+            <div className="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-200 text-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-4 h-4 text-indigo-600" />
+                  <strong className="text-indigo-950 font-bold uppercase tracking-wider">Promise-to-Pay (PTP) Tracker</strong>
+                </div>
+                {selectedCase.ptp_date ? (
+                  <span className="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white font-bold font-mono text-[10px]">
+                    Promised Date: {selectedCase.ptp_date}
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-indigo-700 font-medium">No PTP Set</span>
+                )}
+              </div>
+
+              <form onSubmit={handlePtpSubmit} className="flex items-center space-x-2">
+                <input
+                  type="date"
+                  value={ptpDateInput}
+                  onChange={e => setPtpDateInput(e.target.value)}
+                  className="bg-white border border-indigo-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 font-medium focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-2xs"
+                >
+                  Set Promise Date (Pause Chaser)
+                </button>
+              </form>
+            </div>
+
             {/* Individual AI Recommendation Action Ladder */}
             <div className="space-y-3">
               <h4 className="font-extrabold text-slate-500 text-xs uppercase tracking-wider">Customer-Specific AI Recovery Plan</h4>
@@ -203,27 +250,32 @@ export default function CaseTimeline({
               <div className="flex-1">
                 <strong className="text-blue-950 block font-bold">Authoritative Policy Decision: {selectedCase.policy_decision?.decision}</strong>
                 <p className="mt-0.5 text-blue-900 font-medium">{selectedCase.policy_decision?.reason || 'All standard merchant guardrails passed.'}</p>
-                <div className="text-[11px] font-mono text-blue-700 mt-1">
-                  Matched Rules: {selectedCase.policy_decision?.matched_rules?.join(', ')}
-                </div>
               </div>
             </div>
 
-            {/* Execute Buttons */}
-            <div className="flex justify-end space-x-3 pt-2 border-t border-slate-100">
+            {/* Omnichannel Action Buttons */}
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                onClick={() => onOpenVoiceCall(selectedCase)}
+                className="px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center space-x-1.5 transition-colors shadow-2xs"
+              >
+                <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Simulate AI Voice Call</span>
+              </button>
+
               <button
                 onClick={() => onOpenWhatsApp(selectedCase)}
-                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center space-x-2 transition-colors shadow-2xs"
+                className="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center space-x-1.5 transition-colors shadow-2xs"
               >
-                <MessageSquare className="w-4 h-4 text-emerald-600" />
-                <span>Simulate WhatsApp Outreach</span>
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                <span>WhatsApp Outreach</span>
               </button>
 
               <button
                 onClick={() => onOpenCheckout(selectedCase)}
-                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 flex items-center space-x-2 transition-colors"
+                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 flex items-center space-x-1.5 transition-colors"
               >
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink className="w-3.5 h-3.5" />
                 <span>Open Razorpay Pay Link</span>
               </button>
             </div>

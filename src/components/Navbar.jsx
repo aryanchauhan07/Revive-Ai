@@ -11,7 +11,9 @@ import {
   FileSpreadsheet,
   ChevronDown,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  Compass,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -19,7 +21,9 @@ export default function Navbar({
   setActiveTab, 
   merchant, 
   onToggleKillSwitch, 
-  onTriggerDemo 
+  onTriggerDemo,
+  demoStoryStep,
+  onStartDemoStory
 }) {
   const [showDemoMenu, setShowDemoMenu] = useState(false);
   const isKillSwitchActive = merchant?.killSwitch;
@@ -66,11 +70,20 @@ export default function Navbar({
 
           {/* Controls & Actions */}
           <div className="flex items-center space-x-3">
-            {/* Interactive Demo Generator Dropdown */}
+            {/* 1-Click Interactive Guided Demo Story Button for Judges */}
+            <button
+              onClick={onStartDemoStory}
+              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-500 text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all"
+            >
+              <Compass className="w-4 h-4 text-emerald-200" />
+              <span>1-Click Guided Demo Story</span>
+            </button>
+
+            {/* Scenario Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setShowDemoMenu(!showDemoMenu)}
-                className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold transition-all shadow-sm"
+                className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold transition-all shadow-2xs"
               >
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>Simulate Scenario</span>
@@ -84,7 +97,7 @@ export default function Navbar({
                   </div>
                   <button
                     onClick={() => {
-                      onTriggerDemo('HDFC Bank', 'upi', 'gateway_technical_error');
+                      onTriggerDemo('HDFC Bank', 'upi');
                       setShowDemoMenu(false);
                     }}
                     className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 font-semibold text-slate-700 flex items-center justify-between"
@@ -94,7 +107,7 @@ export default function Navbar({
                   </button>
                   <button
                     onClick={() => {
-                      onTriggerDemo('ICICI Bank', 'card', 'payment_cancelled_by_user');
+                      onTriggerDemo('ICICI Bank', 'card');
                       setShowDemoMenu(false);
                     }}
                     className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 font-semibold text-slate-700 flex items-center justify-between"
@@ -104,7 +117,7 @@ export default function Navbar({
                   </button>
                   <button
                     onClick={() => {
-                      onTriggerDemo('SBI Bank', 'mandate', 'insufficient_funds');
+                      onTriggerDemo('SBI Bank', 'mandate');
                       setShowDemoMenu(false);
                     }}
                     className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 font-semibold text-slate-700 flex items-center justify-between"
@@ -138,7 +151,7 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex space-x-1.5 overflow-x-auto custom-scrollbar py-2 border-t border-slate-100">
           {tabs.map((tab) => {
