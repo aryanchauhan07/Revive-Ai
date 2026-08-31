@@ -46,8 +46,8 @@
   "paymentAttempts": [],
   "webhookInbox": [
     {
-      "event_id": "evt_self_1788171588303",
-      "received_at": "2026-08-31T10:19:48.303Z",
+      "event_id": "evt_self_1788171782155",
+      "received_at": "2026-08-31T10:23:02.155Z",
       "signature_valid": true,
       "is_demo": true,
       "event_type": "payment.captured",
@@ -56,15 +56,15 @@
         "payload": {
           "payment": {
             "entity": {
-              "id": "pay_self_1788171588298"
+              "id": "pay_self_1788171782151"
             }
           }
         }
       }
     },
     {
-      "event_id": "evt_test_dedupe_1788171588278",
-      "received_at": "2026-08-31T10:19:48.278Z",
+      "event_id": "evt_test_dedupe_1788171782133",
+      "received_at": "2026-08-31T10:23:02.134Z",
       "signature_valid": true,
       "is_demo": true,
       "event_type": "payment.failed",
@@ -868,11 +868,11 @@
     {
       "id": "CASE-TEST-SELF-RECOVER",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_self_1788171588298",
+      "provider_payment_id": "pay_self_1788171782151",
       "amount_paise": 500000,
       "status": "RECOVERED",
       "attribution": "SELF_RECOVERED",
-      "recovered_at": "2026-08-31T10:19:48.304Z",
+      "recovered_at": "2026-08-31T10:23:02.155Z",
       "canceled_queued_actions": true
     },
     {
@@ -1051,7 +1051,7 @@
       "customer_phone": "+919898989898",
       "amount_paise": 2850000,
       "currency": "INR",
-      "status": "APPROVAL_REQUIRED",
+      "status": "CONTACTED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -1131,6 +1131,22 @@
         ],
         "requires_approval": true,
         "reason": "High-value transaction requires explicit human manager approval."
+      },
+      "last_execution": {
+        "id": "EXEC-1788171766879",
+        "case_id": "CASE-103",
+        "idempotency_key": "action:CASE-103:WAIT:1788171766879",
+        "action": "WAIT",
+        "params": {
+          "waitMinutes": 15
+        },
+        "result": {
+          "provider": "internal_escalation_workflow",
+          "reviewer_id": "human_manager",
+          "status": "HANDLED"
+        },
+        "executed_at": "2026-08-31T10:22:46.879Z",
+        "status": "COMPLETED"
       }
     },
     {
@@ -2824,6 +2840,214 @@
   ],
   "actionExecutions": [
     {
+      "id": "EXEC-1788171766879",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171766879",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:46.879Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171766663",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171766663",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:46.663Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171761062",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171761062",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:41.062Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171760840",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171760840",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:40.840Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171760648",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171760648",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:40.648Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171760462",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171760462",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:40.462Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171760246",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171760246",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:40.246Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171759047",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171759047",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:39.047Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171758815",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171758815",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:38.815Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171758613",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171758613",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:38.613Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171758119",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171758119",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:38.119Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171754952",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171754952",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:34.952Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788171752185",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:WAIT:1788171752185",
+      "action": "WAIT",
+      "params": {
+        "waitMinutes": 15
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-08-31T10:22:32.185Z",
+      "status": "COMPLETED"
+    },
+    {
       "id": "EXEC-1787915178732",
       "case_id": "CASE-TEST-EXEC",
       "idempotency_key": "CASE-TEST-EXEC:v1:act_create_link_v1",
@@ -3179,74 +3403,204 @@
   ],
   "auditEvents": [
     {
-      "id": "AUDIT-1788171588359-183",
+      "id": "AUDIT-1788171782210-753",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.359Z",
+      "occurred_at": "2026-08-31T10:23:02.210Z",
       "actor_type": "system",
       "actor_id": "attribution_engine_v1",
       "action": "BATCH_EVALUATION_RUN",
-      "correlation_id": "RUN-1788171588354",
+      "correlation_id": "RUN-1788171782206",
       "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
     },
     {
-      "id": "AUDIT-1788171588350-172",
+      "id": "AUDIT-1788171782202-233",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.350Z",
+      "occurred_at": "2026-08-31T10:23:02.202Z",
       "actor_type": "system",
       "actor_id": "attribution_engine_v1",
       "action": "BATCH_EVALUATION_RUN",
-      "correlation_id": "RUN-1788171588323",
+      "correlation_id": "RUN-1788171782174",
       "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
     },
     {
-      "id": "AUDIT-1788171588314-503",
+      "id": "AUDIT-1788171782164-687",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.314Z",
+      "occurred_at": "2026-08-31T10:23:02.164Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "WEBHOOK_VERIFIED",
-      "correlation_id": "evt_self_1788171588303",
-      "details": "Processed webhook payment.captured for pay_self_1788171588298. Signature valid: true."
+      "correlation_id": "evt_self_1788171782155",
+      "details": "Processed webhook payment.captured for pay_self_1788171782151. Signature valid: true."
     },
     {
-      "id": "AUDIT-1788171588310-632",
+      "id": "AUDIT-1788171782161-632",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.310Z",
+      "occurred_at": "2026-08-31T10:23:02.161Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "CUSTOMER_SELF_RECOVERED",
       "correlation_id": "CASE-TEST-SELF-RECOVER",
-      "details": "Payment pay_self_1788171588298 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+      "details": "Payment pay_self_1788171782151 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
     },
     {
-      "id": "AUDIT-1788171588291-312",
+      "id": "AUDIT-1788171782144-455",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.291Z",
+      "occurred_at": "2026-08-31T10:23:02.144Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "DUPLICATE_WEBHOOK_IGNORED",
-      "correlation_id": "evt_test_dedupe_1788171588278",
-      "details": "No-op: Webhook event evt_test_dedupe_1788171588278 already processed at 2026-08-31T10:19:48.278Z. Duplicate ignored safely."
+      "correlation_id": "evt_test_dedupe_1788171782133",
+      "details": "No-op: Webhook event evt_test_dedupe_1788171782133 already processed at 2026-08-31T10:23:02.134Z. Duplicate ignored safely."
     },
     {
-      "id": "AUDIT-1788171588279-409",
+      "id": "AUDIT-1788171782134-443",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.279Z",
+      "occurred_at": "2026-08-31T10:23:02.134Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "WEBHOOK_VERIFIED",
-      "correlation_id": "evt_test_dedupe_1788171588278",
+      "correlation_id": "evt_test_dedupe_1788171782133",
       "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
     },
     {
-      "id": "AUDIT-1788171588270-15",
+      "id": "AUDIT-1788171782129-829",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-31T10:19:48.270Z",
+      "occurred_at": "2026-08-31T10:23:02.129Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "SECURITY_WEBHOOK_REJECTED",
-      "correlation_id": "evt_1788171588269_lnbwi",
+      "correlation_id": "evt_1788171782129_y97rma",
       "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
+    {
+      "id": "AUDIT-1788171766888-995",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:46.888Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171766879. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171766670-974",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:46.670Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171766663. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171761069-547",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:41.069Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171761062. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171760849-88",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:40.849Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171760840. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171760660-190",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:40.660Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171760648. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171760477-125",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:40.477Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171760462. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171760258-137",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:40.258Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171760246. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171759057-141",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:39.057Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171759047. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171758822-394",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:38.822Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171758815. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171758622-173",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:38.622Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171758613. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171758131-361",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:38.131Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171758119. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171754966-385",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:34.966Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171754952. Status: COMPLETED"
+    },
+    {
+      "id": "AUDIT-1788171752195-706",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T10:22:32.195Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed action WAIT with Idempotency Key action:CASE-103:WAIT:1788171752185. Status: COMPLETED"
     },
     {
       "id": "AUDIT-1788170510601-493",
@@ -5251,10 +5605,10 @@
   ],
   "batchRuns": [
     {
-      "id": "RUN-1788171588354",
+      "id": "RUN-1788171782206",
       "batch_size": 100,
       "seed": 20260828,
-      "executed_at": "2026-08-31T10:19:48.354Z",
+      "executed_at": "2026-08-31T10:23:02.206Z",
       "total_revenue_at_risk_paise": 58990000,
       "natural_self_recovery_paise": 7220000,
       "baselineA_recovered_paise": 7220000,
@@ -5274,10 +5628,10 @@
       "is_reproducible": true
     },
     {
-      "id": "RUN-1788171588323",
+      "id": "RUN-1788171782174",
       "batch_size": 100,
       "seed": 20260828,
-      "executed_at": "2026-08-31T10:19:48.323Z",
+      "executed_at": "2026-08-31T10:23:02.174Z",
       "total_revenue_at_risk_paise": 58990000,
       "natural_self_recovery_paise": 7220000,
       "baselineA_recovered_paise": 7220000,

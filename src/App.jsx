@@ -24,7 +24,7 @@ import {
   executeCase 
 } from './services/api';
 
-import { Compass, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight, X } from 'lucide-react';
+import { Compass, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight, X, Sparkles, Award } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('command');
@@ -38,8 +38,8 @@ export default function App() {
   const [selectedWhatsAppCase, setSelectedWhatsAppCase] = useState(null);
   const [selectedVoiceCase, setSelectedVoiceCase] = useState(null);
 
-  // 1-Click Guided Demo Story State
-  const [demoStoryStep, setDemoStoryStep] = useState(0); // 0 = Off, 1 = Incident, 2 = AI Diagnosis, 3 = Policy Check, 4 = Recovery
+  // 1-Click Guided Demo Story State (5-Stage Architecture Journey)
+  const [demoStoryStep, setDemoStoryStep] = useState(0); // 0 = Off, 1 to 5
 
   const loadData = async () => {
     try {
@@ -104,15 +104,22 @@ export default function App() {
   const handleNextStoryStep = () => {
     if (demoStoryStep === 1) {
       setDemoStoryStep(2);
-      setActiveTab('incidents');
+      setActiveTab('cases'); // Step 2: Decision Brain 8-Action Economics Matrix
     } else if (demoStoryStep === 2) {
       setDemoStoryStep(3);
-      setActiveTab('approvals');
+      setActiveTab('approvals'); // Step 3: Policy Gate & Human Approval
     } else if (demoStoryStep === 3) {
       setDemoStoryStep(4);
-      setActiveTab('command');
+      setActiveTab('command'); // Step 4: Omnichannel Execution & Pay Link
+      if (cases.length > 0) {
+        setSelectedCheckoutCase(cases[0]);
+      }
+    } else if (demoStoryStep === 4) {
+      setDemoStoryStep(5);
+      setActiveTab('batch'); // Step 5: Outcome Feedback Loop & Attribution
     } else {
       setDemoStoryStep(0);
+      setActiveTab('command');
     }
   };
 
@@ -151,13 +158,14 @@ export default function App() {
               <Compass className="w-5 h-5 text-emerald-200 animate-spin" />
               <div>
                 <span className="font-extrabold text-xs tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded-full">
-                  Guided Demo Story • Step {demoStoryStep} of 4
+                  Architecture Demo Journey • Step {demoStoryStep} of 5
                 </span>
                 <span className="text-xs font-bold ml-2">
-                  {demoStoryStep === 1 && "Step 1: HDFC UPI Anomaly Detected (Rolling Z-score drop to 38%)"}
-                  {demoStoryStep === 2 && "Step 2: AI Root Cause Diagnosis & SRE Blast Radius Isolation"}
-                  {demoStoryStep === 3 && "Step 3: Policy Check — Priya Patel (₹28,500) Flagged for Manager Approval"}
-                  {demoStoryStep === 4 && "Step 4: Automated Omnichannel Recovery & Live Revenue Captured!"}
+                  {demoStoryStep === 1 && "Step 1: Payment SRE Intelligence — HDFC UPI Anomaly Detected & Circuit Breaker Tripped"}
+                  {demoStoryStep === 2 && "Step 2: Recovery Decision Brain — 8-Action Economics Matrix Evaluates Expected Net Values"}
+                  {demoStoryStep === 3 && "Step 3: Policy & Governance Gateway — Priya Patel (₹28,500) Flagged for Manager Approval"}
+                  {demoStoryStep === 4 && "Step 4: Omnichannel Execution — Razorpay Test Mode 1-Click Pay Link Dispatched"}
+                  {demoStoryStep === 5 && "Step 5: Outcome Feedback Loop & Attribution — Closed-Loop Learning & Measured ROI"}
                 </span>
               </div>
             </div>
@@ -167,7 +175,7 @@ export default function App() {
                 onClick={handleNextStoryStep}
                 className="px-3.5 py-1.5 rounded-xl bg-white text-emerald-800 text-xs font-extrabold hover:bg-emerald-50 transition-all flex items-center space-x-1 shadow-sm"
               >
-                <span>{demoStoryStep === 4 ? 'Finish Story' : 'Next Story Step'}</span>
+                <span>{demoStoryStep === 5 ? 'Finish Demo Journey' : 'Next Architecture Step'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
               <button onClick={() => setDemoStoryStep(0)} className="p-1 rounded-lg text-emerald-100 hover:text-white">
