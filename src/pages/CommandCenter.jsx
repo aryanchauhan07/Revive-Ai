@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MetricCard from '../components/MetricCard';
 import AuditStream from '../components/AuditStream';
-import { IndianRupee, TrendingUp, AlertTriangle, ShieldCheck, PlayCircle, Search, ArrowUpRight } from 'lucide-react';
+import { IndianRupee, TrendingUp, AlertTriangle, ShieldCheck, PlayCircle, Search, Phone } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function CommandCenter({ 
@@ -11,6 +11,7 @@ export default function CommandCenter({
   auditEvents = [], 
   onOpenCheckout, 
   onOpenWhatsApp, 
+  onOpenVoiceCall = () => {},
   onTriggerDemo 
 }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -227,6 +228,14 @@ export default function CommandCenter({
                           </span>
                         </td>
                         <td className="py-3 px-3 text-right space-x-1.5">
+                          <button
+                            onClick={() => onOpenVoiceCall(c)}
+                            title="Simulate Hinglish AI Voice Call"
+                            className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-colors shadow-2xs inline-flex items-center space-x-1"
+                          >
+                            <Phone className="w-3 h-3 text-emerald-600" />
+                            <span>Voice</span>
+                          </button>
                           <button
                             onClick={() => onOpenWhatsApp(c)}
                             className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold transition-colors"

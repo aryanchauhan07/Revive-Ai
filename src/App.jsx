@@ -154,8 +154,8 @@ export default function App() {
                   Guided Demo Story • Step {demoStoryStep} of 4
                 </span>
                 <span className="text-xs font-bold ml-2">
-                  {demoStoryStep === 1 && "Step 1: HDFC UPI Anomaly Detected (Rolling Z-score drop to 41%)"}
-                  {demoStoryStep === 2 && "Step 2: AI Root Cause Diagnosis & 5 Individualized Customer Plans"}
+                  {demoStoryStep === 1 && "Step 1: HDFC UPI Anomaly Detected (Rolling Z-score drop to 38%)"}
+                  {demoStoryStep === 2 && "Step 2: AI Root Cause Diagnosis & SRE Blast Radius Isolation"}
                   {demoStoryStep === 3 && "Step 3: Policy Check — Priya Patel (₹28,500) Flagged for Manager Approval"}
                   {demoStoryStep === 4 && "Step 4: Automated Omnichannel Recovery & Live Revenue Captured!"}
                 </span>
@@ -187,6 +187,7 @@ export default function App() {
             auditEvents={auditEvents}
             onOpenCheckout={setSelectedCheckoutCase}
             onOpenWhatsApp={setSelectedWhatsAppCase}
+            onOpenVoiceCall={setSelectedVoiceCase}
             onTriggerDemo={handleTriggerDemo}
           />
         )}
