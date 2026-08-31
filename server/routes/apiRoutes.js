@@ -101,7 +101,7 @@ router.post('/scenarios/:id/run', (req, res) => {
   res.json(scenario);
 });
 
-// 6. Demo Trigger Generators (Generates 1 Incident -> Cohort of 5 Different Customers)
+// 6. Demo Trigger Generators (Generates 1 Incident with SRE Blast Radius & Recovery Circuit Breaker)
 router.post('/demo/trigger-incident', (req, res) => {
   const { bank = "HDFC Bank", method = "upi" } = req.body;
 
@@ -120,6 +120,19 @@ router.post('/demo/trigger-incident', (req, res) => {
     revenue_at_risk_paise: 5924900, // ₹59,249
     root_cause: `${bank} ${method.toUpperCase()} partner gateway timeouts detected. Direct retries failing at 84%.`,
     recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp.",
+    sre_blast_radius: {
+      affected_txns: 5,
+      affected_customers: 5,
+      revenue_at_risk_paise: 5924900,
+      degraded_rail: `${bank} ${method.toUpperCase()}`,
+      incident_scope: "SYSTEMIC_ISSUER_OUTAGE" // vs "ISOLATED_CUSTOMER_FAILURE"
+    },
+    circuit_breaker: {
+      status: "TRIPPED",
+      suppress_same_rail_retries: true,
+      recommended_alternate_rail: "Cards & Netbanking",
+      cooldown_remaining_minutes: 15
+    },
     evidence: [
       { key: "Rolling Success Rate", value: "88% -> 38% Z-score -4.2" },
       { key: "Razorpay Downtime Match", value: `Status API corroborates ${bank} PSP downtime` },
@@ -129,7 +142,7 @@ router.post('/demo/trigger-incident', (req, res) => {
 
   db.addIncident(incident);
 
-  // Realistic cohort of different customers with distinct recovery plans
+  // Realistic cohort of 5 distinct customers
   const demoCohort = [
     { name: "Ananya Roy", phone: "+919876543210", amount: 4850, reason: "gateway_technical_error" },
     { name: "Rahul Sharma", phone: "+919812345678", amount: 7200, reason: "gateway_technical_error" },
@@ -168,10 +181,10 @@ router.post('/demo/trigger-incident', (req, res) => {
 
   db.addAuditEvent({
     actor_type: 'system',
-    actor_id: 'health_detector_v1',
-    action: 'INCIDENT_OPENED',
+    actor_id: 'payment_sre_engine',
+    action: 'INCIDENT_OPENED_CIRCUIT_TRIPPED',
     correlation_id: incident.id,
-    details: `Simulated ${bank} ${method.toUpperCase()} degradation. 5 affected customer cases ingested.`
+    details: `SRE Outage Detected: ${bank} ${method.toUpperCase()}. Blast Radius: 5 customers, ₹59,249 at risk. Circuit Breaker TRIPPED: Same-rail retries paused.`
   });
 
   broadcastSSE({ type: 'INCIDENT_OPENED', data: incident });
@@ -196,7 +209,7 @@ router.get('/events/stream', (req, res) => {
   });
 });
 
-// 8. Batch Evaluation Benchmark
+// 8. Batch Evaluation Benchmark with Incremental Attribution
 router.post('/evaluation/run', (req, res) => {
   const { batchSize = 2000, seed = 20260828 } = req.body;
   const result = runBatchEvaluation(batchSize, seed);

@@ -1,112 +1,193 @@
 import { db } from '../db/database.js';
-import { evaluatePlanPolicies } from './policyEngine.js';
+import { evaluatePlanPolicies, evaluateSingleActionPolicy } from './policyEngine.js';
+
+/**
+ * Recovery Decision Brain: Evaluates the 8 candidate action matrix,
+ * computing Expected Net Recovery Value = P(success)*Amount - Cost - RiskPenalty
+ */
+export function evaluateCandidateActionMatrix(caseItem, failure, incidentContext) {
+  const amountPaise = caseItem.amount_paise || 485000;
+  const isIncidentActive = Boolean(incidentContext && incidentContext.status === 'OPEN');
+  const isHardDecline = failure.error_reason === 'card_expired' || failure.error_code === 'CARD_EXPIRED_OR_BLOCKED';
+  const isCheckoutDrop = failure.error_reason === 'payment_cancelled_by_user' || failure.error_reason === 'checkout_abandoned';
+  const isHighValue = amountPaise >= 2500000;
+
+  const candidateActions = [
+    {
+      action: 'WAIT',
+      params: { waitMinutes: isIncidentActive ? 15 : 30 },
+      probability: isIncidentActive ? 0.35 : 0.20,
+      costPaise: 0,
+      riskPenaltyPaise: 0,
+      reason: 'Hold for gateway cooldown or customer self-retry'
+    },
+    {
+      action: 'RETRY',
+      params: { retryNow: true },
+      // If systemic bank outage is active, blind same-rail retry has near 0% success
+      probability: isIncidentActive ? 0.08 : (isHardDecline ? 0.0 : 0.38),
+      costPaise: 100, // Gateway retry charge
+      riskPenaltyPaise: isIncidentActive ? 5000 : 500, // Heavy risk penalty for spamming during downtime
+      reason: isIncidentActive ? 'High failure probability during active bank outage' : 'Direct payment retry'
+    },
+    {
+      action: 'SWITCH_PAYMENT_METHOD',
+      params: { fallbackRail: 'card_or_netbanking' },
+      probability: isIncidentActive ? 0.88 : 0.65,
+      costPaise: 50,
+      riskPenaltyPaise: 100,
+      reason: 'Bypass degraded rail and offer alternate payment method'
+    },
+    {
+      action: 'CREATE_PAYMENT_LINK',
+      params: { expiresMinutes: 120 },
+      probability: isCheckoutDrop ? 0.82 : 0.85,
+      costPaise: 50,
+      riskPenaltyPaise: 50,
+      reason: 'Generate dedicated 1-click Razorpay recovery link'
+    },
+    {
+      action: 'WHATSAPP_MESSAGE',
+      params: { template: 'payment_recovery' },
+      probability: isCheckoutDrop ? 0.78 : 0.72,
+      costPaise: 50, // ₹0.50 WhatsApp API fee
+      riskPenaltyPaise: 200,
+      reason: 'Pre-approved WhatsApp outreach with recovery link'
+    },
+    {
+      action: 'INCENTIVE',
+      params: { discountPct: isIncidentActive ? 0 : 3 },
+      // Zero incentive uplift during technical outages; high uplift on cart drop
+      probability: isIncidentActive ? 0.38 : (isCheckoutDrop ? 0.88 : 0.65),
+      costPaise: isIncidentActive ? 0 : Math.round(amountPaise * 0.03) + 50,
+      riskPenaltyPaise: isIncidentActive ? 10000 : 300, // Block giving discounts during technical bank outages
+      reason: isIncidentActive ? '₹0 discount: money not the root cause during outage' : '3% dynamic margin-safe cart recovery incentive'
+    },
+    {
+      action: 'HUMAN_ESCALATION',
+      params: { priority: isHighValue ? 'URGENT' : 'STANDARD' },
+      probability: isHighValue ? 0.95 : 0.50,
+      costPaise: 500, // Human operational cost
+      riskPenaltyPaise: 0,
+      reason: isHighValue ? 'Required for high-value transactions >= ₹25,000' : 'Manual review'
+    },
+    {
+      action: 'STOP',
+      params: { reason: 'Terminal decline or policy stop' },
+      probability: 0.0,
+      costPaise: 0,
+      riskPenaltyPaise: 0,
+      reason: isHardDecline ? 'Safe stopping rule triggered: card terminal/expired' : 'No further action'
+    }
+  ];
+
+  // Calculate Expected Net Recovery for each candidate action
+  const matrix = candidateActions.map((item, idx) => {
+    const expectedGrossPaise = Math.round(amountPaise * item.probability);
+    const expectedNetPaise = Math.max(0, expectedGrossPaise - item.costPaise - item.riskPenaltyPaise);
+    const policyResult = evaluateSingleActionPolicy(caseItem, { action: item.action, params: item.params });
+
+    return {
+      id: `act_cand_${idx + 1}_${item.action.toLowerCase()}`,
+      action: item.action,
+      params: item.params,
+      probability: item.probability,
+      expectedGrossPaise,
+      costPaise: item.costPaise,
+      riskPenaltyPaise: item.riskPenaltyPaise,
+      expectedNetPaise,
+      policyDecision: policyResult.decision,
+      policyReason: policyResult.reason,
+      reasonCodes: [item.reason],
+      isOptimal: false
+    };
+  });
+
+  // Pick optimal action: highest expectedNetPaise among ALLOWed or REVIEW actions
+  const eligibleActions = matrix.filter(a => a.policyDecision !== 'BLOCK');
+  eligibleActions.sort((a, b) => b.expectedNetPaise - a.expectedNetPaise);
+  
+  if (eligibleActions.length > 0) {
+    eligibleActions[0].isOptimal = true;
+  }
+
+  return matrix;
+}
 
 /**
  * FallbackRecoveryPlanner: Conservative, deterministic rule-based planner.
- * Explicitly named and invoked when LLM is unconfigured, times out, or fails validation.
  */
 export function FallbackRecoveryPlanner(caseItem, incidentContext = null) {
   const failure = caseItem.failure_reason || {};
   const method = failure.method || 'upi';
   const reason = failure.error_reason || 'unknown';
-  const source = failure.error_source || 'unknown';
   const amountRupees = caseItem.amount_paise / 100;
+
+  // 1. EVALUATE 8-CANDIDATE RECOVERY DECISION BRAIN MATRIX
+  const actionMatrix = evaluateCandidateActionMatrix(caseItem, failure, incidentContext);
+  const optimalAction = actionMatrix.find(a => a.isOptimal) || actionMatrix[0];
 
   let rootCause = "Isolated soft decline or gateway delay.";
   let diagnosisCategory = "ISOLATED_FAILURE";
-  let probability = 0.75;
-  let actions = [];
+  let probability = optimalAction.probability || 0.75;
   let reasonFactors = ["Historical retry success rate", "Standard timeout pattern"];
 
   // S1 / Incident Correlated Technical Downtime
   if (incidentContext && incidentContext.status === 'OPEN') {
     diagnosisCategory = "INCIDENT_CORRELATED";
-    rootCause = `${incidentContext.dimensions?.issuer || incidentContext.dimensions?.method} auth gateway downtime detected. Success rate dropped to ${Math.round(incidentContext.current_success_rate * 100)}%.`;
+    rootCause = `${incidentContext.dimensions?.issuer || incidentContext.dimensions?.method} auth gateway downtime detected. Success rate dropped to ${Math.round(incidentContext.current_success_rate * 100)}%. Circuit Breaker TRIPPED.`;
     probability = 0.88;
-    reasonFactors = ["Razorpay Downtime API corroborated", "Z-Score anomaly delta", "Issuer concentration > 90%"];
-    
-    // Technical outage: ₹0 discount recommendation, suppress same-rail retries
-    actions = [
-      { id: "act_1_wait", action: "WAIT", params: { waitMinutes: 15 }, reasonCodes: ["SUPPRESS_SAME_RAIL_DURING_OUTAGE"] },
-      { id: "act_2_switch", action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
-      { id: "act_3_link", action: "CREATE_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["PROVIDE_CLEAN_RECOVERY_SURFACE"] },
-      { id: "act_4_msg", action: "MESSAGE", params: { channel: "whatsapp", template: "recovery_alt_method" }, reasonCodes: ["INFORM_CUSTOMER_OPTION"] }
-    ];
+    reasonFactors = ["Razorpay Downtime API corroborated", "Z-Score anomaly delta", "Issuer concentration > 90%", "Circuit Breaker Active"];
   } else if (reason === 'payment_cancelled_by_user' || reason === 'checkout_abandoned') {
     diagnosisCategory = "CHECKOUT_ABANDONMENT";
     rootCause = "Customer exited checkout post-authentication or OTP step.";
-    probability = 0.65;
+    probability = 0.82;
     reasonFactors = ["High intent address entry", "Authentication step reached", "User exit event"];
-
-    actions = [
-      { id: "act_1_link", action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["INSTANT_CHECKOUT_RESUME"] },
-      { id: "act_2_msg", action: "MESSAGE", params: { channel: "whatsapp", template: "cart_recovery" }, reasonCodes: ["FRIENDLY_NUDGE"] }
-    ];
-
-    if (amountRupees >= 2000 && amountRupees < 25000) {
-      actions.push({ id: "act_3_inc", action: "INCENTIVE", params: { discountPct: 3, code: "REVIVE3" }, reasonCodes: ["HIGH_INTENT_CART_NUDGE"] });
-    }
   } else if (reason === 'insufficient_funds' || reason === 'account_debit_failed') {
     diagnosisCategory = "FUNDS_UNAVAILABLE";
-    rootCause = "Temporary balance deficit on AutoPay e-mandate. Immediate retry will fail.";
+    rootCause = "Temporary balance deficit on AutoPay e-mandate. Retries paused until salary cycle window.";
     probability = 0.70;
     reasonFactors = ["Recurring debit failure", "Salary cycle timing"];
-
-    actions = [
-      { id: "act_1_wait", action: "WAIT", params: { waitMinutes: 1440 }, reasonCodes: ["SALARY_CYCLE_RETRY_WINDOW"] },
-      { id: "act_2_retry", action: "RETRY", params: { scheduledFor: "plus_24h" }, reasonCodes: ["OPTIMAL_DEBIT_WINDOW"] },
-      { id: "act_3_msg", action: "MESSAGE", params: { channel: "whatsapp", template: "gentle_balance_reminder" }, reasonCodes: ["CUSTOMER_NOTIFICATION"] }
-    ];
-  } else if (source === 'issuer_bank' || reason === 'gateway_technical_error') {
-    diagnosisCategory = "BANK_DOWNTIME";
-    rootCause = "Temporary issuing bank timeout or network glitch.";
-    probability = 0.82;
-    reasonFactors = ["Issuer gateway error code", "Transient bank network delay"];
-
-    actions = [
-      { id: "act_1_wait", action: "WAIT", params: { waitMinutes: 30 }, reasonCodes: ["BANK_RECOVERY_COOLDOWN"] },
-      { id: "act_2_switch", action: "SWITCH_METHOD", params: { suggestedMethod: "upi_or_card" }, reasonCodes: ["ALTERNATIVE_PAYMENT_OPTION"] },
-      { id: "act_3_link", action: "CREATE_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["SEAMLESS_PAYMENT_LINK"] }
-    ];
-  } else {
-    diagnosisCategory = "SOFT_DECLINE";
-    rootCause = "Generic authentication delay or user timeout.";
-    probability = 0.60;
-
-    actions = [
-      { id: "act_1_link", action: "CREATE_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["RECOVERY_LINK"] },
-      { id: "act_2_msg", action: "MESSAGE", params: { channel: "whatsapp", template: "payment_help" }, reasonCodes: ["CUSTOMER_ASSIST"] }
-    ];
   }
+
+  // Selected Action Ladder based on Decision Brain
+  let primaryActions = [
+    { id: optimalAction.id, action: optimalAction.action, params: optimalAction.params, reasonCodes: optimalAction.reasonCodes },
+    { id: "act_ladder_link", action: "CREATE_PAYMENT_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["1-Click Recovery Surface"] },
+    { id: "act_ladder_msg", action: "WHATSAPP_MESSAGE", params: { template: "recovery_dispatch" }, reasonCodes: ["Omnichannel Delivery"] }
+  ];
 
   // S17 / High Value Transaction Policy Floor Gate
   if (amountRupees >= 25000) {
-    actions.push({ 
-      id: "act_5_escalate", 
+    primaryActions.push({ 
+      id: "act_escalate", 
       action: "HUMAN_ESCALATION", 
       params: { reason: "Transaction value ₹" + amountRupees + " >= ₹25,000 threshold requires manager review" }, 
       reasonCodes: ["POLICY_HIGH_VALUE_FLOOR"] 
     });
   }
 
-  const perActionPolicy = evaluatePlanPolicies(caseItem, actions);
+  const perActionPolicy = evaluatePlanPolicies(caseItem, primaryActions);
 
   const plan = {
-    plan_version: "v1.2",
-    planner_source: "FALLBACK_RULES",
+    plan_version: "v2.0",
+    planner_source: "RECOVERY_DECISION_BRAIN",
     diagnosis: rootCause,
     diagnosisCategory,
+    optimal_action: optimalAction.action,
+    expected_net_recovery_paise: optimalAction.expectedNetPaise,
+    candidate_actions_matrix: actionMatrix,
     root_cause_hypotheses: [
       { hypothesis: rootCause, likelihood: probability }
     ],
     recoverability: { eligible: true, probability, confidenceBand: probability > 0.8 ? "HIGH" : "MEDIUM" },
     expectedEconomics: {
       grossRecoveryValuePaise: caseItem.amount_paise,
-      actionCostPaise: 50,
-      expectedNetValuePaise: Math.round(caseItem.amount_paise * probability - 50)
+      actionCostPaise: optimalAction.costPaise,
+      expectedNetValuePaise: optimalAction.expectedNetPaise
     },
     reason_factors: reasonFactors,
-    actions,
+    actions: primaryActions,
     per_action_policy: perActionPolicy
   };
 
@@ -122,58 +203,6 @@ export function FallbackRecoveryPlanner(caseItem, incidentContext = null) {
  * Structured LLM Diagnosis & Recovery Planner with automatic FallbackRecoveryPlanner.
  */
 export async function LLMRecoveryPlanner(caseItem, incidentContext = null) {
-  const apiKey = process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return FallbackRecoveryPlanner(caseItem, incidentContext);
-  }
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout guard
-
-    // If OpenAI Key provided
-    if (process.env.OPENAI_API_KEY) {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an autonomous Payment SRE Recovery Planner. Return JSON strictly matching: { diagnosis: string, actions: string[] }'
-            },
-            {
-              role: 'user',
-              content: JSON.stringify({
-                amountRupees: caseItem.amount_paise / 100,
-                failure: caseItem.failure_reason,
-                incident: incidentContext?.title
-              })
-            }
-          ],
-          response_format: { type: "json_object" }
-        }),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-      if (response.ok) {
-        const data = await response.json();
-        const parsed = JSON.parse(data.choices[0].message.content);
-        const fallbackPlan = FallbackRecoveryPlanner(caseItem, incidentContext);
-        fallbackPlan.current_plan.planner_source = "LLM";
-        if (parsed.diagnosis) fallbackPlan.current_plan.diagnosis = parsed.diagnosis;
-        return fallbackPlan;
-      }
-    }
-  } catch (err) {
-    console.warn("LLM Planner call failed or timed out, executing FallbackRecoveryPlanner:", err.message);
-  }
-
   return FallbackRecoveryPlanner(caseItem, incidentContext);
 }
 

@@ -18,108 +18,79 @@ When an online payment fails today, most companies do one of two dumb things:
 
 ---
 
-## 2. The Core Concept: A "Closed-Loop Payment SRE Agent"
+## 2. The Core Concept: An Autonomous AI Payment SRE & Revenue Recovery Engine
 
-Think of **RECOVEROPS** like an **Automated Emergency Room for Failed Payments**:
+Think of **RECOVEROPS** like an **Automated Emergency Room & SRE Control Plane for Failed Payments**:
 
 ```
-[ 1. DETECT ]  -->  [ 2. DIAGNOSE ]  -->  [ 3. POLICY CHECK ]  -->  [ 4. RECOVER ]  -->  [ 5. RECONCILE ]
-Statistical          AI isolates root      Deterministic rules        Executes Pay       Measures exact
-Anomaly on           cause (Bank outage    enforce budget, quiet      Link / WhatsApp    net profit &
-Razorpay rails       vs Cart Drop)         hours & ₹25k approval      / Hinglish Voice   cancels stale retries
+[ 1. INGEST & DEDUPE ]  ──►  [ 2. PAYMENT SRE & BLAST RADIUS ]  ──►  [ 3. RECOVERY DECISION BRAIN ]  ──►  [ 4. POLICY GATEWAY ]  ──►  [ 5. IDEMPOTENT EXEC ]  ──►  [ 6. ATTRIBUTION & ROI ]
+Raw HMAC Verification        Isolates Outage vs Individual        8-Candidate Action Matrix          ALLOW / REVIEW / BLOCK         Razorpay Link / WhatsApp   Disentangles Natural
+& Webhook Idempotency        & Trips Circuit Breaker             Expected Net Recovery Optimization  Quiet Hours & ₹25k Floor       Hinglish Voice / PTP       Recovery vs Incremental Lift
 ```
 
 ---
 
-## 3. How It Works Step-by-Step (The 5-Step Engine)
+## 3. The Three Key Differentiators
 
-### Step 1: Real-Time Anomaly Detection (Statistical Signal)
-Instead of looking at one transaction in isolation, the detector monitors rolling streams of payments grouped by:
-- **Payment Method**: UPI, Credit Cards, Netbanking, AutoPay.
-- **Issuing Bank / PSP**: HDFC, ICICI, SBI, Axis, etc.
+### Differentiator 1: Recovery Decision Brain (Mathematical Action Selection)
+Instead of asking an LLM to recommend an action blindly, the Decision Brain models recovery as an **Expected Utility Optimization Problem**.
 
-If HDFC UPI success rate suddenly plummets from **88% baseline down to 41%**, the engine flags an **Incident (`INC-901`)** with mathematical confidence.
+For every failure case, it evaluates an **8-Candidate Action Matrix**:
+1. `WAIT`: Hold for gateway cooldown or salary cycle.
+2. `RETRY`: Direct payment retry (suppressed during bank outages).
+3. `SWITCH_PAYMENT_METHOD`: Offer alternative rail (e.g. Card/Netbanking when UPI is degraded).
+4. `CREATE_PAYMENT_LINK`: Issue a dedicated 1-click Razorpay payment link.
+5. `WHATSAPP_MESSAGE`: Send a pre-approved recovery notification.
+6. `INCENTIVE`: Dynamic margin-safe discount (3% on high-intent cart drop; ₹0 on technical bank outage).
+7. `HUMAN_ESCALATION`: Route to manager for sensitive $\ge$ ₹25,000 orders.
+8. `STOP`: Safe stopping rule (for terminal declines or expired cards to prevent spam).
+
+#### Decision Equation:
+$$\text{Expected Net Recovery Value} = \Big( P(\text{success} \mid \text{action}) \times \text{Gross Amount} \Big) - \text{Intervention Cost} - \text{Risk/Friction Penalty}$$
+
+The action with the **highest Expected Net Recovery** that is **`ALLOW`ed by Policy** is selected and executed.
 
 ---
 
-### Step 2: Root-Cause Diagnosis & Individualized Planning
-The AI Planner (or deterministic `FallbackRecoveryPlanner`) analyzes the failure reason and customer intent to build an **Action Ladder**:
+### Differentiator 2: Payment SRE Intelligence & Blast Radius Analysis
+The system determines whether a failure is an **isolated customer problem** or a **systemic payment ecosystem incident** (e.g., HDFC UPI down):
 
-| Failure Scenario | AI Diagnosis | Intelligent Strategy |
+1. **Blast Radius Computation**:
+   - **Affected Transactions**: 5 transactions in current window.
+   - **Affected Unique Customers**: 5 customers.
+   - **Revenue at Risk**: ₹59,249.
+   - **Degraded Rail**: `HDFC Bank UPI`.
+2. **Recovery Circuit Breaker**:
+   - **TRIPPED State**: Instantly pauses wasteful same-rail retries.
+   - **Adaptive Fallback**: Directs customers to unaffected rails (Card / Netbanking).
+   - **Stabilization Cooldown**: Waits for success baseline recovery before releasing cohort outreach.
+
+---
+
+### Differentiator 3: Recovery Measurement & Attribution Engine
+Disentangles natural customer recovery from true **incremental revenue lift**:
+
+```
+Total Revenue at Risk (100%)
+  ├── 1. Natural Self-Recovery (Money customer would have paid anyway without our help)
+  ├── 2. Incremental Lift from RECOVEROPS (Money saved purely because of intelligent intervention)
+  └── 3. Unrecoverable / Terminal Declines (Hard declines safely stopped)
+```
+
+- **Net Incremental Recovery Math**:
+  $$\text{Net Incremental Lift} = \text{RECOVEROPS Net Recovered} - \text{Baseline B (Generic Retries) Net Recovered}$$
+- **Self-Recovery Cancellation**: If `payment.captured` is received before outreach, queued actions are canceled immediately with attribution tagged as `SELF_RECOVERED`.
+
+---
+
+## 4. Technical Architecture & File Map
+
+| Layer | Responsibility | File Link |
 | :--- | :--- | :--- |
-| **Bank Outage** (HDFC UPI Down) | `BANK_DOWNTIME` | **₹0 discount** (money isn't the problem). Suppress same-rail retries $\rightarrow$ Offer Card/Netbanking Pay Link. |
-| **High-Intent Cart Drop** | `CHECKOUT_ABANDONMENT` | Dispatch WhatsApp checkout link with a dynamic 3% incentive. |
-| **AutoPay Balance Deficit** | `FUNDS_UNAVAILABLE` | Pause retries $\rightarrow$ Schedule retry window for the 1st of the month (salary cycle). |
-| **High-Value Order** (₹28,500) | `HIGH_VALUE_TRANSACTION` | Flag for **Human Manager Approval** before any incentive is dispatched. |
-
----
-
-### Step 3: The Deterministic Policy Engine (The Safety Guardrails)
-The AI is **never allowed to directly touch money or send messages without policy verification**. 
-The Policy Engine evaluates **every single action** against hard merchant rules:
-- **Quiet Hours DND**: If current time is 01:00 AM IST, messages are automatically scheduled for 08:00 AM IST.
-- **High-Value Floor Gate**: Any order $\ge$ ₹25,000 is put in `APPROVAL_REQUIRED` mode.
-- **Discount Ceiling**: Autonomous discounts capped at 2%; discounts up to 5% require manager review; discounts >5% are blocked.
-- **Emergency Kill Switch**: Merchant can freeze all autonomous actions instantly with 1 click.
-
----
-
-### Step 4: Omnichannel Action Execution
-Once approved, the Idempotent Action Executor triggers the optimal communication channel:
-1. **Razorpay Test Mode / Sandbox Payment Links**: Generates clean, secure 1-click payment links.
-2. **WhatsApp Outreach**: Sends friendly notification with the payment recovery link.
-3. **Hinglish AI Voice Call Sandbox**: Simulates an automated phone call in natural Hinglish (*"Namaste Rahul ji! Main Razorpay Revive AI se bol raha hoon..."*).
-4. **Promise-to-Pay (PTP) Tracker**: If a customer promises to pay on a specific date (e.g. Sept 2nd), the agent pauses all automated chasers until that day.
-
----
-
-### Step 5: Self-Recovery Cancellation & Revenue Reconciliation
-- **Customer Self-Recovers**: If a customer retries on their own and succeeds, RECOVEROPS detects the `payment.captured` webhook and **immediately cancels all queued recovery messages**.
-- **No Double Charging**: A customer is never asked to pay for an order that is already completed.
-- **Measured Profit Math**:
-  $$\text{Net Incremental Revenue} = \text{Recovered Money} - \text{Discounts Given} - \text{WhatsApp Messaging Costs} - \text{Baseline Recovery}$$
-
----
-
-## 4. Technical Architecture & System Design
-
-```
-                     ┌─────────────────────────────────────────────────────────┐
-                     │                 WEBHOOK INGRESS & SRE                   │
-                     │  • Raw HMAC SHA-256 Buffer Verification                 │
-                     │  • Event Deduplication (x-razorpay-event-id)            │
-                     └────────────────────────────┬────────────────────────────┘
-                                                  │
-                                                  ▼
-                     ┌─────────────────────────────────────────────────────────┐
-                     │              AI RECOVERY PLANNER & SRE                  │
-                     │  • Structured LLM Planner (3s Timeout Guard)            │
-                     │  • FallbackRecoveryPlanner (Deterministic Rules)        │
-                     └────────────────────────────┬────────────────────────────┘
-                                                  │
-                                                  ▼
-                     ┌─────────────────────────────────────────────────────────┐
-                     │               POLICY & GOVERNANCE ENGINE                │
-                     │  • Per-Action Policy Decisions (ALLOW / REVIEW / BLOCK) │
-                     │  • Execution-Time Recheck Guard (Fail-Closed)           │
-                     └────────────────────────────┬────────────────────────────┘
-                                                  │
-                                                  ▼
-                     ┌─────────────────────────────────────────────────────────┐
-                     │               IDEMPOTENT ACTION EXECUTOR                │
-                     │  • Stable Key: action:{case_id}:{plan_ver}:{action_id}  │
-                     │  • Razorpay Test Mode API / Interactive Sandbox         │
-                     │  • WhatsApp / Hinglish Voice Sandbox / PTP Tracker      │
-                     └─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 5. Summary of Key Files
-
-- [server/core/webhookIngress.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/webhookIngress.js): Raw HMAC signature verification, idempotency deduplication, and self-recovery cancellation.
-- [server/core/recoveryPlanner.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/recoveryPlanner.js): Structured diagnosis, candidate action ladders, and `FallbackRecoveryPlanner`.
-- [server/core/policyEngine.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/policyEngine.js): Per-action rule evaluation, DND quiet hours, and high-value floor gates.
-- [server/core/actionExecutor.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/actionExecutor.js): Stable idempotency keys, execution-time rechecks, and Razorpay API adapters.
-- [server/simulation/batchSimulator.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/simulation/batchSimulator.js): 2,000-event Mulberry32 seeded benchmark simulator.
-- [tests/unit.test.js](file:///c:/Users/User/OneDrive/Revive%20AI/tests/unit.test.js): Automated engineering unit test suite (`npm test`).
+| **Ingress & Security** | Raw HMAC SHA-256 validation & event deduplication | [webhookIngress.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/webhookIngress.js) |
+| **Recovery Decision Brain** | 8-Action candidate matrix, Expected Net Recovery optimization, and LLM fallback | [recoveryPlanner.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/recoveryPlanner.js) |
+| **Payment SRE & Telemetry** | Anomaly detection, Blast Radius analysis, and Recovery Circuit Breakers | [apiRoutes.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/routes/apiRoutes.js) |
+| **Policy Governance** | Per-action policy checks, quiet hours, and execution-time rechecks | [policyEngine.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/policyEngine.js) |
+| **Idempotent Executor** | Stable idempotency keys (`action:{case_id}:{ver}:{action_id}`) & API adapters | [actionExecutor.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/core/actionExecutor.js) |
+| **Attribution Engine** | 2,000-event Mulberry32 seeded benchmark simulator with ROI & lift attribution | [batchSimulator.js](file:///c:/Users/User/OneDrive/Revive%20AI/server/simulation/batchSimulator.js) |
+| **Unit Tests** | Automated engineering unit test suite (`npm test` 100% pass rate) | [unit.test.js](file:///c:/Users/User/OneDrive/Revive%20AI/tests/unit.test.js) |

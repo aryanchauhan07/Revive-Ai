@@ -6,7 +6,12 @@ import {
   Search, 
   Phone, 
   Calendar, 
-  ShieldCheck 
+  ShieldCheck,
+  Sparkles,
+  Calculator,
+  Award,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 export default function CaseTimeline({ 
@@ -26,6 +31,7 @@ export default function CaseTimeline({
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedCaseId, setSelectedCaseId] = useState(uniqueCases[0]?.id || 'CASE-101');
   const [ptpDateInput, setPtpDateInput] = useState('');
+  const [showMatrix, setShowMatrix] = useState(true);
 
   // Filtered Cases
   const filteredCases = uniqueCases.filter(c => {
@@ -45,6 +51,8 @@ export default function CaseTimeline({
     setPtpDateInput('');
   };
 
+  const actionMatrix = selectedCase?.current_plan?.candidate_actions_matrix || [];
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
@@ -52,7 +60,7 @@ export default function CaseTimeline({
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Recovery Case Manager</h2>
           <p className="text-xs text-slate-500 font-medium">
-            Customer-specific failure diagnosis, policy rules, and omnichannel actions
+            Recovery Decision Brain action economics matrix, policy evaluation, and omnichannel execution
           </p>
         </div>
 
@@ -90,7 +98,7 @@ export default function CaseTimeline({
             <h3 className="font-extrabold text-slate-500 text-xs uppercase tracking-wider">Cases Queue ({filteredCases.length})</h3>
           </div>
 
-          <div className="space-y-2 overflow-y-auto max-h-[520px] custom-scrollbar">
+          <div className="space-y-2 overflow-y-auto max-h-[580px] custom-scrollbar">
             {filteredCases.length === 0 ? (
               <p className="text-xs text-slate-400 py-8 text-center">No cases found.</p>
             ) : (
@@ -154,10 +162,70 @@ export default function CaseTimeline({
               </div>
 
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-                <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">AI Policy Decision</span>
+                <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Authoritative Policy Gate</span>
                 <p className="text-blue-900 font-bold">{selectedCase.policy_decision?.decision || 'ALLOW'}</p>
                 <span className="text-[11px] text-slate-500 block">{selectedCase.policy_decision?.reason || 'All standard safety guardrails passed.'}</span>
               </div>
+            </div>
+
+            {/* DIFFERENTIATOR 1: RECOVERY DECISION BRAIN MATRIX (Interactive table) */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-blue-200/80 space-y-3 text-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Calculator className="w-4 h-4 text-blue-600" />
+                  <strong className="text-slate-900 font-bold uppercase tracking-wider text-[11px]">Recovery Decision Brain: 8-Action Economics Matrix</strong>
+                </div>
+                <button
+                  onClick={() => setShowMatrix(!showMatrix)}
+                  className="text-xs text-blue-600 font-bold flex items-center space-x-1"
+                >
+                  <span>{showMatrix ? 'Hide Matrix' : 'Show Matrix'}</span>
+                  {showMatrix ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
+              {showMatrix && (
+                <div className="overflow-x-auto custom-scrollbar pt-1">
+                  <table className="w-full text-left text-[11px]">
+                    <thead className="bg-white border-b border-slate-200 text-slate-500 uppercase font-bold text-[9px]">
+                      <tr>
+                        <th className="py-2 px-2.5">Candidate Action</th>
+                        <th className="py-2 px-2.5">P(Success)</th>
+                        <th className="py-2 px-2.5">Expected Gross</th>
+                        <th className="py-2 px-2.5">Intervention Cost</th>
+                        <th className="py-2 px-2.5">Expected Net</th>
+                        <th className="py-2 px-2.5">Policy</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200/60 bg-white">
+                      {actionMatrix.map((item, idx) => (
+                        <tr key={idx} className={item.isOptimal ? 'bg-emerald-50/70 font-bold text-emerald-950' : 'text-slate-700'}>
+                          <td className="py-2 px-2.5 flex items-center space-x-1.5">
+                            {item.isOptimal && <Award className="w-3 h-3 text-emerald-600 shrink-0" />}
+                            <span>{item.action}</span>
+                          </td>
+                          <td className="py-2 px-2.5 font-mono">{Math.round(item.probability * 100)}%</td>
+                          <td className="py-2 px-2.5 font-mono">₹{Math.round(item.expectedGrossPaise / 100).toLocaleString()}</td>
+                          <td className="py-2 px-2.5 font-mono text-slate-500">₹{(item.costPaise / 100).toFixed(2)}</td>
+                          <td className="py-2 px-2.5 font-mono font-bold text-emerald-700">₹{Math.round(item.expectedNetPaise / 100).toLocaleString()}</td>
+                          <td className="py-2 px-2.5">
+                            <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${
+                              item.policyDecision === 'ALLOW' ? 'bg-emerald-100 text-emerald-800' :
+                              item.policyDecision === 'REVIEW' ? 'bg-amber-100 text-amber-800' :
+                              'bg-rose-100 text-rose-800'
+                            }`}>
+                              {item.policyDecision}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="text-[10px] text-slate-500 pt-2 italic">
+                    * Equation: Expected Net Recovery = (P(Success) × Amount) − Intervention Cost − Risk Penalty.
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Promise-to-Pay (PTP) Tracker */}
@@ -188,19 +256,6 @@ export default function CaseTimeline({
                   Set PTP Date (Pause Chaser)
                 </button>
               </form>
-            </div>
-
-            {/* AI Action Plan */}
-            <div className="space-y-2">
-              <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px] block">Customer Action Ladder</span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {(selectedCase.current_plan?.actions || []).map((act, idx) => (
-                  <div key={idx} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-bold text-blue-700">
-                    <span className="text-slate-400 text-[10px] block font-mono">Step #{idx + 1}</span>
-                    <span>{act.action}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Quick Action Triggers */}

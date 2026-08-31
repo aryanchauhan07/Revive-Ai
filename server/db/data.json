@@ -46,6 +46,40 @@
   "paymentAttempts": [],
   "webhookInbox": [
     {
+      "event_id": "evt_self_1788170383715",
+      "received_at": "2026-08-31T09:59:43.715Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.captured",
+      "payload": {
+        "event": "payment.captured",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_self_1788170383712"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_test_dedupe_1788170383697",
+      "received_at": "2026-08-31T09:59:43.697Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.failed",
+      "payload": {
+        "event": "payment.failed",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_dedupe_1"
+            }
+          }
+        }
+      }
+    },
+    {
       "event_id": "evt_self_rec_888",
       "received_at": "2026-08-28T11:06:18.742Z",
       "signature_valid": true,
@@ -831,6 +865,16 @@
     }
   ],
   "recoveryCases": [
+    {
+      "id": "CASE-TEST-SELF-RECOVER",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_self_1788170383712",
+      "amount_paise": 500000,
+      "status": "RECOVERED",
+      "attribution": "SELF_RECOVERED",
+      "recovered_at": "2026-08-31T09:59:43.716Z",
+      "canceled_queued_actions": true
+    },
     {
       "id": "CASE-105",
       "incident_id": "INC-901",
@@ -2695,89 +2739,6 @@
       }
     },
     {
-      "id": "CASE-101",
-      "incident_id": "INC-901",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_N8x29f9A0k1",
-      "customer_name": "Rahul Sharma",
-      "customer_email": "rahul.sharma@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 849900,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "current_plan": {
-        "diagnosis": "Temporary HDFC UPI auth server timeout.",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.85,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 849900,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 849850
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "Mode Assist/Auto",
-          "Within quiet hours check",
-          "Max contact limit OK"
-        ],
-        "requires_approval": false
-      },
-      "created_at": "2026-08-27T05:41:24.161Z"
-    },
-    {
       "id": "CASE-102",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
@@ -3217,6 +3178,76 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1788170383796-889",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.796Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788170383786",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788170383782-987",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.782Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788170383739",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788170383729-171",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.729Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_self_1788170383715",
+      "details": "Processed webhook payment.captured for pay_self_1788170383712. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788170383720-796",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.720Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "CUSTOMER_SELF_RECOVERED",
+      "correlation_id": "CASE-TEST-SELF-RECOVER",
+      "details": "Payment pay_self_1788170383712 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+    },
+    {
+      "id": "AUDIT-1788170383704-482",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.704Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "DUPLICATE_WEBHOOK_IGNORED",
+      "correlation_id": "evt_test_dedupe_1788170383697",
+      "details": "No-op: Webhook event evt_test_dedupe_1788170383697 already processed at 2026-08-31T09:59:43.697Z. Duplicate ignored safely."
+    },
+    {
+      "id": "AUDIT-1788170383697-921",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.697Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_test_dedupe_1788170383697",
+      "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788170383688-555",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-08-31T09:59:43.688Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "SECURITY_WEBHOOK_REJECTED",
+      "correlation_id": "evt_1788170383688_sun3b",
+      "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
     {
       "id": "AUDIT-1788159011776-121",
       "merchant_id": "merchant_razor_01",
@@ -4889,6 +4920,52 @@
     }
   ],
   "batchRuns": [
+    {
+      "id": "RUN-1788170383786",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-08-31T09:59:43.786Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
+    {
+      "id": "RUN-1788170383739",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-08-31T09:59:43.739Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
     {
       "id": "RUN-1788158513500",
       "batch_size": 2000,
