@@ -123,13 +123,26 @@ export default function CaseTimeline({
 
                     <div className="flex items-center justify-between text-[10px] pt-1">
                       <span className="text-slate-400 font-mono">{c.id}</span>
-                      <span className={`px-2 py-0.5 rounded-full border text-[9px] font-bold ${
-                        c.status === 'RECOVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                        c.status === 'APPROVAL_REQUIRED' ? 'bg-amber-50 text-amber-800 border-amber-200' :
-                        'bg-blue-50 text-blue-700 border-blue-200'
-                      }`}>
-                        {c.status}
-                      </span>
+                      <div className="flex items-center space-x-1.5">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCaseId(c.id);
+                            onOpenVoiceCall(c);
+                          }}
+                          className="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[9px] font-bold inline-flex items-center space-x-1"
+                        >
+                          <Phone className="w-2.5 h-2.5" />
+                          <span>Voice</span>
+                        </button>
+                        <span className={`px-2 py-0.5 rounded-full border text-[9px] font-bold ${
+                          c.status === 'RECOVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                          c.status === 'APPROVAL_REQUIRED' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                          'bg-blue-50 text-blue-700 border-blue-200'
+                        }`}>
+                          {c.status}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );

@@ -249,20 +249,23 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals & Drawers */}
+      {/* Modals & Drawers with explicit keys for fresh remounts */}
       <RazorpayCheckoutModal
+        key={selectedCheckoutCase?.id || 'checkout_modal'}
         caseItem={selectedCheckoutCase}
         onClose={() => setSelectedCheckoutCase(null)}
         onCompletePayment={handleCompletePayment}
       />
 
       <WhatsAppSandboxModal
+        key={selectedWhatsAppCase?.id || 'whatsapp_modal'}
         caseItem={selectedWhatsAppCase}
         onClose={() => setSelectedWhatsAppCase(null)}
         onOpenCheckout={setSelectedCheckoutCase}
       />
 
       <VoiceCallSandboxModal
+        key={selectedVoiceCase?.id || 'voice_modal'}
         caseItem={selectedVoiceCase}
         onClose={() => setSelectedVoiceCase(null)}
         onOpenCheckout={setSelectedCheckoutCase}

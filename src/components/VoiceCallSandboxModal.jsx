@@ -7,6 +7,14 @@ export default function VoiceCallSandboxModal({ caseItem, onClose, onOpenCheckou
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const scrollRef = useRef(null);
 
+  // Reset state when a new case is selected
+  useEffect(() => {
+    if (caseItem) {
+      setCallState('DIALING');
+      setTranscriptIndex(0);
+    }
+  }, [caseItem?.id]);
+
   if (!caseItem) return null;
 
   const amountRupees = Math.round(caseItem.amount_paise / 100).toLocaleString();
@@ -16,7 +24,7 @@ export default function VoiceCallSandboxModal({ caseItem, onClose, onOpenCheckou
     { speaker: 'Customer', text: 'Haan ji boliye, kaun?' },
     { speaker: 'AI Agent', text: `Aapka ₹${amountRupees} ka payment bank server timeout ki wajah se fail ho gaya tha.` },
     { speaker: 'Customer', text: 'Achha, kya mera amount bank se deduct hua hai?' },
-    { speaker: 'AI Agent', text: 'Nahi ji, aapka amount safe hai. Kya main aapko alternative 1-click Razorpay payment link WhatsApp par bhej doon?' },
+    { speaker: 'AI Agent', text: 'Nahi ji, aapka amount bilkul safe hai. Kya main aapko alternate 1-click Razorpay payment link WhatsApp par bhej doon?' },
     { speaker: 'Customer', text: 'Haan please bhej dijiye, main abhi complete kar leta hoon.' },
     { speaker: 'AI Agent', text: 'Dhanyawad! Call disconnect hotey hi link bhej diya gaya hai. Have a wonderful day!' }
   ];
@@ -41,7 +49,7 @@ export default function VoiceCallSandboxModal({ caseItem, onClose, onOpenCheckou
       const timer = setTimeout(() => {
         setCallState('CONNECTED');
         speakText(conversationTranscript[0].text);
-      }, 1500);
+      }, 1200);
       return () => clearTimeout(timer);
     }
 
@@ -57,7 +65,7 @@ export default function VoiceCallSandboxModal({ caseItem, onClose, onOpenCheckou
             return prev;
           }
         });
-      }, 2500);
+      }, 2400);
       return () => clearInterval(interval);
     }
   }, [callState]);
