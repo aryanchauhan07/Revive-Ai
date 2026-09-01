@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BrandLogo from './BrandLogo';
 import { 
   ShieldAlert, 
   Activity, 
@@ -50,22 +51,9 @@ export default function Navbar({
       {/* Top Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo & Subtitle */}
-          <div className="flex items-center space-x-3.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 p-0.5 shadow-md shadow-blue-500/15 flex items-center justify-center">
-              <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-                <ShieldAlert className="w-5 h-5 text-blue-600" />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-lg tracking-tight text-slate-900">RECOVER<span className="text-blue-600">OPS</span></span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80 font-semibold">
-                  Razorpay Track 03
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 font-medium">Payment SRE & AI Revenue Recovery Engine</p>
-            </div>
+          {/* Custom Brand Logo */}
+          <div onClick={() => setActiveTab('command')} className="cursor-pointer">
+            <BrandLogo size={38} showText={true} />
           </div>
 
           {/* Controls & Actions */}
