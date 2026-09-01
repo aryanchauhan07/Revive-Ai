@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckSquare, CheckCircle2, XCircle, AlertTriangle, ShieldCheck, ArrowRight, Loader2, Sliders, Tag } from 'lucide-react';
+import { CheckSquare, CheckCircle2, XCircle, AlertTriangle, ShieldCheck, ArrowRight, Loader2, Sliders } from 'lucide-react';
 
 export default function ApprovalCenter({ 
   cases = [], 
@@ -12,20 +12,15 @@ export default function ApprovalCenter({
 
   const currentHighValuePaise = merchant?.policy?.money?.highValueApprovalPaise || 2500000;
   const currentThresholdRupees = Math.round(currentHighValuePaise / 100);
-  const maxAutoDiscountPct = merchant?.policy?.money?.maxAutoDiscountPct || 2;
 
-  // Filter only cases that legitimately require human review based on the active policy
+  // Filter strictly by the amount threshold selected
   const approvalCases = (cases || []).filter(c => {
     if (approvedIds.has(c.id)) return false;
     if (c.status === 'RECOVERED' || c.status === 'CANCELLED') return false;
     if (!c.customer_name || c.id?.startsWith('CASE-TEST')) return false;
 
-    const isHighValue = (c.amount_paise || 0) >= currentHighValuePaise && merchant?.mode !== 'AUTOPILOT';
-    const isDiscountReview = c.current_plan?.actions?.some(
-      a => a.action === 'INCENTIVE' && (a.params?.discountPct || 0) > maxAutoDiscountPct
-    );
-
-    return isHighValue || isDiscountReview;
+    // Strict amount criterion: case amount must be >= active threshold
+    return (c.amount_paise || 0) >= currentHighValuePaise;
   });
 
   const handleApprove = async (caseId, action) => {
@@ -50,25 +45,25 @@ export default function ApprovalCenter({
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Human Manager Approval Queue</h2>
           <p className="text-xs text-slate-500 mt-0.5 font-medium">
-            Policy governance gate for high-value orders (&ge; ₹{currentThresholdRupees.toLocaleString()}) and sensitive recovery incentives (Human-in-the-Loop)
+            Policy governance gate: Filtered strictly for transactions &ge; ₹{currentThresholdRupees.toLocaleString()} (Human-in-the-Loop)
           </p>
         </div>
 
-        {/* Quick Threshold Toggle for Demo Judges */}
+        {/* Quick Threshold Toggle for Amount Criterion */}
         <div className="flex items-center space-x-2 bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
           <span className="text-[11px] font-bold text-slate-500 pl-2 pr-1 flex items-center space-x-1">
             <Sliders className="w-3.5 h-3.5 text-blue-600" />
-            <span>Approval Floor:</span>
+            <span>Threshold:</span>
           </span>
           <button
-            onClick={() => handleQuickThresholdChange(10000)}
+            onClick={() => handleQuickThresholdChange(25000)}
             className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-              currentThresholdRupees === 10000
+              currentThresholdRupees === 25000
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            ₹10k (5 Cases)
+            &ge; ₹25k (1 Case)
           </button>
           <button
             onClick={() => handleQuickThresholdChange(15000)}
@@ -78,17 +73,27 @@ export default function ApprovalCenter({
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            ₹15k (2 Cases)
+            &ge; ₹15k (2 Cases)
           </button>
           <button
-            onClick={() => handleQuickThresholdChange(25000)}
+            onClick={() => handleQuickThresholdChange(10000)}
             className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-              currentThresholdRupees === 25000
+              currentThresholdRupees === 10000
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            ₹25k (1 Case)
+            &ge; ₹10k (5 Cases)
+          </button>
+          <button
+            onClick={() => handleQuickThresholdChange(5000)}
+            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
+              currentThresholdRupees === 5000
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            &ge; ₹5k (8 Cases)
           </button>
         </div>
       </div>
@@ -100,7 +105,7 @@ export default function ApprovalCenter({
           </div>
           <h3 className="text-base font-bold text-slate-900">All Approvals Cleared!</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium">
-            No pending policy exceptions exceeding the active ₹{currentThresholdRupees.toLocaleString()} threshold. Low-risk actions are executing autonomously.
+            No pending transactions exceeding the &ge; ₹{currentThresholdRupees.toLocaleString()} threshold. Low-risk actions are executing autonomously.
           </p>
         </div>
       ) : (
@@ -109,11 +114,6 @@ export default function ApprovalCenter({
             const isProcessing = processingId === c.id;
             const targetAction = c.current_plan?.actions?.find(a => a.action !== 'HUMAN_ESCALATION') || c.current_plan?.actions?.[0] || { action: 'CREATE_PAYMENT_LINK' };
             const amountRupees = Math.round((c.amount_paise || 0) / 100);
-            
-            const isHighValue = (c.amount_paise || 0) >= currentHighValuePaise;
-            const discountAction = c.current_plan?.actions?.find(a => a.action === 'INCENTIVE');
-            const discountPct = discountAction?.params?.discountPct || 0;
-            const isDiscountReview = discountPct > maxAutoDiscountPct && !isHighValue;
 
             return (
               <div key={c.id} className="glass-panel rounded-2xl p-5 border border-amber-300 bg-amber-50/40 shadow-card space-y-4 animate-fade-in">
@@ -121,7 +121,7 @@ export default function ApprovalCenter({
                   <div>
                     <div className="flex items-center space-x-2">
                       <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-bold border border-amber-300">
-                        {isHighValue ? 'HIGH-VALUE APPROVAL' : 'INCENTIVE REVIEW'}
+                        APPROVAL REQUIRED
                       </span>
                       <h3 className="font-extrabold text-slate-900 text-base">{c.customer_name}</h3>
                     </div>
@@ -132,9 +132,7 @@ export default function ApprovalCenter({
                   <div className="text-left sm:text-right">
                     <div className="text-2xl font-extrabold text-slate-900">₹{amountRupees.toLocaleString()}</div>
                     <span className="text-xs text-amber-800 font-bold">
-                      {isHighValue 
-                        ? `Exceeds ₹${currentThresholdRupees.toLocaleString()} Floor` 
-                        : `${discountPct}% Dynamic Discount Review`}
+                      &ge; ₹{currentThresholdRupees.toLocaleString()} Threshold Met
                     </span>
                   </div>
                 </div>
@@ -143,16 +141,14 @@ export default function ApprovalCenter({
                 <div className="p-3.5 rounded-xl bg-white border border-amber-200 text-xs space-y-1">
                   <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Policy Gate Trigger Reason</span>
                   <p className="text-slate-800 font-semibold">
-                    {isHighValue
-                      ? `Transaction value (₹${amountRupees.toLocaleString()}) meets or exceeds the active high-value threshold (₹${currentThresholdRupees.toLocaleString()}). Requires human manager sign-off before dispatching link.`
-                      : `Proposed recovery incentive (${discountPct}% dynamic discount) exceeds the autonomous auto-discount limit (${maxAutoDiscountPct}%). Requires manager review.`}
+                    Transaction value (₹{amountRupees.toLocaleString()}) meets or exceeds the active policy threshold (₹{currentThresholdRupees.toLocaleString()}). Requires explicit human manager approval before dispatching recovery link.
                   </p>
                 </div>
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                   <div className="text-xs text-slate-600 font-medium">
-                    Proposed Action: <strong className="text-blue-700 font-bold">{targetAction.action}</strong> {discountPct > 0 ? `(${discountPct}% Discount Link)` : '(1-Click Recovery Payment Link)'}
+                    Proposed Action: <strong className="text-blue-700 font-bold">{targetAction.action}</strong> (1-Click Recovery Payment Link)
                   </div>
                   <div className="flex items-center space-x-3">
                     <button
