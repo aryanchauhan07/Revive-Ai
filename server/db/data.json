@@ -16,9 +16,9 @@
         "HUMAN_ESCALATION": "REQUIRE_APPROVAL"
       },
       "money": {
-        "maxAutoDiscountPct": 4,
-        "maxDiscountPct": 4,
-        "highValueApprovalPaise": 2000000,
+        "maxAutoDiscountPct": 2,
+        "maxDiscountPct": 5,
+        "highValueApprovalPaise": 2500000,
         "monthlyIncentiveBudgetPaise": 5000000,
         "minGrossMarginPct": 18
       },
@@ -45,6 +45,40 @@
   "payments": [],
   "paymentAttempts": [],
   "webhookInbox": [
+    {
+      "event_id": "evt_self_1788254204526",
+      "received_at": "2026-09-01T09:16:44.527Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.captured",
+      "payload": {
+        "event": "payment.captured",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_self_1788254204523"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_test_dedupe_1788254204498",
+      "received_at": "2026-09-01T09:16:44.498Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.failed",
+      "payload": {
+        "event": "payment.failed",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_dedupe_1"
+            }
+          }
+        }
+      }
+    },
     {
       "event_id": "evt_self_1788245878485",
       "received_at": "2026-09-01T06:57:58.485Z",
@@ -148,7 +182,7 @@
       "title": "HDFC Bank UPI Authorization Degradation",
       "status": "OPEN",
       "severity": "HIGH",
-      "started_at": "2026-09-01T02:14:03.238Z",
+      "started_at": "2026-09-01T09:07:22.549Z",
       "dimensions": {
         "method": "upi",
         "issuer": "HDFC Bank",
@@ -196,7 +230,7 @@
       "title": "ICICI Card 3DS Authentication Timeout",
       "status": "OPEN",
       "severity": "MEDIUM",
-      "started_at": "2026-09-01T00:14:03.239Z",
+      "started_at": "2026-09-01T09:07:10.592Z",
       "dimensions": {
         "method": "card",
         "issuer": "ICICI Bank",
@@ -244,7 +278,7 @@
       "title": "SBI AutoPay e-Mandate Balance Deficit",
       "status": "OPEN",
       "severity": "LOW",
-      "started_at": "2026-08-31T16:14:03.239Z",
+      "started_at": "2026-09-01T09:07:16.298Z",
       "dimensions": {
         "method": "mandate",
         "issuer": "SBI Bank",
@@ -281,6 +315,50 @@
           "value": "End-of-month timing deficit (28th-30th)"
         }
       ]
+    },
+    {
+      "id": "INC-905",
+      "merchant_id": "merchant_razor_01",
+      "title": "B2B Overdue Invoices & Enterprise Receivables Chaser",
+      "status": "OPEN",
+      "severity": "MEDIUM",
+      "started_at": "2026-09-01T08:13:20.695Z",
+      "dimensions": {
+        "method": "invoice",
+        "issuer": "Corporate Netbanking",
+        "step": "receivables_collection",
+        "reason": "net30_overdue"
+      },
+      "baseline_success_rate": 0.9,
+      "current_success_rate": 0.62,
+      "z_score": -3.1,
+      "affected_count": 1,
+      "revenue_at_risk_paise": 14500000,
+      "root_cause": "Net-30 payment terms exceeded by 14 days. Corporate AP reconciliation delay.",
+      "recommended_approach": "Dispatch automated statement of account via WhatsApp with 1-click B2B payment link and split installment option.",
+      "sre_blast_radius": {
+        "affected_txns": 1,
+        "affected_customers": 1,
+        "revenue_at_risk_paise": 14500000,
+        "degraded_rail": "B2B Invoices",
+        "incident_scope": "ENTERPRISE_RECEIVABLES"
+      },
+      "circuit_breaker": {
+        "status": "WATCH",
+        "suppress_same_rail_retries": false,
+        "recommended_alternate_rail": "B2B Instant Link",
+        "cooldown_remaining_minutes": 0
+      },
+      "evidence": [
+        {
+          "key": "Invoice Terms",
+          "value": "Net-30 Past Due (42 days elapsed)"
+        },
+        {
+          "key": "AP Contact",
+          "value": "Statement of Account dispatched to accounts@techmatrix.io"
+        }
+      ]
     }
   ],
   "recoveryCases": [
@@ -288,7 +366,7 @@
       "id": "CASE-101",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_hdfc_01",
+      "provider_payment_id": "pay_inc-901_1",
       "customer_name": "Ananya Roy",
       "customer_email": "ananya.roy@example.com",
       "customer_phone": "+919876543210",
@@ -364,19 +442,19 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T03:44:03.239Z"
+      "created_at": "2026-09-01T09:07:22.556Z"
     },
     {
       "id": "CASE-102",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_hdfc_02",
+      "provider_payment_id": "pay_inc-901_2",
       "customer_name": "Rahul Sharma",
       "customer_email": "rahul.sharma@example.com",
       "customer_phone": "+919812345678",
       "amount_paise": 720000,
       "currency": "INR",
-      "status": "RECOVERED",
+      "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -436,7 +514,7 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-01T03:34:03.239Z",
+      "created_at": "2026-09-01T09:07:22.572Z",
       "recovered_at": "2026-09-01T06:56:46.123Z",
       "payment_method_used": "upi",
       "attribution": "RECOVEROPS_ASSISTED"
@@ -445,9 +523,9 @@
       "id": "CASE-103",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_hdfc_03",
+      "provider_payment_id": "pay_inc-901_3",
       "customer_name": "Priya Patel",
-      "customer_email": "priya.p@example.com",
+      "customer_email": "priya.patel@example.com",
       "customer_phone": "+919898989898",
       "amount_paise": 2850000,
       "currency": "INR",
@@ -511,15 +589,15 @@
         ],
         "reason": "High-value order (₹28,500 >= ₹20,000) requires human manager approval."
       },
-      "created_at": "2026-09-01T03:14:03.239Z"
+      "created_at": "2026-09-01T09:07:22.588Z"
     },
     {
       "id": "CASE-104",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_hdfc_04",
+      "provider_payment_id": "pay_inc-901_4",
       "customer_name": "Sneha Mehta",
-      "customer_email": "sneha.m@example.com",
+      "customer_email": "sneha.mehta@example.com",
       "customer_phone": "+919877766554",
       "amount_paise": 649900,
       "currency": "INR",
@@ -584,15 +662,15 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T02:54:03.239Z"
+      "created_at": "2026-09-01T09:07:22.604Z"
     },
     {
       "id": "CASE-105",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_hdfc_05",
+      "provider_payment_id": "pay_inc-901_5",
       "customer_name": "Vikram Singh",
-      "customer_email": "vikram.s@example.com",
+      "customer_email": "vikram.singh@example.com",
       "customer_phone": "+919866655443",
       "amount_paise": 1220000,
       "currency": "INR",
@@ -647,15 +725,15 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T02:44:03.239Z"
+      "created_at": "2026-09-01T09:07:22.616Z"
     },
     {
       "id": "CASE-201",
       "incident_id": "INC-902",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_icici_01",
+      "provider_payment_id": "pay_inc-902_1",
       "customer_name": "Rohan Kapoor",
-      "customer_email": "rohan.k@example.com",
+      "customer_email": "rohan.kapoor@example.com",
       "customer_phone": "+919811122233",
       "amount_paise": 1450000,
       "currency": "INR",
@@ -664,7 +742,7 @@
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
         "error_source": "issuer_bank",
-        "error_step": "authentication",
+        "error_step": "payment_authorization",
         "error_reason": "otp_timeout_expired",
         "method": "card",
         "issuer": "ICICI Bank"
@@ -711,15 +789,15 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T02:34:03.239Z"
+      "created_at": "2026-09-01T09:07:10.603Z"
     },
     {
       "id": "CASE-202",
       "incident_id": "INC-902",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_icici_02",
+      "provider_payment_id": "pay_inc-902_2",
       "customer_name": "Meera Nair",
-      "customer_email": "meera.n@example.com",
+      "customer_email": "meera.nair@example.com",
       "customer_phone": "+919822233344",
       "amount_paise": 890000,
       "currency": "INR",
@@ -728,7 +806,7 @@
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
         "error_source": "issuer_bank",
-        "error_step": "authentication",
+        "error_step": "payment_authorization",
         "error_reason": "card_auth_failed",
         "method": "card",
         "issuer": "ICICI Bank"
@@ -774,19 +852,19 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T02:14:03.239Z"
+      "created_at": "2026-09-01T09:07:10.640Z"
     },
     {
       "id": "CASE-203",
       "incident_id": "INC-902",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_icici_03",
+      "provider_payment_id": "pay_inc-902_3",
       "customer_name": "Aditya Verma",
-      "customer_email": "aditya.v@example.com",
+      "customer_email": "aditya.verma@example.com",
       "customer_phone": "+919833344455",
       "amount_paise": 2390000,
       "currency": "INR",
-      "status": "APPROVAL_REQUIRED",
+      "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -838,24 +916,24 @@
         ],
         "reason": "High-value order (₹23,900 >= ₹20,000) requires human manager approval."
       },
-      "created_at": "2026-09-01T02:04:03.239Z"
+      "created_at": "2026-09-01T09:07:10.655Z"
     },
     {
       "id": "CASE-401",
       "incident_id": "INC-904",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_sbi_01",
+      "provider_payment_id": "pay_inc-904_1",
       "customer_name": "Karan Malhotra",
-      "customer_email": "karan.m@example.com",
+      "customer_email": "karan.malhotra@example.com",
       "customer_phone": "+919844455566",
       "amount_paise": 1240000,
       "currency": "INR",
       "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
-        "error_code": "BAD_REQUEST_ERROR",
-        "error_source": "customer",
-        "error_step": "debit",
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
         "error_reason": "insufficient_funds",
         "method": "mandate",
         "issuer": "SBI Bank"
@@ -901,24 +979,24 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T01:54:03.239Z"
+      "created_at": "2026-09-01T09:07:16.305Z"
     },
     {
       "id": "CASE-402",
       "incident_id": "INC-904",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_sbi_02",
+      "provider_payment_id": "pay_inc-904_2",
       "customer_name": "Divya Joshi",
-      "customer_email": "divya.j@example.com",
+      "customer_email": "divya.joshi@example.com",
       "customer_phone": "+919855566677",
       "amount_paise": 890000,
       "currency": "INR",
       "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
-        "error_code": "BAD_REQUEST_ERROR",
-        "error_source": "customer",
-        "error_step": "debit",
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
         "error_reason": "insufficient_funds",
         "method": "mandate",
         "issuer": "SBI Bank"
@@ -964,7 +1042,80 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T01:44:03.239Z"
+      "created_at": "2026-09-01T09:07:16.323Z"
+    },
+    {
+      "id": "CASE-501",
+      "incident_id": "INC-905",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "inv_tech_881",
+      "customer_name": "TechMatrix Cloud (Arjun Singhania)",
+      "customer_email": "arjun@techmatrix.io",
+      "customer_phone": "+919833445566",
+      "amount_paise": 14500000,
+      "currency": "INR",
+      "status": "APPROVAL_REQUIRED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "INVOICE_OVERDUE",
+        "error_source": "b2b_client",
+        "error_step": "accounts_payable",
+        "error_reason": "net30_past_due_42days",
+        "method": "invoice",
+        "issuer": "Corporate Netbanking"
+      },
+      "current_plan": {
+        "diagnosis": "B2B Net-30 invoice overdue by 14 days. AP reconciliation delay identified.",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.92,
+          "confidenceBand": "HIGH"
+        },
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 14500000,
+          "actionCostPaise": 250,
+          "expectedNetValuePaise": 14497500
+        },
+        "actions": [
+          {
+            "action": "HUMAN_ESCALATION",
+            "params": {
+              "reason": "High-value enterprise invoice >= ₹20k"
+            },
+            "reasonCodes": [
+              "ENTERPRISE_GOVERNANCE"
+            ]
+          },
+          {
+            "action": "MESSAGE",
+            "params": {
+              "channel": "whatsapp",
+              "template": "statement_of_account"
+            },
+            "reasonCodes": [
+              "AP_LEDGER_REMINDER"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 4320
+            },
+            "reasonCodes": [
+              "INSTANT_B2B_SETTLEMENT"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "REVIEW",
+        "matched_rules": [
+          "HIGH_VALUE_THRESHOLD (145000 >= ₹20,000)"
+        ],
+        "requires_approval": true,
+        "reason": "High-value enterprise invoice (₹1,45,000 >= ₹20,000) requires human manager review."
+      },
+      "created_at": "2026-09-01T08:13:20.696Z"
     }
   ],
   "actionExecutions": [
@@ -1595,6 +1746,146 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1788254204546-396",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.546Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788254204544",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788254204541-862",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.541Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788254204539",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788254204531-683",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.531Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_self_1788254204526",
+      "details": "Processed webhook payment.captured for pay_self_1788254204523. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788254204529-249",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.529Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "CUSTOMER_SELF_RECOVERED",
+      "correlation_id": "CASE-TEST-SELF-RECOVER",
+      "details": "Payment pay_self_1788254204523 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+    },
+    {
+      "id": "AUDIT-1788254204502-695",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.502Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "DUPLICATE_WEBHOOK_IGNORED",
+      "correlation_id": "evt_test_dedupe_1788254204498",
+      "details": "No-op: Webhook event evt_test_dedupe_1788254204498 already processed at 2026-09-01T09:16:44.498Z. Duplicate ignored safely."
+    },
+    {
+      "id": "AUDIT-1788254204498-557",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.498Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_test_dedupe_1788254204498",
+      "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788254204493-807",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:16:44.493Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "SECURITY_WEBHOOK_REJECTED",
+      "correlation_id": "evt_1788254204493_grury",
+      "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
+    {
+      "id": "AUDIT-1788253642628-0",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:07:22.628Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-901",
+      "details": "HDFC Bank UPI Authorization Degradation opened. Blast Radius: 5 customers, ₹59,249 at risk. Circuit breaker: TRIPPED."
+    },
+    {
+      "id": "AUDIT-1788253636344-182",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:07:16.344Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-904",
+      "details": "SBI AutoPay e-Mandate Balance Deficit opened. Blast Radius: 2 customers, ₹21,300 at risk. Circuit breaker: ACTIVE."
+    },
+    {
+      "id": "AUDIT-1788253630669-175",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T09:07:10.669Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-902",
+      "details": "ICICI Card 3DS Authentication Timeout opened. Blast Radius: 3 customers, ₹47,300 at risk. Circuit breaker: WATCH."
+    },
+    {
+      "id": "AUDIT-1788250484958-676",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T08:14:44.958Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=4%, HighValueFloor=₹20000. Re-evaluated active cases."
+    },
+    {
+      "id": "AUDIT-1788250479235-700",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T08:14:39.236Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=4%, HighValueFloor=₹20000. Re-evaluated active cases."
+    },
+    {
+      "id": "AUDIT-1788250458733-774",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T08:14:18.733Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=4%, HighValueFloor=₹20000. Re-evaluated active cases."
+    },
+    {
+      "id": "AUDIT-1788250454349-580",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T08:14:14.349Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=4%, HighValueFloor=₹20000. Re-evaluated active cases."
+    },
     {
       "id": "AUDIT-1788250087872-843",
       "merchant_id": "merchant_razor_01",
@@ -4504,149 +4795,55 @@
       "action": "ACTION_EXECUTED",
       "correlation_id": "CASE-102",
       "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362911. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902362737-336",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:42.737Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362732. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902362064-821",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:42.064Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362057. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902335413-128",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:15.414Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902335407. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902335209-257",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:15.209Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902335203. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334990-130",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.990Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334987. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334771-177",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.771Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334769. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334576-384",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.576Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334568. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334353-424",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.353Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334349. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902333429-395",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:13.429Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902333423. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902332395-81",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:12.395Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action INCENTIVE with Idempotency Key action:CASE-102:INCENTIVE:1787902332389. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902330573-273",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:10.573Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action INCENTIVE with Idempotency Key action:CASE-102:INCENTIVE:1787902330568. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902328193-178",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:08.193Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action INCENTIVE with Idempotency Key action:CASE-102:INCENTIVE:1787902328188. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787899999351-617",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T06:53:19.351Z",
-      "actor_type": "user",
-      "actor_id": "customer",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-9225",
-      "details": "Executed action PAYMENT_CAPTURED with Idempotency Key action:CASE-9225:PAYMENT_CAPTURED:1787899999343. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787897948736-362",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T06:19:08.736Z",
-      "actor_type": "user",
-      "actor_id": "merchant_admin",
-      "action": "KILL_SWITCH_TOGGLED",
-      "correlation_id": "merchant_razor_01",
-      "details": "Emergency Kill Switch DEACTIVATED"
     }
   ],
   "batchRuns": [
+    {
+      "id": "RUN-1788254204544",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T09:16:44.544Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
+    {
+      "id": "RUN-1788254204539",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T09:16:44.539Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
     {
       "id": "RUN-1788249976123",
       "batch_size": 2000,

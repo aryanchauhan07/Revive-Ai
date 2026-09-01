@@ -46,19 +46,20 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
     try {
       await onSavePolicy(updatedPolicy);
 
-      // Trigger compact, centered confirmation pill
+      // Trigger rich floating confirmation notification
       setNotification({
         id: Date.now(),
-        title: 'Policy Configuration Saved & Synchronized',
+        title: 'Policy Configuration Saved & Synchronized!',
         mode: mode,
         threshold: Number(highValueThreshold),
-        discountCap: Number(maxAutoDiscountPct)
+        discountCap: Number(maxAutoDiscountPct),
+        timestamp: new Date().toLocaleTimeString()
       });
 
-      // Auto-dismiss after 3 seconds
+      // Auto-dismiss after 4 seconds
       setTimeout(() => {
         setNotification(null);
-      }, 3000);
+      }, 4000);
     } catch (err) {
       console.error("Save policy error:", err);
     } finally {
@@ -68,29 +69,46 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
 
   return (
     <div className="space-y-6 relative">
-      {/* Compact Centered Top Pill Notification (Dynamic Island Style) */}
+      {/* Floating Success Toast Notification */}
       {notification && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-bounce-subtle">
-          <div className="bg-slate-900/95 backdrop-blur-md text-white border border-emerald-500/50 rounded-full px-4 py-2 shadow-2xl shadow-slate-950/30 flex items-center space-x-3 text-xs">
-            <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-              <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[3]" />
+        <div className="fixed top-20 right-8 z-50 max-w-md w-full bg-white border-2 border-emerald-500 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20 animate-slide-in-right space-y-2.5">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-xs tracking-tight">
+                  {notification.title}
+                </h4>
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Synchronized with Recovery Decision Brain at {notification.timestamp}
+                </p>
+              </div>
             </div>
-            
-            <div className="flex items-center space-x-2">
-              <span className="font-extrabold text-slate-100">{notification.title}</span>
-              <span className="text-slate-500">•</span>
-              <span className="text-emerald-400 font-mono font-bold text-[11px]">
-                {notification.mode} | ₹{notification.threshold.toLocaleString()} Floor | {notification.discountCap}% Auto-Cap
-              </span>
-            </div>
-
             <button 
               onClick={() => setNotification(null)}
-              className="text-slate-400 hover:text-white p-0.5 rounded-full transition-colors ml-1"
+              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
+
+          <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-100 text-[10px] font-mono">
+            <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
+              Mode: {notification.mode}
+            </span>
+            <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200">
+              Floor: ₹{notification.threshold.toLocaleString()}
+            </span>
+            <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
+              Auto Discount: {notification.discountCap}%
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-600 font-medium">
+            ⚡ All customer recovery queues and the Human Approval Center have been dynamically re-evaluated in real time.
+          </p>
         </div>
       )}
 
