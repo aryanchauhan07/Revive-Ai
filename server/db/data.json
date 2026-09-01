@@ -46,6 +46,74 @@
   "paymentAttempts": [],
   "webhookInbox": [
     {
+      "event_id": "evt_self_1788235945482",
+      "received_at": "2026-09-01T04:12:25.482Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.captured",
+      "payload": {
+        "event": "payment.captured",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_self_1788235945480"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_test_dedupe_1788235945471",
+      "received_at": "2026-09-01T04:12:25.471Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.failed",
+      "payload": {
+        "event": "payment.failed",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_dedupe_1"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_self_1788235896357",
+      "received_at": "2026-09-01T04:11:36.357Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.captured",
+      "payload": {
+        "event": "payment.captured",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_self_1788235896355"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_test_dedupe_1788235896347",
+      "received_at": "2026-09-01T04:11:36.347Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.failed",
+      "payload": {
+        "event": "payment.failed",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_dedupe_1"
+            }
+          }
+        }
+      }
+    },
+    {
       "event_id": "evt_self_1788235435155",
       "received_at": "2026-09-01T04:03:55.155Z",
       "signature_valid": true,
@@ -137,755 +205,30 @@
           "value": "Status API corroborates HDFC Bank PSP downtime"
         }
       ]
-    },
-    {
-      "id": "INC-324",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T08:47:16.571Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-791",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T08:47:14.758Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-613",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T08:47:14.465Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-163",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T08:46:27.630Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-431",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T08:43:18.030Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-312",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T07:34:05.056Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-460",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T07:34:03.553Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-979",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T06:18:15.705Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-415",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-28T06:17:55.276Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-239",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T11:44:19.985Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-856",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T10:57:56.939Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-985",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T10:43:14.552Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-192",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T10:43:12.247Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-650",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T09:50:56.892Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-307",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T09:50:55.064Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-912",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T09:50:53.607Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-630",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T09:00:47.111Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-733",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T09:00:45.657Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-285",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T07:50:06.444Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-468",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T07:50:05.441Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-695",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T07:50:03.775Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-806",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T06:35:55.081Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-431",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-27T06:22:53.583Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 58,
-      "revenue_at_risk_paise": 4950000,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Correlated",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        }
-      ]
-    },
-    {
-      "id": "INC-901",
-      "merchant_id": "merchant_razor_01",
-      "title": "HDFC Bank UPI Authorization Degradation",
-      "status": "OPEN",
-      "severity": "HIGH",
-      "started_at": "2026-08-31T10:31:10.756Z",
-      "dimensions": {
-        "method": "upi",
-        "issuer": "HDFC Bank",
-        "step": "authorization",
-        "reason": "gateway_technical_error"
-      },
-      "baseline_success_rate": 0.88,
-      "current_success_rate": 0.38,
-      "z_score": -4.2,
-      "affected_count": 5,
-      "revenue_at_risk_paise": 5924900,
-      "root_cause": "HDFC Bank UPI partner gateway timeouts detected. Direct retries failing at 84%.",
-      "evidence": [
-        {
-          "key": "Rolling Success Rate",
-          "value": "88% -> 38% Z-score -4.2"
-        },
-        {
-          "key": "Razorpay Downtime Match",
-          "value": "Status API corroborates HDFC Bank PSP downtime"
-        },
-        {
-          "key": "Method Concentration",
-          "value": "92% of failures localized to UPI rail"
-        }
-      ],
-      "recommended_approach": "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp."
     }
   ],
   "recoveryCases": [
     {
       "id": "CASE-TEST-SELF-RECOVER",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_self_1788235435148",
+      "provider_payment_id": "pay_self_1788235945480",
       "amount_paise": 500000,
       "status": "RECOVERED",
       "attribution": "SELF_RECOVERED",
-      "recovered_at": "2026-09-01T04:03:55.155Z",
+      "recovered_at": "2026-09-01T04:12:25.482Z",
       "canceled_queued_actions": true
     },
     {
-      "id": "CASE-105",
+      "id": "CASE-101",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1788172270963_4",
-      "customer_name": "Vikram Singh",
-      "customer_email": "vikram.singh@example.com",
-      "customer_phone": "+919866655443",
-      "amount_paise": 1220000,
+      "provider_payment_id": "pay_hdfc_01",
+      "customer_name": "Ananya Roy",
+      "customer_email": "ananya.roy@example.com",
+      "customer_phone": "+919876543210",
+      "amount_paise": 485000,
       "currency": "INR",
-      "status": "CONTACTED",
+      "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -895,19 +238,17 @@
         "method": "upi",
         "issuer": "HDFC Bank"
       },
-      "created_at": "2026-08-31T10:31:10.964Z",
       "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "diagnosis": "Temporary HDFC UPI auth server timeout.",
         "recoverability": {
           "eligible": true,
           "probability": 0.88,
           "confidenceBand": "HIGH"
         },
         "expectedEconomics": {
-          "grossRecoveryValuePaise": 1220000,
+          "grossRecoveryValuePaise": 485000,
           "actionCostPaise": 50,
-          "expectedNetValuePaise": 1073550
+          "expectedNetValuePaise": 484950
         },
         "actions": [
           {
@@ -952,39 +293,169 @@
       "policy_decision": {
         "decision": "ALLOW",
         "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
+          "Mode Assist/Auto",
+          "Within quiet hours check",
+          "Max contact limit OK"
         ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
+        "requires_approval": false
       },
-      "last_execution": {
-        "id": "EXEC-1788189496268",
-        "case_id": "CASE-105",
-        "idempotency_key": "action:CASE-105:PAYMENT_CAPTURED:1788189496268",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "upi"
+      "created_at": "2026-09-01T03:41:25.248Z"
+    },
+    {
+      "id": "CASE-102",
+      "incident_id": "INC-901",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_hdfc_02",
+      "customer_name": "Rahul Sharma",
+      "customer_email": "rahul.sharma@example.com",
+      "customer_phone": "+919812345678",
+      "amount_paise": 720000,
+      "currency": "INR",
+      "status": "CONTACTED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
+        "error_reason": "gateway_technical_error",
+        "method": "upi",
+        "issuer": "HDFC Bank"
+      },
+      "current_plan": {
+        "diagnosis": "HDFC UPI partner PSP degradation.",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.82,
+          "confidenceBand": "HIGH"
         },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 720000,
+          "actionCostPaise": 50,
+          "expectedNetValuePaise": 719950
         },
-        "executed_at": "2026-08-31T15:18:16.268Z",
-        "status": "COMPLETED"
-      }
+        "actions": [
+          {
+            "action": "SWITCH_METHOD",
+            "params": {
+              "suggestedMethod": "card_or_netbanking"
+            },
+            "reasonCodes": [
+              "REROUTE_HEALTHY_RAIL"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 60
+            },
+            "reasonCodes": [
+              "INSTANT_CHECKOUT_RESUME"
+            ]
+          },
+          {
+            "action": "MESSAGE",
+            "params": {
+              "channel": "whatsapp",
+              "template": "payment_help"
+            },
+            "reasonCodes": [
+              "FRIENDLY_NUDGE"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "ALLOW",
+        "matched_rules": [
+          "Standard auto-execution allowed"
+        ],
+        "requires_approval": false
+      },
+      "created_at": "2026-09-01T03:31:25.250Z"
+    },
+    {
+      "id": "CASE-103",
+      "incident_id": "INC-901",
+      "merchant_id": "merchant_razor_01",
+      "provider_payment_id": "pay_hdfc_03",
+      "customer_name": "Priya Patel",
+      "customer_email": "priya.p@example.com",
+      "customer_phone": "+919898989898",
+      "amount_paise": 2850000,
+      "currency": "INR",
+      "status": "APPROVAL_REQUIRED",
+      "eligibility": "ELIGIBLE",
+      "failure_reason": {
+        "error_code": "GATEWAY_ERROR",
+        "error_source": "issuer_bank",
+        "error_step": "payment_authorization",
+        "error_reason": "gateway_technical_error",
+        "method": "upi",
+        "issuer": "HDFC Bank"
+      },
+      "current_plan": {
+        "diagnosis": "High-value transaction during HDFC UPI partner degradation.",
+        "recoverability": {
+          "eligible": true,
+          "probability": 0.95,
+          "confidenceBand": "HIGH"
+        },
+        "expectedEconomics": {
+          "grossRecoveryValuePaise": 2850000,
+          "actionCostPaise": 500,
+          "expectedNetValuePaise": 2849500
+        },
+        "actions": [
+          {
+            "action": "HUMAN_ESCALATION",
+            "params": {
+              "reason": "High-value transaction >= ₹25,000 threshold"
+            },
+            "reasonCodes": [
+              "MONEY_SAFETY_FLOOR"
+            ]
+          },
+          {
+            "action": "SWITCH_METHOD",
+            "params": {
+              "suggestedMethod": "card_or_netbanking"
+            },
+            "reasonCodes": [
+              "BYPASS_DEGRADED_RAIL"
+            ]
+          },
+          {
+            "action": "CREATE_LINK",
+            "params": {
+              "expiresMinutes": 180
+            },
+            "reasonCodes": [
+              "MANAGER_APPROVED_LINK"
+            ]
+          }
+        ]
+      },
+      "policy_decision": {
+        "decision": "REVIEW",
+        "matched_rules": [
+          "HIGH_VALUE_THRESHOLD (28500 >= ₹25,000)"
+        ],
+        "requires_approval": true,
+        "reason": "High-value transaction requires explicit human manager approval before dispatching recovery link."
+      },
+      "created_at": "2026-09-01T03:11:25.250Z"
     },
     {
       "id": "CASE-104",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1788172270908_3",
+      "provider_payment_id": "pay_hdfc_04",
       "customer_name": "Sneha Mehta",
-      "customer_email": "sneha.mehta@example.com",
+      "customer_email": "sneha.m@example.com",
       "customer_phone": "+919877766554",
       "amount_paise": 649900,
       "currency": "INR",
-      "status": "PLANNED",
+      "status": "CONTACTED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "BAD_REQUEST_ERROR",
@@ -994,56 +465,45 @@
         "method": "upi",
         "issuer": "HDFC Bank"
       },
-      "created_at": "2026-08-31T10:31:10.908Z",
       "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "diagnosis": "Customer abandoned checkout due to friction during bank timeout.",
         "recoverability": {
           "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
+          "probability": 0.78,
+          "confidenceBand": "MEDIUM"
         },
         "expectedEconomics": {
           "grossRecoveryValuePaise": 649900,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 571862
+          "actionCostPaise": 19500,
+          "expectedNetValuePaise": 630400
         },
         "actions": [
           {
-            "action": "WAIT",
+            "action": "MESSAGE",
             "params": {
-              "waitMinutes": 15
+              "channel": "whatsapp",
+              "template": "cart_recovery_discount"
             },
             "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+              "RE_ENGAGE_CUSTOMER"
             ]
           },
           {
-            "action": "SWITCH_METHOD",
+            "action": "INCENTIVE",
             "params": {
-              "suggestedMethod": "card_or_netbanking"
+              "discountPct": 3
             },
             "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
+              "APPLY_AUTHORIZED_DYNAMIC_DISCOUNT"
             ]
           },
           {
             "action": "CREATE_LINK",
             "params": {
-              "expiresMinutes": 120
+              "expiresMinutes": 60
             },
             "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
+              "CHECKOUT_RESUME_LINK"
             ]
           }
         ]
@@ -1051,175 +511,22 @@
       "policy_decision": {
         "decision": "ALLOW",
         "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
+          "3% discount within 5% ceiling",
+          "Quiet hours OK"
         ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-103",
-      "incident_id": "INC-901",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1788172270867_2",
-      "customer_name": "Priya Patel",
-      "customer_email": "priya.patel@example.com",
-      "customer_phone": "+919898989898",
-      "amount_paise": 2850000,
-      "currency": "INR",
-      "status": "CONTACTED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-31T10:31:10.867Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 2850000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 2507950
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          },
-          {
-            "action": "HUMAN_ESCALATION",
-            "params": {
-              "reason": "Transaction value exceeds ₹25,000"
-            },
-            "reasonCodes": [
-              "HIGH_VALUE_REVIEW"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "REVIEW",
-        "matched_rules": [
-          "HIGH_VALUE_THRESHOLD (28500 >= ₹25000)"
-        ],
-        "requires_approval": true,
-        "reason": "High-value transaction requires explicit human manager approval."
-      },
-      "last_execution": {
-        "id": "EXEC-1788172324114",
-        "case_id": "CASE-103",
-        "idempotency_key": "action:CASE-103:PAYMENT_CAPTURED:1788172324114",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "upi"
-        },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
-        },
-        "executed_at": "2026-08-31T10:32:04.114Z",
-        "status": "COMPLETED"
-      }
-    },
-    {
-      "id": "CASE-SELF-RECOVER",
-      "provider_payment_id": "pay_self_123",
-      "status": "RECOVERED",
-      "customer_name": "Self Recovering Customer",
-      "attribution": "METHOD_SWITCH_ASSISTED",
-      "recovered_at": "2026-08-28T11:06:18.742Z"
-    },
-    {
-      "id": "CASE-TEST-EXEC",
-      "amount_paise": 1000000,
-      "status": "CONTACTED",
-      "provider_payment_id": "pay_exec_001",
-      "customer_name": "Test Customer",
-      "customer_phone": "+919876543210",
-      "current_plan": {
-        "plan_version": "v1",
-        "actions": [
-          {
-            "action_id": "act_create_link_v1",
-            "action": "CREATE_LINK",
-            "params": {}
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
         "requires_approval": false
       },
-      "last_execution": {
-        "id": "EXEC-1788171986240",
-        "case_id": "CASE-TEST-EXEC",
-        "idempotency_key": "action:CASE-TEST-EXEC:PAYMENT_CAPTURED:1788171986240",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "upi"
-        },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
-        },
-        "executed_at": "2026-08-31T10:26:26.240Z",
-        "status": "COMPLETED"
-      }
+      "created_at": "2026-09-01T02:51:25.250Z"
     },
     {
-      "id": "CASE-101",
+      "id": "CASE-105",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1788172270770_0",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
+      "provider_payment_id": "pay_hdfc_05",
+      "customer_name": "Vikram Singh",
+      "customer_email": "vikram.s@example.com",
+      "customer_phone": "+919866655443",
+      "amount_paise": 1220000,
       "currency": "INR",
       "status": "PLANNED",
       "eligibility": "ELIGIBLE",
@@ -1231,30 +538,19 @@
         "method": "upi",
         "issuer": "HDFC Bank"
       },
-      "created_at": "2026-08-31T10:31:10.770Z",
       "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "diagnosis": "HDFC UPI partner PSP degradation.",
         "recoverability": {
           "eligible": true,
-          "probability": 0.88,
+          "probability": 0.85,
           "confidenceBand": "HIGH"
         },
         "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
+          "grossRecoveryValuePaise": 1220000,
           "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
+          "expectedNetValuePaise": 1219950
         },
         "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
           {
             "action": "SWITCH_METHOD",
             "params": {
@@ -1270,17 +566,7 @@
               "expiresMinutes": 120
             },
             "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
+              "SEND_RECOVERY_PAYMENT_LINK"
             ]
           }
         ]
@@ -1288,82 +574,62 @@
       "policy_decision": {
         "decision": "ALLOW",
         "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
+          "Standard auto-execution allowed"
         ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
+        "requires_approval": false
+      },
+      "created_at": "2026-09-01T02:41:25.250Z"
     },
     {
-      "id": "CASE-1455",
-      "incident_id": "INC-460",
+      "id": "CASE-201",
+      "incident_id": "INC-902",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787902443613",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
+      "provider_payment_id": "pay_icici_01",
+      "customer_name": "Rohan Kapoor",
+      "customer_email": "rohan.k@example.com",
+      "customer_phone": "+919811122233",
+      "amount_paise": 1450000,
       "currency": "INR",
       "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
         "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
+        "error_step": "authentication",
+        "error_reason": "otp_timeout_expired",
+        "method": "card",
+        "issuer": "ICICI Bank"
       },
-      "created_at": "2026-08-28T07:34:03.613Z",
       "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "diagnosis": "ICICI 3DS OTP delivery delay caused timeout.",
         "recoverability": {
           "eligible": true,
-          "probability": 0.88,
+          "probability": 0.86,
           "confidenceBand": "HIGH"
         },
         "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
+          "grossRecoveryValuePaise": 1450000,
           "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
+          "expectedNetValuePaise": 1449950
         },
         "actions": [
           {
-            "action": "WAIT",
+            "action": "CREATE_PAYMENT_LINK",
             "params": {
-              "waitMinutes": 15
+              "expiresMinutes": 60
             },
             "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
+              "BYPASS_3DS_FORM"
             ]
           },
           {
             "action": "MESSAGE",
             "params": {
               "channel": "whatsapp",
-              "template": "recovery_alt_method"
+              "template": "instant_qr"
             },
             "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
+              "QR_NUDGE"
             ]
           }
         ]
@@ -1371,82 +637,61 @@
       "policy_decision": {
         "decision": "ALLOW",
         "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
+          "Standard auto-execution allowed"
         ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
+        "requires_approval": false
+      },
+      "created_at": "2026-09-01T02:31:25.250Z"
     },
     {
-      "id": "CASE-9225",
-      "incident_id": "INC-979",
+      "id": "CASE-202",
+      "incident_id": "INC-902",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787897895762",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
+      "provider_payment_id": "pay_icici_02",
+      "customer_name": "Meera Nair",
+      "customer_email": "meera.n@example.com",
+      "customer_phone": "+919822233344",
+      "amount_paise": 890000,
       "currency": "INR",
       "status": "CONTACTED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
         "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
+        "error_step": "authentication",
+        "error_reason": "card_auth_failed",
+        "method": "card",
+        "issuer": "ICICI Bank"
       },
-      "created_at": "2026-08-28T06:18:15.762Z",
       "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "diagnosis": "Card authentication declined by issuer.",
         "recoverability": {
           "eligible": true,
-          "probability": 0.88,
+          "probability": 0.81,
           "confidenceBand": "HIGH"
         },
         "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
+          "grossRecoveryValuePaise": 890000,
           "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
+          "expectedNetValuePaise": 889950
         },
         "actions": [
           {
-            "action": "WAIT",
+            "action": "SWITCH_PAYMENT_METHOD",
             "params": {
-              "waitMinutes": 15
+              "suggestedMethod": "upi"
             },
             "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+              "SWITCH_TO_UPI"
             ]
           },
           {
-            "action": "SWITCH_METHOD",
+            "action": "CREATE_PAYMENT_LINK",
             "params": {
-              "suggestedMethod": "card_or_netbanking"
+              "expiresMinutes": 90
             },
             "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
+              "PAYMENT_LINK"
             ]
           }
         ]
@@ -1454,98 +699,61 @@
       "policy_decision": {
         "decision": "ALLOW",
         "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
+          "Standard auto-execution allowed"
         ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
+        "requires_approval": false
       },
-      "last_execution": {
-        "id": "EXEC-1787899999343",
-        "case_id": "CASE-9225",
-        "idempotency_key": "action:CASE-9225:PAYMENT_CAPTURED:1787899999343",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "card"
-        },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
-        },
-        "executed_at": "2026-08-28T06:53:19.343Z",
-        "status": "COMPLETED"
-      }
+      "created_at": "2026-09-01T02:11:25.250Z"
     },
     {
-      "id": "CASE-3884",
-      "incident_id": "INC-415",
+      "id": "CASE-401",
+      "incident_id": "INC-904",
       "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787897875361",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
+      "provider_payment_id": "pay_sbi_01",
+      "customer_name": "Karan Malhotra",
+      "customer_email": "karan.m@example.com",
+      "customer_phone": "+919844455566",
+      "amount_paise": 1240000,
       "currency": "INR",
       "status": "PLANNED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_source": "customer",
+        "error_step": "debit",
+        "error_reason": "insufficient_funds",
+        "method": "mandate",
+        "issuer": "SBI Bank"
       },
-      "created_at": "2026-08-28T06:17:55.361Z",
       "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
+        "diagnosis": "End-of-month salary cycle deficit on recurring mandate.",
         "recoverability": {
           "eligible": true,
-          "probability": 0.88,
+          "probability": 0.89,
           "confidenceBand": "HIGH"
         },
         "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
+          "grossRecoveryValuePaise": 1240000,
           "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
+          "expectedNetValuePaise": 1239950
         },
         "actions": [
           {
             "action": "WAIT",
             "params": {
-              "waitMinutes": 15
+              "waitMinutes": 1440
             },
             "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
+              "SALARY_CYCLE_WINDOW"
             ]
           },
           {
-            "action": "SWITCH_METHOD",
+            "action": "RETRY",
             "params": {
-              "suggestedMethod": "card_or_netbanking"
+              "scheduledFor": "plus_24h"
             },
             "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
+              "OPTIMAL_DEBIT_RETRY"
             ]
           }
         ]
@@ -1553,1304 +761,11 @@
       "policy_decision": {
         "decision": "ALLOW",
         "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
+          "Scheduled retry permitted"
         ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-9382",
-      "incident_id": "INC-239",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787831060062",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
+        "requires_approval": false
       },
-      "created_at": "2026-08-27T11:44:20.062Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-9132",
-      "incident_id": "INC-856",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787828276994",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T10:57:56.994Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-8147",
-      "incident_id": "INC-985",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787827394606",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T10:43:14.606Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-7634",
-      "incident_id": "INC-192",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787827392328",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T10:43:12.328Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-3855",
-      "incident_id": "INC-650",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787824256957",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T09:50:56.957Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-9376",
-      "incident_id": "INC-307",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787824255131",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T09:50:55.131Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-9081",
-      "incident_id": "INC-912",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787824253666",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T09:50:53.666Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-3782",
-      "incident_id": "INC-630",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787821247180",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "CONTACTED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T09:00:47.180Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      },
-      "last_execution": {
-        "id": "EXEC-1787822927127",
-        "case_id": "CASE-3782",
-        "idempotency_key": "action:CASE-3782:PAYMENT_CAPTURED:1787822927126",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "card"
-        },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
-        },
-        "executed_at": "2026-08-27T09:28:47.127Z",
-        "status": "COMPLETED"
-      }
-    },
-    {
-      "id": "CASE-5875",
-      "incident_id": "INC-733",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787821245717",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T09:00:45.717Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-6581",
-      "incident_id": "INC-285",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787817006508",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T07:50:06.509Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-8071",
-      "incident_id": "INC-468",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787817005504",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T07:50:05.504Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-4039",
-      "incident_id": "INC-695",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787817003819",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "CONTACTED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T07:50:03.819Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      },
-      "last_execution": {
-        "id": "EXEC-1787824269673",
-        "case_id": "CASE-4039",
-        "idempotency_key": "action:CASE-4039:PAYMENT_CAPTURED:1787824269673",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "upi"
-        },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
-        },
-        "executed_at": "2026-08-27T09:51:09.673Z",
-        "status": "COMPLETED"
-      }
-    },
-    {
-      "id": "CASE-2790",
-      "incident_id": "INC-806",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787812555159",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T06:35:55.159Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
-    },
-    {
-      "id": "CASE-2476",
-      "incident_id": "INC-431",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1787811773648",
-      "customer_name": "Ananya Roy",
-      "customer_email": "ananya.roy@example.com",
-      "customer_phone": "+919876543210",
-      "amount_paise": 485000,
-      "currency": "INR",
-      "status": "CONTACTED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-27T06:22:53.648Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 485000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 426750
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      },
-      "last_execution": {
-        "id": "EXEC-1787816989385",
-        "case_id": "CASE-2476",
-        "idempotency_key": "action:CASE-2476:PAYMENT_CAPTURED:1787816989384",
-        "action": "PAYMENT_CAPTURED",
-        "params": {
-          "method": "upi"
-        },
-        "result": {
-          "provider": "internal_escalation_workflow",
-          "reviewer_id": "customer",
-          "status": "HANDLED"
-        },
-        "executed_at": "2026-08-27T07:49:49.385Z",
-        "status": "COMPLETED"
-      }
-    },
-    {
-      "id": "CASE-102",
-      "incident_id": "INC-901",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_demo_1788172270822_1",
-      "customer_name": "Rahul Sharma",
-      "customer_email": "rahul.sharma@example.com",
-      "customer_phone": "+919812345678",
-      "amount_paise": 720000,
-      "currency": "INR",
-      "status": "PLANNED",
-      "eligibility": "ELIGIBLE",
-      "failure_reason": {
-        "error_code": "GATEWAY_ERROR",
-        "error_source": "issuer_bank",
-        "error_step": "payment_authorization",
-        "error_reason": "gateway_technical_error",
-        "method": "upi",
-        "issuer": "HDFC Bank"
-      },
-      "created_at": "2026-08-31T10:31:10.822Z",
-      "current_plan": {
-        "diagnosis": "HDFC Bank system degradation detected. Success rate dropped to 38%.",
-        "diagnosisCategory": "INCIDENT_CORRELATED",
-        "recoverability": {
-          "eligible": true,
-          "probability": 0.88,
-          "confidenceBand": "HIGH"
-        },
-        "expectedEconomics": {
-          "grossRecoveryValuePaise": 720000,
-          "actionCostPaise": 50,
-          "expectedNetValuePaise": 633550
-        },
-        "actions": [
-          {
-            "action": "WAIT",
-            "params": {
-              "waitMinutes": 15
-            },
-            "reasonCodes": [
-              "SUPPRESS_SAME_RAIL_DURING_OUTAGE"
-            ]
-          },
-          {
-            "action": "SWITCH_METHOD",
-            "params": {
-              "suggestedMethod": "card_or_netbanking"
-            },
-            "reasonCodes": [
-              "BYPASS_DEGRADED_RAIL"
-            ]
-          },
-          {
-            "action": "CREATE_LINK",
-            "params": {
-              "expiresMinutes": 120
-            },
-            "reasonCodes": [
-              "PROVIDE_CLEAN_RECOVERY_SURFACE"
-            ]
-          },
-          {
-            "action": "MESSAGE",
-            "params": {
-              "channel": "whatsapp",
-              "template": "recovery_alt_method"
-            },
-            "reasonCodes": [
-              "INFORM_CUSTOMER_OPTION"
-            ]
-          }
-        ]
-      },
-      "policy_decision": {
-        "decision": "ALLOW",
-        "matched_rules": [
-          "ALL_STANDARD_GUARDRAILS_PASSED"
-        ],
-        "requires_approval": false,
-        "reason": "All policy checks passed."
-      }
+      "created_at": "2026-09-01T01:51:25.250Z"
     }
   ],
   "actionExecutions": [
@@ -3481,6 +1396,126 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1788235945516-157",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.516Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788235945513",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788235945511-29",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.511Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788235945492",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788235945485-681",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.485Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_self_1788235945482",
+      "details": "Processed webhook payment.captured for pay_self_1788235945480. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788235945484-953",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.484Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "CUSTOMER_SELF_RECOVERED",
+      "correlation_id": "CASE-TEST-SELF-RECOVER",
+      "details": "Payment pay_self_1788235945480 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+    },
+    {
+      "id": "AUDIT-1788235945476-845",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.476Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "DUPLICATE_WEBHOOK_IGNORED",
+      "correlation_id": "evt_test_dedupe_1788235945471",
+      "details": "No-op: Webhook event evt_test_dedupe_1788235945471 already processed at 2026-09-01T04:12:25.471Z. Duplicate ignored safely."
+    },
+    {
+      "id": "AUDIT-1788235945471-658",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.471Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_test_dedupe_1788235945471",
+      "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788235945468-401",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:12:25.468Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "SECURITY_WEBHOOK_REJECTED",
+      "correlation_id": "evt_1788235945468_mr8vkpb",
+      "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
+    {
+      "id": "AUDIT-1788235896361-428",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:11:36.361Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_self_1788235896357",
+      "details": "Processed webhook payment.captured for pay_self_1788235896355. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788235896359-443",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:11:36.359Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "CUSTOMER_SELF_RECOVERED",
+      "correlation_id": "CASE-TEST-SELF-RECOVER",
+      "details": "Payment pay_self_1788235896355 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+    },
+    {
+      "id": "AUDIT-1788235896352-410",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:11:36.352Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "DUPLICATE_WEBHOOK_IGNORED",
+      "correlation_id": "evt_test_dedupe_1788235896347",
+      "details": "No-op: Webhook event evt_test_dedupe_1788235896347 already processed at 2026-09-01T04:11:36.347Z. Duplicate ignored safely."
+    },
+    {
+      "id": "AUDIT-1788235896347-0",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:11:36.347Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_test_dedupe_1788235896347",
+      "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788235896345-83",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T04:11:36.345Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "SECURITY_WEBHOOK_REJECTED",
+      "correlation_id": "evt_1788235896345_fbkxh6",
+      "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
     {
       "id": "AUDIT-1788235435212-854",
       "merchant_id": "merchant_razor_01",
@@ -5820,129 +3855,55 @@
       "action": "POLICY_EVALUATED",
       "correlation_id": "CASE-4039",
       "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
-    },
-    {
-      "id": "AUDIT-1787817003780-946",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:50:03.780Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-695",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787816989393-300",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:49:49.393Z",
-      "actor_type": "user",
-      "actor_id": "customer",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-2476",
-      "details": "Executed action PAYMENT_CAPTURED with Idempotency Key action:CASE-2476:PAYMENT_CAPTURED:1787816989384. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787812555176-917",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:35:55.176Z",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-2790",
-      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
-    },
-    {
-      "id": "AUDIT-1787812555164-481",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:35:55.164Z",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-2790",
-      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
-    },
-    {
-      "id": "AUDIT-1787812555086-117",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:35:55.086Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-806",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787811773661-398",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:22:53.661Z",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-2476",
-      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
-    },
-    {
-      "id": "AUDIT-1787811773654-876",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:22:53.654Z",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-2476",
-      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
-    },
-    {
-      "id": "AUDIT-1787811773588-508",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:22:53.588Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-431",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787811436157-195",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T06:17:16.157Z",
-      "actor_type": "system",
-      "actor_id": "batch_evaluator_v1",
-      "action": "BATCH_EVALUATION_RUN",
-      "correlation_id": "RUN-1787811436075",
-      "details": "Executed 2,000-event benchmark batch. Revenue at risk: ₹8,47,500. Recovered: ₹6,41,100 (75.6% Recovery Rate). Violations: 0."
-    },
-    {
-      "id": "AUDIT-001",
-      "merchant_id": "merchant_razor_01",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-901",
-      "details": "HDFC Bank UPI Success Rate dropped below -2.5 Z-score (88% -> 41%). Revenue at risk: ₹38,400.",
-      "occurred_at": "2026-08-27T04:11:24.161Z"
-    },
-    {
-      "id": "AUDIT-002",
-      "merchant_id": "merchant_razor_01",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-101",
-      "details": "Proposed plan: WAIT 15m -> SWITCH_METHOD -> CREATE_LINK -> MESSAGE (WhatsApp). Expected Net: ₹8,498.50.",
-      "occurred_at": "2026-08-27T05:41:24.161Z"
-    },
-    {
-      "id": "AUDIT-003",
-      "merchant_id": "merchant_razor_01",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-101",
-      "details": "Policy Evaluation: ALLOW. 6 rules passed. 0 policy violations.",
-      "occurred_at": "2026-08-27T05:41:34.161Z"
     }
   ],
   "batchRuns": [
+    {
+      "id": "RUN-1788235945513",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T04:12:25.513Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
+    {
+      "id": "RUN-1788235945492",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T04:12:25.492Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
     {
       "id": "RUN-1788235435209",
       "batch_size": 100,

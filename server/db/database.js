@@ -11,7 +11,7 @@ const hdfcUpiCohort = [
     id: "CASE-101",
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
-    provider_payment_id: "pay_N8x29f9A0k1",
+    provider_payment_id: "pay_hdfc_01",
     customer_name: "Ananya Roy",
     customer_email: "ananya.roy@example.com",
     customer_phone: "+919876543210",
@@ -49,7 +49,7 @@ const hdfcUpiCohort = [
     id: "CASE-102",
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
-    provider_payment_id: "pay_N8x33k9A2b4",
+    provider_payment_id: "pay_hdfc_02",
     customer_name: "Rahul Sharma",
     customer_email: "rahul.sharma@example.com",
     customer_phone: "+919812345678",
@@ -86,7 +86,7 @@ const hdfcUpiCohort = [
     id: "CASE-103",
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
-    provider_payment_id: "pay_N8x99k1P9a3",
+    provider_payment_id: "pay_hdfc_03",
     customer_name: "Priya Patel",
     customer_email: "priya.p@example.com",
     customer_phone: "+919898989898",
@@ -103,18 +103,20 @@ const hdfcUpiCohort = [
       issuer: "HDFC Bank"
     },
     current_plan: {
-      diagnosis: "High-value enterprise order failed on degraded UPI rail.",
-      recoverability: { eligible: true, probability: 0.75, confidenceBand: "MEDIUM" },
-      expectedEconomics: { grossRecoveryValuePaise: 2850000, actionCostPaise: 100, expectedNetValuePaise: 2849900 },
+      diagnosis: "High-value transaction during HDFC UPI partner degradation.",
+      recoverability: { eligible: true, probability: 0.95, confidenceBand: "HIGH" },
+      expectedEconomics: { grossRecoveryValuePaise: 2850000, actionCostPaise: 500, expectedNetValuePaise: 2849500 },
       actions: [
-        { action: "HUMAN_ESCALATION", params: { reason: "Order amount ₹28,500 >= ₹25,000 threshold requires manager review" }, reasonCodes: ["POLICY_HIGH_VALUE_FLOOR"] },
-        { action: "CREATE_LINK", params: { expiresMinutes: 1440 }, reasonCodes: ["PREPARE_RECOVERY_LINK"] }
+        { action: "HUMAN_ESCALATION", params: { reason: "High-value transaction >= ₹25,000 threshold" }, reasonCodes: ["MONEY_SAFETY_FLOOR"] },
+        { action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
+        { action: "CREATE_LINK", params: { expiresMinutes: 180 }, reasonCodes: ["MANAGER_APPROVED_LINK"] }
       ]
     },
     policy_decision: {
       decision: "REVIEW",
-      matched_rules: ["Order value >= ₹25,000 threshold triggered"],
-      requires_approval: true
+      matched_rules: ["HIGH_VALUE_THRESHOLD (28500 >= ₹25,000)"],
+      requires_approval: true,
+      reason: "High-value transaction requires explicit human manager approval before dispatching recovery link."
     },
     created_at: new Date(Date.now() - 3600000).toISOString()
   },
@@ -122,50 +124,50 @@ const hdfcUpiCohort = [
     id: "CASE-104",
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
-    provider_payment_id: "pay_N8x44m7K1x8",
+    provider_payment_id: "pay_hdfc_04",
     customer_name: "Sneha Mehta",
     customer_email: "sneha.m@example.com",
     customer_phone: "+919877766554",
     amount_paise: 649900, // ₹6,499
     currency: "INR",
-    status: "PLANNED",
+    status: "CONTACTED",
     eligibility: "ELIGIBLE",
     failure_reason: {
       error_code: "BAD_REQUEST_ERROR",
       error_source: "customer",
-      error_step: "payment_authentication",
+      error_step: "payment_authorization",
       error_reason: "payment_cancelled_by_user",
       method: "upi",
       issuer: "HDFC Bank"
     },
     current_plan: {
-      diagnosis: "Checkout drop-off post authentication delay.",
-      recoverability: { eligible: true, probability: 0.70, confidenceBand: "MEDIUM" },
+      diagnosis: "Customer abandoned checkout due to friction during bank timeout.",
+      recoverability: { eligible: true, probability: 0.78, confidenceBand: "MEDIUM" },
       expectedEconomics: { grossRecoveryValuePaise: 649900, actionCostPaise: 19500, expectedNetValuePaise: 630400 },
       actions: [
-        { action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["RESUME_CHECKOUT"] },
-        { action: "INCENTIVE", params: { discountPct: 3, code: "REVIVE3" }, reasonCodes: ["HIGH_INTENT_CART_NUDGE"] },
-        { action: "MESSAGE", params: { channel: "whatsapp", template: "cart_recovery" }, reasonCodes: ["DISCOUNT_OUTREACH"] }
+        { action: "MESSAGE", params: { channel: "whatsapp", template: "cart_recovery_discount" }, reasonCodes: ["RE_ENGAGE_CUSTOMER"] },
+        { action: "INCENTIVE", params: { discountPct: 3 }, reasonCodes: ["APPLY_AUTHORIZED_DYNAMIC_DISCOUNT"] },
+        { action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["CHECKOUT_RESUME_LINK"] }
       ]
     },
     policy_decision: {
       decision: "ALLOW",
-      matched_rules: ["Discount 3% <= 5% cap"],
+      matched_rules: ["3% discount within 5% ceiling", "Quiet hours OK"],
       requires_approval: false
     },
-    created_at: new Date(Date.now() - 1200000).toISOString()
+    created_at: new Date(Date.now() - 4800000).toISOString()
   },
   {
     id: "CASE-105",
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
-    provider_payment_id: "pay_N8x55p2Q9z1",
+    provider_payment_id: "pay_hdfc_05",
     customer_name: "Vikram Singh",
     customer_email: "vikram.s@example.com",
     customer_phone: "+919866655443",
     amount_paise: 1220000, // ₹12,200
     currency: "INR",
-    status: "RECOVERED",
+    status: "PLANNED",
     eligibility: "ELIGIBLE",
     failure_reason: {
       error_code: "GATEWAY_ERROR",
@@ -176,24 +178,24 @@ const hdfcUpiCohort = [
       issuer: "HDFC Bank"
     },
     current_plan: {
-      diagnosis: "UPI rail timeout recovered via card payment link.",
-      recoverability: { eligible: true, probability: 1.0, confidenceBand: "HIGH" },
+      diagnosis: "HDFC UPI partner PSP degradation.",
+      recoverability: { eligible: true, probability: 0.85, confidenceBand: "HIGH" },
       expectedEconomics: { grossRecoveryValuePaise: 1220000, actionCostPaise: 50, expectedNetValuePaise: 1219950 },
       actions: [
-        { action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["RECOVERY_LINK"] },
-        { action: "MESSAGE", params: { channel: "whatsapp", template: "payment_help" }, reasonCodes: ["OUTREACH"] }
+        { action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
+        { action: "CREATE_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["SEND_RECOVERY_PAYMENT_LINK"] }
       ]
     },
     policy_decision: {
       decision: "ALLOW",
-      matched_rules: ["Auto-execution passed"],
+      matched_rules: ["Standard auto-execution allowed"],
       requires_approval: false
     },
     created_at: new Date(Date.now() - 5400000).toISOString()
   }
 ];
 
-// Initial dataset with 5 distinct active incidents & non-repetitive cohorts
+// Initial dataset with 3 distinct active incidents & non-repetitive cohorts
 const initialData = {
   merchant: {
     id: "merchant_razor_01",
@@ -245,15 +247,28 @@ const initialData = {
       started_at: new Date(Date.now() - 3600000 * 2).toISOString(),
       dimensions: { method: "upi", issuer: "HDFC Bank", step: "authorization", reason: "gateway_technical_error" },
       baseline_success_rate: 0.88,
-      current_success_rate: 0.41,
-      z_score: -3.8,
+      current_success_rate: 0.38,
+      z_score: -4.2,
       affected_count: 5,
       revenue_at_risk_paise: 5924900, // ₹59,249 total cohort
-      root_cause: "HDFC UPI Auth Gateway is experiencing intermittent timeouts. Direct retries are failing at 82%.",
+      root_cause: "HDFC UPI partner gateway timeouts detected. Direct retries failing at 84%.",
       recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp.",
+      sre_blast_radius: {
+        affected_txns: 5,
+        affected_customers: 5,
+        revenue_at_risk_paise: 5924900,
+        degraded_rail: "HDFC Bank UPI",
+        incident_scope: "SYSTEMIC_ISSUER_OUTAGE"
+      },
+      circuit_breaker: {
+        status: "TRIPPED",
+        suppress_same_rail_retries: true,
+        recommended_alternate_rail: "Cards & Netbanking",
+        cooldown_remaining_minutes: 15
+      },
       evidence: [
-        { key: "UPI Success Drop", value: "88% -> 41% baseline delta" },
-        { key: "Razorpay Downtime Match", value: "Partner HDFC UPI partner degraded status confirmed" },
+        { key: "Rolling Success Rate", value: "88% -> 38% (Z-score -4.2)" },
+        { key: "Razorpay Downtime Match", value: "Status API corroborates HDFC Bank PSP downtime" },
         { key: "Method Concentration", value: "92% of failures localized to UPI rail" }
       ]
     },
@@ -264,42 +279,37 @@ const initialData = {
       status: "OPEN",
       severity: "MEDIUM",
       started_at: new Date(Date.now() - 3600000 * 4).toISOString(),
-      dimensions: { method: "card", issuer: "ICICI Bank", step: "authentication", reason: "payment_cancelled_by_user" },
+      dimensions: { method: "card", issuer: "ICICI Bank", step: "authentication", reason: "otp_timeout" },
       baseline_success_rate: 0.92,
       current_success_rate: 0.68,
       z_score: -2.7,
       affected_count: 3,
       revenue_at_risk_paise: 4730000, // ₹47,300
-      root_cause: "ICICI 3DS OTP delivery delay causing checkout timeouts post-authentication.",
-      recommended_approach: "Offer instant UPI QR payment link fallback with 3% recovery discount.",
+      root_cause: "ICICI 3DS OTP delivery delay (+45s average) causing checkout abandonment.",
+      recommended_approach: "Bypass 3DS retry; dispatch instant UPI QR 1-click payment link.",
+      sre_blast_radius: {
+        affected_txns: 3,
+        affected_customers: 3,
+        revenue_at_risk_paise: 4730000,
+        degraded_rail: "ICICI Credit Cards",
+        incident_scope: "GATEWAY_LATENCY_ANOMALY"
+      },
+      circuit_breaker: {
+        status: "WATCH",
+        suppress_same_rail_retries: false,
+        recommended_alternate_rail: "UPI Instant QR",
+        cooldown_remaining_minutes: 10
+      },
       evidence: [
-        { key: "OTP Delay Spike", value: "+45s average OTP latency" },
-        { key: "User Abandonment", value: "68% drop-off post OTP screen" }
-      ]
-    },
-    {
-      id: "INC-903",
-      merchant_id: "merchant_razor_01",
-      title: "Checkout Drop-off & Cart Abandonment",
-      status: "OPEN",
-      severity: "MEDIUM",
-      started_at: new Date(Date.now() - 3600000 * 6).toISOString(),
-      dimensions: { method: "upi", issuer: "Multi-bank", step: "selection", reason: "checkout_abandoned" },
-      baseline_success_rate: 0.85,
-      current_success_rate: 0.62,
-      z_score: -2.1,
-      affected_count: 2,
-      revenue_at_risk_paise: 2230000, // ₹22,300
-      root_cause: "High friction at checkout selection step; high intent customers exiting.",
-      recommended_approach: "Send personalized WhatsApp reminder with pre-filled Razorpay link.",
-      evidence: [
-        { key: "Intent Drop", value: "Abandoned within 2 minutes of cart entry" }
+        { key: "OTP Delay Spike", value: "+45s average OTP latency from gateway" },
+        { key: "User Abandonment", value: "68% drop-off post-OTP challenge screen" },
+        { key: "Rail Concentration", value: "95% localized to ICICI Visa/Mastercard 3DS" }
       ]
     },
     {
       id: "INC-904",
       merchant_id: "merchant_razor_01",
-      title: "AutoPay e-Mandate Balance Debit Failures",
+      title: "SBI AutoPay e-Mandate Balance Deficit",
       status: "OPEN",
       severity: "LOW",
       started_at: new Date(Date.now() - 3600000 * 12).toISOString(),
@@ -309,87 +319,29 @@ const initialData = {
       z_score: -1.8,
       affected_count: 2,
       revenue_at_risk_paise: 2130000, // ₹21,300
-      root_cause: "End-of-month salary cycle deficit; hard retry immediately will fail.",
-      recommended_approach: "Schedule e-mandate retry window on predicted salary credit day (1st-3rd of month).",
+      root_cause: "End-of-month recurring AutoPay deficit. Immediate retries will fail.",
+      recommended_approach: "Schedule e-mandate retry window on salary cycle day (1st-3rd of month).",
+      sre_blast_radius: {
+        affected_txns: 2,
+        affected_customers: 2,
+        revenue_at_risk_paise: 2130000,
+        degraded_rail: "SBI AutoPay e-Mandate",
+        incident_scope: "RECURRING_DEBIT_TIMING_DEFICIT"
+      },
+      circuit_breaker: {
+        status: "ACTIVE",
+        suppress_same_rail_retries: true,
+        recommended_alternate_rail: "Salary-Day Scheduled Retry",
+        cooldown_remaining_minutes: 1440
+      },
       evidence: [
-        { key: "Debit Failure Code", value: "INSUFFICIENT_FUNDS on recurring debit" }
+        { key: "Debit Failure Code", value: "INSUFFICIENT_FUNDS on recurring debit attempt" },
+        { key: "Timing Analysis", value: "End-of-month timing deficit (28th-30th)" }
       ]
     }
   ],
   recoveryCases: [
-    ...hdfcUpiCohort,
-    {
-      id: "CASE-106",
-      incident_id: "INC-902",
-      merchant_id: "merchant_razor_01",
-      provider_payment_id: "pay_N8x66r3M8v2",
-      customer_name: "Amit Verma",
-      customer_email: "amit.verma@example.com",
-      customer_phone: "+919855544332",
-      amount_paise: 1540000, // ₹15,400
-      currency: "INR",
-      status: "PLANNED",
-      eligibility: "ELIGIBLE",
-      failure_reason: {
-        error_code: "BAD_REQUEST_ERROR",
-        error_source: "customer",
-        error_step: "payment_authentication",
-        error_reason: "payment_cancelled_by_user",
-        method: "card",
-        issuer: "ICICI Bank"
-      },
-      current_plan: {
-        diagnosis: "ICICI 3DS OTP delay caused user exit.",
-        recoverability: { eligible: true, probability: 0.80, confidenceBand: "HIGH" },
-        expectedEconomics: { grossRecoveryValuePaise: 1540000, actionCostPaise: 50, expectedNetValuePaise: 1539950 },
-        actions: [
-          { action: "SWITCH_METHOD", params: { suggestedMethod: "upi" }, reasonCodes: ["BYPASS_CARD_AUTHENTICATION"] },
-          { action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["UPI_LINK"] }
-        ]
-      },
-      policy_decision: {
-        decision: "ALLOW",
-        matched_rules: ["Standard auto-execution allowed"],
-        requires_approval: false
-      },
-      created_at: new Date(Date.now() - 4000000).toISOString()
-    },
-    {
-      id: "CASE-107",
-      incident_id: "INC-904",
-      merchant_id: "merchant_razor_01",
-      provider_payment_id: "pay_N8x77s4N9w1",
-      customer_name: "Manish Joshi",
-      customer_email: "manish.j@example.com",
-      customer_phone: "+919844433221",
-      amount_paise: 1240000, // ₹12,400
-      currency: "INR",
-      status: "PLANNED",
-      eligibility: "ELIGIBLE",
-      failure_reason: {
-        error_code: "BAD_REQUEST_ERROR",
-        error_source: "customer",
-        error_step: "payment_authorization",
-        error_reason: "insufficient_funds",
-        method: "mandate",
-        issuer: "SBI Bank"
-      },
-      current_plan: {
-        diagnosis: "Temporary balance deficit on AutoPay e-mandate.",
-        recoverability: { eligible: true, probability: 0.72, confidenceBand: "MEDIUM" },
-        expectedEconomics: { grossRecoveryValuePaise: 1240000, actionCostPaise: 50, expectedNetValuePaise: 1239950 },
-        actions: [
-          { action: "WAIT", params: { waitMinutes: 1440 }, reasonCodes: ["SALARY_CYCLE_WINDOW"] },
-          { action: "RETRY", params: { scheduledFor: "plus_24h" }, reasonCodes: ["OPTIMAL_DEBIT_RETRY"] }
-        ]
-      },
-      policy_decision: {
-        decision: "ALLOW",
-        matched_rules: ["Scheduled retry permitted"],
-        requires_approval: false
-      },
-      created_at: new Date(Date.now() - 5000000).toISOString()
-    }
+    ...hdfcUpiCohort
   ],
   actionExecutions: [],
   auditEvents: [
@@ -400,7 +352,7 @@ const initialData = {
       actor_id: "health_detector_v1",
       action: "INCIDENT_OPENED",
       correlation_id: "INC-901",
-      details: "HDFC Bank UPI Success Rate dropped below -2.5 Z-score (88% -> 41%). Revenue at risk: ₹59,249.",
+      details: "HDFC Bank UPI Success Rate dropped below -2.5 Z-score (88% -> 38%). Revenue at risk: ₹59,249.",
       occurred_at: new Date(Date.now() - 3600000 * 2).toISOString()
     },
     {
@@ -424,6 +376,20 @@ const initialData = {
       occurred_at: new Date(Date.now() - 1790000).toISOString()
     }
   ],
+  strategyLearnings: [
+    {
+      id: "FB-001",
+      case_id: "CASE-102",
+      strategy_used: "SWITCH_PAYMENT_METHOD",
+      payment_rail_used: "card",
+      recovered_amount_paise: 720000,
+      intervention_cost_paise: 50,
+      time_to_recover_seconds: 48,
+      prior_confidence: 0.88,
+      posterior_confidence: 0.912,
+      timestamp: new Date(Date.now() - 3600000).toISOString()
+    }
+  ],
   batchRuns: []
 };
 
@@ -438,7 +404,20 @@ class Database {
       if (fs.existsSync(DB_FILE)) {
         const fileContent = fs.readFileSync(DB_FILE, 'utf-8');
         const parsed = JSON.parse(fileContent);
-        // Ensure cases are deduplicated on load
+
+        // Deduplicate incidents strictly by title / rail
+        if (parsed.incidents) {
+          const uniqueIncidentsMap = new Map();
+          parsed.incidents.forEach(inc => {
+            const key = inc.title || inc.id;
+            if (!uniqueIncidentsMap.has(key)) {
+              uniqueIncidentsMap.set(key, inc);
+            }
+          });
+          parsed.incidents = Array.from(uniqueIncidentsMap.values());
+        }
+
+        // Deduplicate recovery cases by ID
         if (parsed.recoveryCases) {
           const uniqueCasesMap = new Map();
           parsed.recoveryCases.forEach(c => {
@@ -448,6 +427,7 @@ class Database {
           });
           parsed.recoveryCases = Array.from(uniqueCasesMap.values());
         }
+
         return parsed;
       }
     } catch (err) {
@@ -480,9 +460,10 @@ class Database {
 
   getIncidents() { return this.data.incidents; }
   addIncident(incident) {
-    const existing = this.data.incidents.find(i => i.id === incident.id);
-    if (existing) {
-      Object.assign(existing, incident);
+    // Strictly update existing incident by ID or Title
+    const existingIndex = this.data.incidents.findIndex(i => i.id === incident.id || i.title === incident.title);
+    if (existingIndex >= 0) {
+      this.data.incidents[existingIndex] = { ...this.data.incidents[existingIndex], ...incident };
     } else {
       this.data.incidents.unshift(incident);
     }
@@ -493,11 +474,9 @@ class Database {
   getCases() { return this.data.recoveryCases; }
   getCaseById(id) { return this.data.recoveryCases.find(c => c.id === id); }
   addCase(caseItem) {
-    const existingIndex = this.data.recoveryCases.findIndex(
-      c => c.id === caseItem.id || (c.customer_name === caseItem.customer_name && c.amount_paise === caseItem.amount_paise)
-    );
+    const existingIndex = this.data.recoveryCases.findIndex(c => c.id === caseItem.id);
     if (existingIndex >= 0) {
-      this.data.recoveryCases[existingIndex] = caseItem;
+      this.data.recoveryCases[existingIndex] = { ...this.data.recoveryCases[existingIndex], ...caseItem };
     } else {
       this.data.recoveryCases.unshift(caseItem);
     }
@@ -518,21 +497,23 @@ class Database {
   getAuditEvents() { return this.data.auditEvents; }
   addAuditEvent(event) {
     const fullEvent = {
-      id: `AUDIT-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+      id: `AUDIT-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       merchant_id: "merchant_razor_01",
       occurred_at: new Date().toISOString(),
       ...event
     };
     this.data.auditEvents.unshift(fullEvent);
+    if (this.data.auditEvents.length > 100) this.data.auditEvents.pop();
     this.save();
     return fullEvent;
   }
 
-  getBatchRuns() { return this.data.batchRuns; }
-  addBatchRun(batchRun) {
-    this.data.batchRuns.unshift(batchRun);
+  getBatchRuns() { return this.data.batchRuns || []; }
+  addBatchRun(batch) {
+    if (!this.data.batchRuns) this.data.batchRuns = [];
+    this.data.batchRuns.unshift(batch);
     this.save();
-    return batchRun;
+    return batch;
   }
 }
 

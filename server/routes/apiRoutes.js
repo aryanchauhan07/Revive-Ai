@@ -1,32 +1,40 @@
 import express from 'express';
 import { db } from '../db/database.js';
-import { processIncomingWebhook } from '../core/webhookIngress.js';
 import { diagnoseAndPlanCase } from '../core/recoveryPlanner.js';
 import { executeCaseAction } from '../core/actionExecutor.js';
-import { runBatchEvaluation } from '../simulation/batchSimulator.js';
-import { SCENARIO_LIBRARY, runScenarioSimulation } from '../simulation/scenarioLibrary.js';
+import { runEvaluationBenchmark } from '../simulation/batchSimulator.js';
+import { evaluatePlanPolicies } from '../core/policyEngine.js';
 
 const router = express.Router();
 
-// SSE Clients for live audit stream
-const sseClients = new Set();
+// SSE Clients List for real-time live events stream
+let sseClients = [];
 
-export function broadcastSSE(data) {
-  const payload = `data: ${JSON.stringify(data)}\n\n`;
-  for (const client of sseClients) {
-    client.write(payload);
-  }
+export function broadcastSSE(eventData) {
+  sseClients.forEach(client => {
+    try {
+      client.write(`data: ${JSON.stringify(eventData)}\n\n`);
+    } catch (e) {
+      console.warn("Error sending SSE to client:", e.message);
+    }
+  });
 }
 
-// 1. Webhook Ingestion Endpoint (with Raw Body HMAC Verification)
-router.post('/webhooks/razorpay', (req, res) => {
-  const rawBodyBuffer = req.rawBody || Buffer.from(JSON.stringify(req.body || {}));
-  const result = processIncomingWebhook(req.body, req.headers, rawBodyBuffer);
-  broadcastSSE({ type: 'WEBHOOK_RECEIVED', data: result });
-  res.status(result.statusCode || 200).json(result);
+// 1. SSE Stream Endpoint
+router.get('/events/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  sseClients.push(res);
+
+  req.on('close', () => {
+    sseClients = sseClients.filter(c => c !== res);
+  });
 });
 
-// 2. Merchant & Policy Management
+// 2. Merchant & Policy Endpoints
 router.get('/merchant', (req, res) => {
   res.json(db.getMerchant());
 });
@@ -37,10 +45,10 @@ router.post('/merchant/policy', (req, res) => {
     actor_type: 'user',
     actor_id: 'merchant_admin',
     action: 'POLICY_UPDATED',
-    correlation_id: updated.id,
-    details: `Updated autonomy mode to ${updated.mode}. Updated quiet hours and discount caps.`
+    correlation_id: 'merchant_razor_01',
+    details: `Updated policy: Mode=${updated.mode}, MaxDiscount=${updated.policy?.money?.maxDiscountPct}%, HighValueFloor=₹${updated.policy?.money?.highValueApprovalPaise / 100}`
   });
-  broadcastSSE({ type: 'POLICY_UPDATED', data: updated });
+  broadcastSSE({ type: 'MERCHANT_POLICY_UPDATED', data: updated });
   res.json(updated);
 });
 
@@ -50,39 +58,35 @@ router.post('/merchant/kill-switch', (req, res) => {
   db.addAuditEvent({
     actor_type: 'user',
     actor_id: 'merchant_admin',
-    action: 'KILL_SWITCH_TOGGLED',
-    correlation_id: updated.id,
-    details: `Emergency Kill Switch ${enabled ? 'ACTIVATED' : 'DEACTIVATED'}`
+    action: enabled ? 'KILL_SWITCH_ENGAGED' : 'KILL_SWITCH_DISENGAGED',
+    correlation_id: 'merchant_razor_01',
+    details: enabled ? 'Emergency kill switch ACTIVATED. All side-effect actions paused.' : 'Emergency kill switch deactivated. Normal execution resumed.'
   });
-  broadcastSSE({ type: 'KILL_SWITCH_TOGGLED', data: updated });
+  broadcastSSE({ type: 'KILL_SWITCH_CHANGED', data: { killSwitch: enabled } });
   res.json(updated);
 });
 
-// 3. Incidents
+// 3. Incidents Endpoints
 router.get('/incidents', (req, res) => {
   res.json(db.getIncidents());
 });
 
-// 4. Cases
+// 4. Cases & Planning Endpoints
 router.get('/cases', (req, res) => {
   res.json(db.getCases());
 });
 
 router.get('/cases/:id', (req, res) => {
-  const caseObj = db.getCaseById(req.params.id);
-  if (!caseObj) return res.status(404).json({ error: 'Case not found' });
-  res.json(caseObj);
+  const c = db.getCaseById(req.params.id);
+  if (!c) return res.status(404).json({ error: 'Case not found' });
+  res.json(c);
 });
 
+// 5. Action Execution Endpoint
 router.post('/cases/:id/execute', async (req, res) => {
   try {
     const { action, reviewerId } = req.body;
-    const caseObj = db.getCaseById(req.params.id);
-    if (!caseObj) return res.status(404).json({ error: 'Case not found' });
-
-    const actionToExec = action || caseObj.current_plan?.actions[0] || { action: 'CREATE_LINK' };
-    const result = await executeCaseAction(caseObj.id, actionToExec, reviewerId);
-    
+    const result = await executeCaseAction(req.params.id, action, reviewerId);
     broadcastSSE({ type: 'ACTION_EXECUTED', data: result });
     res.json(result);
   } catch (err) {
@@ -90,74 +94,151 @@ router.post('/cases/:id/execute', async (req, res) => {
   }
 });
 
-// 5. Scenarios & Real-World Library
-router.get('/scenarios', (req, res) => {
-  res.json(SCENARIO_LIBRARY);
-});
-
-router.post('/scenarios/:id/run', (req, res) => {
-  const scenario = runScenarioSimulation(req.params.id);
-  broadcastSSE({ type: 'SCENARIO_RUN', data: scenario });
-  res.json(scenario);
-});
-
-// 6. Demo Trigger Generators (Generates 1 Incident with SRE Blast Radius & Recovery Circuit Breaker)
+// 6. Demo Trigger Generators (Generates Clean, Distinct Scenarios with Realistic Cohorts)
 router.post('/demo/trigger-incident', (req, res) => {
   const { bank = "HDFC Bank", method = "upi" } = req.body;
 
-  const incident = {
-    id: "INC-901",
-    merchant_id: "merchant_razor_01",
-    title: `${bank} ${method.toUpperCase()} Authorization Degradation`,
-    status: "OPEN",
-    severity: "HIGH",
-    started_at: new Date().toISOString(),
-    dimensions: { method, issuer: bank, step: "authorization", reason: "gateway_technical_error" },
-    baseline_success_rate: 0.88,
-    current_success_rate: 0.38,
-    z_score: -4.2,
-    affected_count: 5,
-    revenue_at_risk_paise: 5924900, // ₹59,249
-    root_cause: `${bank} ${method.toUpperCase()} partner gateway timeouts detected. Direct retries failing at 84%.`,
-    recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp.",
-    sre_blast_radius: {
-      affected_txns: 5,
-      affected_customers: 5,
-      revenue_at_risk_paise: 5924900,
-      degraded_rail: `${bank} ${method.toUpperCase()}`,
-      incident_scope: "SYSTEMIC_ISSUER_OUTAGE" // vs "ISOLATED_CUSTOMER_FAILURE"
-    },
-    circuit_breaker: {
-      status: "TRIPPED",
-      suppress_same_rail_retries: true,
-      recommended_alternate_rail: "Cards & Netbanking",
-      cooldown_remaining_minutes: 15
-    },
-    evidence: [
-      { key: "Rolling Success Rate", value: "88% -> 38% Z-score -4.2" },
-      { key: "Razorpay Downtime Match", value: `Status API corroborates ${bank} PSP downtime` },
-      { key: "Method Concentration", value: `92% of failures localized to ${method.toUpperCase()} rail` }
-    ]
-  };
+  let incident = {};
+  let demoCohort = [];
 
+  if (bank === "ICICI Bank" || method === "card") {
+    // Scenario 2: ICICI Card 3DS Timeout
+    incident = {
+      id: "INC-902",
+      merchant_id: "merchant_razor_01",
+      title: "ICICI Card 3DS Authentication Timeout",
+      status: "OPEN",
+      severity: "MEDIUM",
+      started_at: new Date().toISOString(),
+      dimensions: { method: "card", issuer: "ICICI Bank", step: "authentication", reason: "otp_timeout" },
+      baseline_success_rate: 0.92,
+      current_success_rate: 0.68,
+      z_score: -2.7,
+      affected_count: 3,
+      revenue_at_risk_paise: 4730000, // ₹47,300
+      root_cause: "ICICI 3DS OTP delivery delay (+45s average) causing checkout abandonment.",
+      recommended_approach: "Bypass 3DS retry; dispatch instant UPI QR 1-click payment link.",
+      sre_blast_radius: {
+        affected_txns: 3,
+        affected_customers: 3,
+        revenue_at_risk_paise: 4730000,
+        degraded_rail: "ICICI Credit Cards",
+        incident_scope: "GATEWAY_LATENCY_ANOMALY"
+      },
+      circuit_breaker: {
+        status: "WATCH",
+        suppress_same_rail_retries: false,
+        recommended_alternate_rail: "UPI Instant QR",
+        cooldown_remaining_minutes: 10
+      },
+      evidence: [
+        { key: "OTP Delay Spike", value: "+45s average OTP latency from gateway" },
+        { key: "User Abandonment", value: "68% drop-off post-OTP challenge screen" },
+        { key: "Rail Concentration", value: "95% localized to ICICI Visa/Mastercard 3DS" }
+      ]
+    };
+
+    demoCohort = [
+      { id: "CASE-201", name: "Rohan Kapoor", phone: "+919811122233", amount: 14500, reason: "otp_timeout_expired", method: "card", issuer: "ICICI Bank" },
+      { id: "CASE-202", name: "Meera Nair", phone: "+919822233344", amount: 8900, reason: "card_auth_failed", method: "card", issuer: "ICICI Bank" },
+      { id: "CASE-203", name: "Aditya Verma", phone: "+919833344455", amount: 23900, reason: "gateway_timeout", method: "card", issuer: "ICICI Bank" }
+    ];
+  } else if (bank === "SBI Bank" || method === "mandate") {
+    // Scenario 3: SBI AutoPay e-Mandate Balance Deficit
+    incident = {
+      id: "INC-904",
+      merchant_id: "merchant_razor_01",
+      title: "SBI AutoPay e-Mandate Balance Deficit",
+      status: "OPEN",
+      severity: "LOW",
+      started_at: new Date().toISOString(),
+      dimensions: { method: "mandate", issuer: "SBI Bank", step: "debit", reason: "insufficient_funds" },
+      baseline_success_rate: 0.86,
+      current_success_rate: 0.72,
+      z_score: -1.8,
+      affected_count: 2,
+      revenue_at_risk_paise: 2130000, // ₹21,300
+      root_cause: "End-of-month recurring AutoPay deficit. Immediate retries will fail.",
+      recommended_approach: "Schedule e-mandate retry window on salary cycle day (1st-3rd of month).",
+      sre_blast_radius: {
+        affected_txns: 2,
+        affected_customers: 2,
+        revenue_at_risk_paise: 2130000,
+        degraded_rail: "SBI AutoPay e-Mandate",
+        incident_scope: "RECURRING_DEBIT_TIMING_DEFICIT"
+      },
+      circuit_breaker: {
+        status: "ACTIVE",
+        suppress_same_rail_retries: true,
+        recommended_alternate_rail: "Salary-Day Scheduled Retry",
+        cooldown_remaining_minutes: 1440
+      },
+      evidence: [
+        { key: "Debit Failure Code", value: "INSUFFICIENT_FUNDS on recurring debit attempt" },
+        { key: "Timing Analysis", value: "End-of-month timing deficit (28th-30th)" }
+      ]
+    };
+
+    demoCohort = [
+      { id: "CASE-401", name: "Karan Malhotra", phone: "+919844455566", amount: 12400, reason: "insufficient_funds", method: "mandate", issuer: "SBI Bank" },
+      { id: "CASE-402", name: "Divya Joshi", phone: "+919855566677", amount: 8900, reason: "insufficient_funds", method: "mandate", issuer: "SBI Bank" }
+    ];
+  } else {
+    // Scenario 1: HDFC Bank UPI Degradation
+    incident = {
+      id: "INC-901",
+      merchant_id: "merchant_razor_01",
+      title: "HDFC Bank UPI Authorization Degradation",
+      status: "OPEN",
+      severity: "HIGH",
+      started_at: new Date().toISOString(),
+      dimensions: { method: "upi", issuer: "HDFC Bank", step: "authorization", reason: "gateway_technical_error" },
+      baseline_success_rate: 0.88,
+      current_success_rate: 0.38,
+      z_score: -4.2,
+      affected_count: 5,
+      revenue_at_risk_paise: 5924900, // ₹59,249
+      root_cause: "HDFC UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+      recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp.",
+      sre_blast_radius: {
+        affected_txns: 5,
+        affected_customers: 5,
+        revenue_at_risk_paise: 5924900,
+        degraded_rail: "HDFC Bank UPI",
+        incident_scope: "SYSTEMIC_ISSUER_OUTAGE"
+      },
+      circuit_breaker: {
+        status: "TRIPPED",
+        suppress_same_rail_retries: true,
+        recommended_alternate_rail: "Cards & Netbanking",
+        cooldown_remaining_minutes: 15
+      },
+      evidence: [
+        { key: "Rolling Success Rate", value: "88% -> 38% (Z-score -4.2)" },
+        { key: "Razorpay Downtime Match", value: "Status API corroborates HDFC Bank PSP downtime" },
+        { key: "Method Concentration", value: "92% of failures localized to UPI rail" }
+      ]
+    };
+
+    demoCohort = [
+      { id: "CASE-101", name: "Ananya Roy", phone: "+919876543210", amount: 4850, reason: "gateway_technical_error", method: "upi", issuer: "HDFC Bank" },
+      { id: "CASE-102", name: "Rahul Sharma", phone: "+919812345678", amount: 7200, reason: "gateway_technical_error", method: "upi", issuer: "HDFC Bank" },
+      { id: "CASE-103", name: "Priya Patel", phone: "+919898989898", amount: 28500, reason: "gateway_technical_error", method: "upi", issuer: "HDFC Bank" },
+      { id: "CASE-104", name: "Sneha Mehta", phone: "+919877766554", amount: 6499, reason: "payment_cancelled_by_user", method: "upi", issuer: "HDFC Bank" },
+      { id: "CASE-105", name: "Vikram Singh", phone: "+919866655443", amount: 12200, reason: "gateway_technical_error", method: "upi", issuer: "HDFC Bank" }
+    ];
+  }
+
+  // Update or insert incident
   db.addIncident(incident);
 
-  // Realistic cohort of 5 distinct customers
-  const demoCohort = [
-    { name: "Ananya Roy", phone: "+919876543210", amount: 4850, reason: "gateway_technical_error" },
-    { name: "Rahul Sharma", phone: "+919812345678", amount: 7200, reason: "gateway_technical_error" },
-    { name: "Priya Patel", phone: "+919898989898", amount: 28500, reason: "gateway_technical_error" },
-    { name: "Sneha Mehta", phone: "+919877766554", amount: 6499, reason: "payment_cancelled_by_user" },
-    { name: "Vikram Singh", phone: "+919866655443", amount: 12200, reason: "gateway_technical_error" }
-  ];
-
+  // Upsert distinct cases
   demoCohort.forEach((cust, idx) => {
-    const caseId = `CASE-10${idx + 1}`;
     const newCase = {
-      id: caseId,
+      id: cust.id,
       incident_id: incident.id,
       merchant_id: "merchant_razor_01",
-      provider_payment_id: `pay_demo_${Date.now()}_${idx}`,
+      provider_payment_id: `pay_${incident.id.toLowerCase()}_${idx + 1}`,
       customer_name: cust.name,
       customer_email: `${cust.name.toLowerCase().replace(/\s+/g, '.')}@example.com`,
       customer_phone: cust.phone,
@@ -170,8 +251,8 @@ router.post('/demo/trigger-incident', (req, res) => {
         error_source: cust.reason === 'payment_cancelled_by_user' ? 'customer' : 'issuer_bank',
         error_step: 'payment_authorization',
         error_reason: cust.reason,
-        method,
-        issuer: bank
+        method: cust.method,
+        issuer: cust.issuer
       },
       created_at: new Date().toISOString()
     };
@@ -181,44 +262,27 @@ router.post('/demo/trigger-incident', (req, res) => {
 
   db.addAuditEvent({
     actor_type: 'system',
-    actor_id: 'payment_sre_engine',
-    action: 'INCIDENT_OPENED_CIRCUIT_TRIPPED',
+    actor_id: 'health_detector_v1',
+    action: 'INCIDENT_OPENED',
     correlation_id: incident.id,
-    details: `SRE Outage Detected: ${bank} ${method.toUpperCase()}. Blast Radius: 5 customers, ₹59,249 at risk. Circuit Breaker TRIPPED: Same-rail retries paused.`
+    details: `${incident.title} opened. Blast Radius: ${incident.sre_blast_radius.affected_customers} customers, ₹${(incident.revenue_at_risk_paise / 100).toLocaleString()} at risk. Circuit breaker: ${incident.circuit_breaker.status}.`
   });
 
-  broadcastSSE({ type: 'INCIDENT_OPENED', data: incident });
-  res.json(incident);
+  broadcastSSE({ type: 'INCIDENT_DETECTED', data: { incident } });
+  res.json({ incident, casesCount: demoCohort.length });
 });
 
-// 7. Audit & SSE Stream
+// 7. Audit Log Endpoint
 router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
 });
 
-router.get('/events/stream', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.flushHeaders();
-
-  sseClients.add(res);
-
-  req.on('close', () => {
-    sseClients.delete(res);
-  });
-});
-
-// 8. Batch Evaluation Benchmark with Incremental Attribution
+// 8. 2,000-Event Benchmark Evaluator
 router.post('/evaluation/run', (req, res) => {
-  const { batchSize = 2000, seed = 20260828 } = req.body;
-  const result = runBatchEvaluation(batchSize, seed);
-  broadcastSSE({ type: 'BATCH_EVALUATION_COMPLETED', data: result });
-  res.json(result);
-});
-
-router.get('/evaluation/history', (req, res) => {
-  res.json(db.getBatchRuns());
+  const { sampleSize = 2000 } = req.body;
+  const results = runEvaluationBenchmark(sampleSize);
+  broadcastSSE({ type: 'EVALUATION_COMPLETED', data: results });
+  res.json(results);
 });
 
 export default router;
