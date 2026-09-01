@@ -90,6 +90,18 @@ export default function App() {
     loadData();
   };
 
+  const handleQuickThresholdUpdate = async (newRupees) => {
+    const policyPayload = {
+      money: {
+        ...(merchant?.policy?.money || {}),
+        highValueApprovalPaise: newRupees * 100
+      }
+    };
+    const updated = await updateMerchantPolicy(policyPayload);
+    setMerchant(updated);
+    loadData();
+  };
+
   const handleTriggerDemo = async (bank = 'HDFC Bank', method = 'upi') => {
     await triggerDemoIncident(bank, method);
     loadData();
@@ -163,7 +175,7 @@ export default function App() {
                 <span className="text-xs font-bold ml-2">
                   {demoStoryStep === 1 && "Step 1: Payment SRE Intelligence — HDFC UPI Anomaly Detected & Circuit Breaker Tripped"}
                   {demoStoryStep === 2 && "Step 2: Recovery Decision Brain — 8-Action Economics Matrix Evaluates Expected Net Values"}
-                  {demoStoryStep === 3 && "Step 3: Policy & Governance Gateway — Priya Patel (₹28,500) Flagged for Manager Approval"}
+                  {demoStoryStep === 3 && "Step 3: Policy & Governance Gateway — High-Value Orders Flagged for Manager Approval"}
                   {demoStoryStep === 4 && "Step 4: Omnichannel Execution — Razorpay Test Mode 1-Click Pay Link Dispatched"}
                   {demoStoryStep === 5 && "Step 5: Outcome Feedback Loop & Attribution — Closed-Loop Learning & Measured ROI"}
                 </span>
@@ -232,7 +244,9 @@ export default function App() {
         {activeTab === 'approvals' && (
           <ApprovalCenter
             cases={cases}
+            merchant={merchant}
             onApproveAction={handleApproveAction}
+            onUpdateThreshold={handleQuickThresholdUpdate}
           />
         )}
 
