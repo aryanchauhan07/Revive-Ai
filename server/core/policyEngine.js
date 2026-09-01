@@ -127,11 +127,11 @@ export function evaluateSingleActionPolicy(caseItem, actionProposed, merchant = 
 
   // 7. Max Attempts Check
   const pastAttempts = caseItem.current_plan?.recoveryHistory?.attempts || 0;
-  if (pastAttempts >= policy.retry.maxAttempts) {
+  if (pastAttempts >= (policy.retry?.maxAttempts || 3)) {
     return {
       decision: 'BLOCK',
       matched_rules: ['MAX_ATTEMPTS_EXHAUSTED'],
-      reason: `Maximum contact/retry attempts (${policy.retry.maxAttempts}) reached for this case.`
+      reason: `Maximum contact/retry attempts (${policy.retry?.maxAttempts || 3}) reached for this case.`
     };
   }
 
@@ -149,12 +149,13 @@ export function evaluateSingleActionPolicy(caseItem, actionProposed, merchant = 
 
 /**
  * Re-evaluates all active recovery cases against a fresh policy update.
- * Dynamically moves cases in/out of the Human Approval Queue.
+ * Dynamically updates exact contextual reasons for high-value floors vs discount reviews.
  */
 export function reEvaluateAllCasesPolicy(merchant = null) {
   if (!merchant) merchant = db.getMerchant();
   const cases = db.getCases();
   const highValuePaise = merchant.policy?.money?.highValueApprovalPaise || 2500000;
+  const maxAutoDiscountPct = merchant.policy?.money?.maxAutoDiscountPct ?? 2;
   
   cases.forEach(caseItem => {
     // Only re-evaluate active non-terminal cases
@@ -163,15 +164,29 @@ export function reEvaluateAllCasesPolicy(merchant = null) {
     const planActions = caseItem.current_plan?.actions || [{ action: 'CREATE_PAYMENT_LINK' }];
     const policyResult = evaluatePlanPolicies(caseItem, planActions);
 
-    const requiresReview = policyResult.requires_approval || (caseItem.amount_paise >= highValuePaise && merchant.mode !== 'AUTOPILOT');
+    const isHighValue = (caseItem.amount_paise || 0) >= highValuePaise && merchant.mode !== 'AUTOPILOT';
+    const discountAction = planActions.find(a => a.action === 'INCENTIVE');
+    const discountPct = discountAction?.params?.discountPct || 0;
+    const isDiscountReview = discountPct > maxAutoDiscountPct;
+
+    const requiresReview = isHighValue || isDiscountReview;
+
+    let reason = 'All policy guardrails passed.';
+    if (isHighValue) {
+      reason = `High-value order (₹${(caseItem.amount_paise / 100).toLocaleString()} >= ₹${(highValuePaise / 100).toLocaleString()}) requires human manager approval.`;
+    } else if (isDiscountReview) {
+      reason = `Proposed incentive (${discountPct}% dynamic discount) exceeds auto-discount ceiling (${maxAutoDiscountPct}%). Requires manager review.`;
+    }
 
     caseItem.policy_decision = {
       decision: requiresReview ? 'REVIEW' : policyResult.decision,
       requires_approval: requiresReview,
-      matched_rules: requiresReview ? [`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${highValuePaise / 100})`] : ['ALL_STANDARD_GUARDRAILS_PASSED'],
-      reason: requiresReview
-        ? `High-value order (₹${(caseItem.amount_paise / 100).toLocaleString()} >= ₹${(highValuePaise / 100).toLocaleString()}) requires human manager approval.`
-        : 'All policy guardrails passed.'
+      matched_rules: isHighValue 
+        ? [`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${highValuePaise / 100})`]
+        : isDiscountReview
+          ? [`DISCOUNT_REQUIRES_REVIEW (${discountPct}% > ${maxAutoDiscountPct}%)`]
+          : ['ALL_STANDARD_GUARDRAILS_PASSED'],
+      reason
     };
 
     if (requiresReview) {
