@@ -99,6 +99,10 @@ test('5. Customer Self-Recovery - Payment Captured Cancels Queued Actions', () =
   const updatedCase = db.getCaseById(caseId);
   assert.equal(updatedCase.status, 'RECOVERED');
   assert.equal(updatedCase.attribution, 'SELF_RECOVERED');
+
+  // Clean up test case to prevent data pollution
+  db.data.recoveryCases = db.data.recoveryCases.filter(c => c.id !== caseId);
+  db.save();
 });
 
 test('6. Seeded PRNG Benchmark Reproducibility - Same Seed Yields Identical Output', () => {

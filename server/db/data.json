@@ -18,7 +18,7 @@
       "money": {
         "maxAutoDiscountPct": 2,
         "maxDiscountPct": 5,
-        "highValueApprovalPaise": 2500000,
+        "highValueApprovalPaise": 1000000,
         "monthlyIncentiveBudgetPaise": 5000000,
         "minGrossMarginPct": 18
       },
@@ -46,8 +46,8 @@
   "paymentAttempts": [],
   "webhookInbox": [
     {
-      "event_id": "evt_self_1788245629092",
-      "received_at": "2026-09-01T06:53:49.092Z",
+      "event_id": "evt_self_1788245878485",
+      "received_at": "2026-09-01T06:57:58.485Z",
       "signature_valid": true,
       "is_demo": true,
       "event_type": "payment.captured",
@@ -56,15 +56,15 @@
         "payload": {
           "payment": {
             "entity": {
-              "id": "pay_self_1788245629090"
+              "id": "pay_self_1788245878482"
             }
           }
         }
       }
     },
     {
-      "event_id": "evt_test_dedupe_1788245629079",
-      "received_at": "2026-09-01T06:53:49.079Z",
+      "event_id": "evt_test_dedupe_1788245878473",
+      "received_at": "2026-09-01T06:57:58.473Z",
       "signature_valid": true,
       "is_demo": true,
       "event_type": "payment.failed",
@@ -285,16 +285,6 @@
   ],
   "recoveryCases": [
     {
-      "id": "CASE-TEST-SELF-RECOVER",
-      "merchant_id": "merchant_razor_01",
-      "provider_payment_id": "pay_self_1788245629090",
-      "amount_paise": 500000,
-      "status": "RECOVERED",
-      "attribution": "SELF_RECOVERED",
-      "recovered_at": "2026-09-01T06:53:49.092Z",
-      "canceled_queued_actions": true
-    },
-    {
       "id": "CASE-101",
       "incident_id": "INC-901",
       "merchant_id": "merchant_razor_01",
@@ -387,7 +377,7 @@
       "customer_phone": "+919812345678",
       "amount_paise": 720000,
       "currency": "INR",
-      "status": "CONTACTED",
+      "status": "RECOVERED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -447,7 +437,10 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-01T03:34:03.239Z"
+      "created_at": "2026-09-01T03:34:03.239Z",
+      "recovered_at": "2026-09-01T06:56:46.123Z",
+      "payment_method_used": "upi",
+      "attribution": "RECOVEROPS_ASSISTED"
     },
     {
       "id": "CASE-103",
@@ -1598,74 +1591,124 @@
   ],
   "auditEvents": [
     {
-      "id": "AUDIT-1788245629128-709",
+      "id": "AUDIT-1788245878526-985",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.128Z",
+      "occurred_at": "2026-09-01T06:57:58.526Z",
       "actor_type": "system",
       "actor_id": "attribution_engine_v1",
       "action": "BATCH_EVALUATION_RUN",
-      "correlation_id": "RUN-1788245629126",
+      "correlation_id": "RUN-1788245878523",
       "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
     },
     {
-      "id": "AUDIT-1788245629124-897",
+      "id": "AUDIT-1788245878520-256",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.124Z",
+      "occurred_at": "2026-09-01T06:57:58.520Z",
       "actor_type": "system",
       "actor_id": "attribution_engine_v1",
       "action": "BATCH_EVALUATION_RUN",
-      "correlation_id": "RUN-1788245629105",
+      "correlation_id": "RUN-1788245878499",
       "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
     },
     {
-      "id": "AUDIT-1788245629099-562",
+      "id": "AUDIT-1788245878491-583",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.099Z",
+      "occurred_at": "2026-09-01T06:57:58.491Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "WEBHOOK_VERIFIED",
-      "correlation_id": "evt_self_1788245629092",
-      "details": "Processed webhook payment.captured for pay_self_1788245629090. Signature valid: true."
+      "correlation_id": "evt_self_1788245878485",
+      "details": "Processed webhook payment.captured for pay_self_1788245878482. Signature valid: true."
     },
     {
-      "id": "AUDIT-1788245629095-859",
+      "id": "AUDIT-1788245878488-571",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.095Z",
+      "occurred_at": "2026-09-01T06:57:58.488Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "CUSTOMER_SELF_RECOVERED",
       "correlation_id": "CASE-TEST-SELF-RECOVER",
-      "details": "Payment pay_self_1788245629090 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+      "details": "Payment pay_self_1788245878482 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
     },
     {
-      "id": "AUDIT-1788245629086-679",
+      "id": "AUDIT-1788245878477-607",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.086Z",
+      "occurred_at": "2026-09-01T06:57:58.477Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "DUPLICATE_WEBHOOK_IGNORED",
-      "correlation_id": "evt_test_dedupe_1788245629079",
-      "details": "No-op: Webhook event evt_test_dedupe_1788245629079 already processed at 2026-09-01T06:53:49.079Z. Duplicate ignored safely."
+      "correlation_id": "evt_test_dedupe_1788245878473",
+      "details": "No-op: Webhook event evt_test_dedupe_1788245878473 already processed at 2026-09-01T06:57:58.473Z. Duplicate ignored safely."
     },
     {
-      "id": "AUDIT-1788245629079-645",
+      "id": "AUDIT-1788245878473-777",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.079Z",
+      "occurred_at": "2026-09-01T06:57:58.473Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "WEBHOOK_VERIFIED",
-      "correlation_id": "evt_test_dedupe_1788245629079",
+      "correlation_id": "evt_test_dedupe_1788245878473",
       "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
     },
     {
-      "id": "AUDIT-1788245629076-957",
+      "id": "AUDIT-1788245878470-276",
       "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-09-01T06:53:49.076Z",
+      "occurred_at": "2026-09-01T06:57:58.470Z",
       "actor_type": "provider",
       "actor_id": "razorpay_webhook",
       "action": "SECURITY_WEBHOOK_REJECTED",
-      "correlation_id": "evt_1788245629076_g6fh6n",
+      "correlation_id": "evt_1788245878469_593xbs",
       "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
+    {
+      "id": "AUDIT-1788245869350-790",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T06:57:49.350Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=5%, HighValueFloor=₹10000"
+    },
+    {
+      "id": "AUDIT-1788245845943-249",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T06:57:25.943Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=5%, HighValueFloor=₹10000"
+    },
+    {
+      "id": "AUDIT-1788245822233-836",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T06:57:02.233Z",
+      "actor_type": "user",
+      "actor_id": "merchant_admin",
+      "action": "POLICY_UPDATED",
+      "correlation_id": "merchant_razor_01",
+      "details": "Updated policy: Mode=ASSIST, MaxDiscount=5%, HighValueFloor=₹20000"
+    },
+    {
+      "id": "AUDIT-1788245806173-320",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T06:56:46.173Z",
+      "actor_type": "user",
+      "actor_id": "customer",
+      "action": "PAYMENT_CAPTURED_RECOVERED",
+      "correlation_id": "CASE-102",
+      "details": "Payment Captured! Recovered ₹7,200 via upi. Attribution: RECOVEROPS_ASSISTED."
+    },
+    {
+      "id": "AUDIT-1788245806138-189",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T06:56:46.138Z",
+      "actor_type": "system",
+      "actor_id": "outcome_feedback_loop",
+      "action": "STRATEGY_LEARNING_UPDATED",
+      "correlation_id": "CASE-102",
+      "details": "Outcome Feedback: SWITCH_PAYMENT_METHOD successfully recovered ₹7,200. Model prior updated: 88% -> 91.2% (+3.2% confidence lift)."
     },
     {
       "id": "AUDIT-1788236365573-587",
@@ -4596,64 +4639,14 @@
       "action": "INCIDENT_OPENED",
       "correlation_id": "INC-733",
       "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787817006522-918",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:50:06.523Z",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-6581",
-      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
-    },
-    {
-      "id": "AUDIT-1787817006515-781",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:50:06.515Z",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-6581",
-      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
-    },
-    {
-      "id": "AUDIT-1787817006448-410",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:50:06.448Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-285",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787817005518-551",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:50:05.518Z",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-8071",
-      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
-    },
-    {
-      "id": "AUDIT-1787817005511-793",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-27T07:50:05.512Z",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-8071",
-      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
     }
   ],
   "batchRuns": [
     {
-      "id": "RUN-1788245629126",
+      "id": "RUN-1788245878523",
       "batch_size": 100,
       "seed": 20260828,
-      "executed_at": "2026-09-01T06:53:49.126Z",
+      "executed_at": "2026-09-01T06:57:58.523Z",
       "total_revenue_at_risk_paise": 58990000,
       "natural_self_recovery_paise": 7220000,
       "baselineA_recovered_paise": 7220000,
@@ -4673,10 +4666,10 @@
       "is_reproducible": true
     },
     {
-      "id": "RUN-1788245629105",
+      "id": "RUN-1788245878499",
       "batch_size": 100,
       "seed": 20260828,
-      "executed_at": "2026-09-01T06:53:49.105Z",
+      "executed_at": "2026-09-01T06:57:58.499Z",
       "total_revenue_at_risk_paise": 58990000,
       "natural_self_recovery_paise": 7220000,
       "baselineA_recovered_paise": 7220000,
@@ -4888,6 +4881,20 @@
       "policy_violations": 0,
       "human_escalations": 11,
       "safe_stops": 8
+    }
+  ],
+  "strategyLearnings": [
+    {
+      "id": "FB-1788245806136",
+      "case_id": "CASE-102",
+      "strategy_used": "SWITCH_PAYMENT_METHOD",
+      "payment_rail_used": "upi",
+      "recovered_amount_paise": 720000,
+      "intervention_cost_paise": 50,
+      "time_to_recover_seconds": 48,
+      "prior_confidence": 0.88,
+      "posterior_confidence": 0.912,
+      "timestamp": "2026-09-01T06:56:46.136Z"
     }
   ]
 }

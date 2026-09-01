@@ -17,10 +17,19 @@ export default function CommandCenter({
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  // Deduplicate cases & incidents by ID
-  const uniqueCasesMap = new Map((cases || []).map(c => [c.id, c]));
+  // Deduplicate cases & incidents strictly
+  const uniqueCasesMap = new Map(
+    (cases || [])
+      .filter(c => c.customer_name && !c.id?.startsWith('CASE-TEST'))
+      .map(c => [c.id, c])
+  );
   const uniqueCases = Array.from(uniqueCasesMap.values());
-  const openIncidents = Array.from(new Map((incidents || []).filter(i => i.status === 'OPEN').map(i => [i.id, i])).values());
+  const openIncidentsMap = new Map();
+  (incidents || []).filter(i => i.status === 'OPEN').forEach(i => {
+    const key = i.title || i.id;
+    if (!openIncidentsMap.has(key)) openIncidentsMap.set(key, i);
+  });
+  const openIncidents = Array.from(openIncidentsMap.values());
   const pendingApprovals = uniqueCases.filter(c => c.status === 'APPROVAL_REQUIRED');
 
   // Financial Metrics Calculation (Paise -> Rupees)

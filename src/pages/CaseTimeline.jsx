@@ -22,9 +22,13 @@ export default function CaseTimeline({
   onExecuteAction = () => {}, 
   onSetPtpDate = () => {} 
 }) {
-  // Deduplicate cases by ID
+  // Deduplicate valid cases by ID
   const uniqueCases = Array.from(
-    new Map((cases || []).map(c => [c.id, c])).values()
+    new Map(
+      (cases || [])
+        .filter(c => c.customer_name && !c.id?.startsWith('CASE-TEST'))
+        .map(c => [c.id, c])
+    ).values()
   );
 
   const [searchTerm, setSearchTerm] = useState('');
