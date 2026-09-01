@@ -1,4 +1,5 @@
 # 📘 RECOVEROPS — Tab-by-Tab Plain English Guide & 5-Minute Video Pitch Script
+### Razorpay AI Buildathon — Track 03: AI Revenue Recovery
 
 ---
 
@@ -12,7 +13,7 @@ This section explains what every single tab in the platform does in simple langu
 * **What is this page for?**
   * This is the **executive cockpit** for the merchant's finance and payment operations team. It gives a real-time summary of revenue at risk, money already recovered, active recovery cases, and live system health.
 * **Key Features on this Page:**
-  * **Top Metric Cards:** Shows Total Revenue at Risk (e.g. ₹2.03 Lakhs), Recovered Revenue, Active Incidents, and Recovery Rate (84.8%).
+  * **Top Metric Cards:** Shows Total Revenue at Risk (₹2.03 Lakhs), Recovered Revenue, Active Incidents, and Recovery Rate (84.8%).
   * **Payment Rail Health Curve:** Real-time visualization showing live success rate vs. historical baseline across UPI, Cards, Netbanking, and AutoPay.
   * **Active Cases Table:** List of failed transactions with customer names, amounts, failure reasons, and quick action buttons (`1-Click Link`, `WhatsApp`, `Voice Call`).
 * **Expected Outcome:**
@@ -22,10 +23,10 @@ This section explains what every single tab in the platform does in simple langu
 
 ### 2. ⚡ Payment Health — Payment SRE Intelligence (`PaymentHealth.jsx`)
 * **What is this page for?**
-  * This is the **Payment SRE (Site Reliability Engineering) layer**. Instead of treating every payment failure as a customer problem, this page determines if a failure is an **individual glitch** or part of a **massive bank/ecosystem outage**.
+  * This is the **Payment SRE (Site Reliability Engineering) layer**. Instead of treating every payment failure as an individual customer issue, this page determines if a failure is an **individual glitch** or part of a **massive bank/ecosystem outage**.
 * **Key Features on this Page:**
   * **SRE Blast Radius Telemetry:** Shows how many transactions and how much revenue are at risk across degraded bank rails.
-  * **Degraded Rail Cards:** Cards showing HDFC UPI (38% success), ICICI Cards (68%), and SBI AutoPay (72%).
+  * **Degraded Rail Cards:** Live cards for HDFC UPI (38% success), ICICI Cards (68%), and SBI AutoPay (72%).
   * **Recovery Circuit Breaker:** Shows `STATUS: TRIPPED`. When a bank is failing, the system **automatically stops useless retries** on that bank (preventing customer frustration and bank retry penalties) and steers customers to alternate methods (Cards/Netbanking).
   * **Trigger Live Anomaly Button:** A live demo button that simulates a bank outage in real time.
 * **Expected Outcome:**
@@ -48,23 +49,29 @@ This section explains what every single tab in the platform does in simple langu
 
 ---
 
-### 4. 🧠 Recovery Cases — Recovery Decision Brain & Omnichannel (`CaseTimeline.jsx`)
+### 4. 🧠 Recovery Cases — Decision Brain & 4-Vertical Manager (`CaseTimeline.jsx`)
 * **What is this page for?**
-  * Demonstrates the **Recovery Decision Brain** and **Omnichannel Recovery Execution**.
+  * Demonstrates the **Recovery Decision Brain** and multi-vertical recovery workflows across all 4 problem statement areas.
 * **Key Features on this Page:**
+  * **4 Problem Statement Vertical Filter Tabs (Top Right):**
+    - 🛒 **`Checkout Drop-Offs`**: Highlights Sneha Mehta (₹6,499) checkout drop-off recovery with dynamic 3% incentive discount.
+    - 🔄 **`Failed Subscriptions`**: Highlights Karan Malhotra (₹12,400) and Divya Joshi (₹8,900) SBI AutoPay e-Mandate salary-window sequencer.
+    - 🏢 **`B2B Invoices`**: Highlights Acme Technologies (₹85,000) corporate overdue invoice aging and virtual account settlement.
+    - ⚡ **`Bank Outages`**: Highlights HDFC UPI & ICICI Card technical failures.
+  * **Contextual Feature Spotlight Banners:** Explains the active recovery strategy for the selected customer type.
   * **8-Action Financial Utility Economics Matrix:** For any selected customer, calculates and displays:
-    1. Estimated Recovery Probability (e.g. 78%)
+    1. Estimated Recovery Probability (e.g. 82%)
     2. Gross Recovered Amount (e.g. ₹6,499)
-    3. Cost of Intervention (e.g. ₹1.95)
+    3. Cost of Intervention (e.g. ₹0.50)
     4. Policy / Risk Impact
     5. **Expected Net Recovery Value** (Chooses the action that maximizes net financial return).
   * **Interactive Omnichannel Action Buttons:**
-    - 🎙️ **`Voice` Button:** Opens the **Hinglish Voice Call Sandbox** with real browser audio synthesis.
-    - 💬 **`WhatsApp` Button:** Opens the **Interactive WhatsApp Drawer** with pre-filled Hinglish templates and payment links.
-    - 💳 **`Pay Link` Button:** Opens the **Razorpay 1-Click Checkout Modal** to simulate customer payment capture in test mode with confetti.
+    - 🎙️ **`Simulate Hinglish Voice Call` Button:** Opens the **Audible Voice Call Sandbox** with real Web Speech API speech synthesis, Hindi/English bilingual dialogue, live speaking waveform, and "Play Current Audio" button.
+    - 💬 **`Dispatch WhatsApp Link` Button:** Opens the **Interactive WhatsApp Drawer** with pre-filled Hinglish templates and payment links.
+    - 💳 **`Razorpay 1-Click Pay Link` Button:** Opens the **Razorpay Checkout Modal** to simulate customer payment capture in test mode with confetti and Bayesian feedback learning.
   * **Promise-to-Pay (PTP) Tracker:** Interactive calendar picker where a customer's promised payment date can be set, automatically pausing outreach cadence until that date.
 * **Expected Outcome:**
-  * Demonstrates that the AI doesn't just guess—it mathematically calculates the highest ROI recovery action and executes it across Voice, WhatsApp, and Razorpay Links.
+  * Demonstrates that AI covers all 4 revenue loss verticals and mathematically calculates the highest ROI recovery action.
 
 ---
 
@@ -74,7 +81,7 @@ This section explains what every single tab in the platform does in simple langu
 * **Key Features on this Page:**
   * **Policy Trigger Category Tabs:**
     - 👑 **`₹20k+ VIP`**: High-value transactions (Priya Patel ₹28,500, Aditya Verma ₹23,900).
-    - 🏷️ **`Discount Review`**: Margin-protection reviews where a proposed dynamic discount exceeds the auto-limit (Sneha Mehta ₹6,499 with 3% discount).
+    - 🏷️ **`Discount Cap Review`**: Margin-protection reviews where a proposed dynamic discount exceeds the auto-limit (Sneha Mehta ₹6,499 with 3% discount).
     - 🟡 **`₹10k - ₹20k`**: Mid-tier high-value cases.
     - 🔵 **`₹1k - ₹10k`**: Standard orders.
     - 🛡️ **`Pending Approvals`** & **`Autonomous Cases`**.
@@ -94,7 +101,7 @@ This section explains what every single tab in the platform does in simple langu
   * **DND Quiet Hours:** Configurable customer contact windows (default 22:00 to 08:00 IST) to respect anti-spam regulations.
   * **Financial Thresholds:** High-Value Approval Floor (₹), Auto-Discount Cap (%), and Max Absolute Discount Ceiling (%).
   * **Emergency Kill Switch:** Red master button that instantly freezes all autonomous messaging, payment retries, and discount dispatches across all rails.
-  * **Save Policy with Floating Toast Notification:** Saving policy changes immediately triggers a green confirmation toast and re-evaluates all active customer queues in real time.
+  * **Floating Confirmation Toast Notification:** Saving policy changes immediately triggers a green confirmation toast and re-evaluates all active customer queues in real time.
 * **Expected Outcome:**
   * Changing a threshold (e.g. lowering the floor to ₹10,000) immediately reflects in the Approval Queue with zero page reloads.
 
@@ -117,7 +124,7 @@ This section explains what every single tab in the platform does in simple langu
 
 ---
 
-# 🎬 PART 2: 5-Minute Video Walkthrough Pitch Script
+# 🎬 PART 2: The 5-Minute Video Walkthrough Pitch Script
 
 > **⏱️ Total Target Duration:** Exactly 5 Minutes (300 Seconds)  
 > **🎯 Goal:** Walk the judges through the full end-to-end user journey showing the problem, intelligence, execution, governance, and measured ROI.
@@ -127,47 +134,48 @@ This section explains what every single tab in the platform does in simple langu
 ### ⏱️ [0:00 – 0:45] The Hook & Problem Statement
 * **Screen:** Open **[http://localhost:5173](http://localhost:5173)** on the **Command Center**.
 * **What to Say:**
-  > *"Hello judges! Revenue loss in digital commerce rarely happens in one clean step. It happens when bank rails degrade, checkouts get abandoned, subscriptions fail, or corporate invoices go overdue.*
+  > *"Hello judges! In digital commerce and SaaS, revenue loss rarely happens in one clean step. It happens across four critical failure modes: payment rail degradations, abandoned checkouts, failed subscriptions, and overdue B2B invoices.*
   >
-  > *Most AI agents in the market are simple prompt wrappers that blindly recommend retrying. But retrying during a bank outage only creates retry storms, angers customers, and costs money.*
+  > *Most generic AI agents simply wrap LLM prompts to blindly retry payments. But during bank downtime, retries only cause retry storms, bank fines, and customer anger.*
   >
-  > *Welcome to **RECOVEROPS** — an autonomous Payment SRE Intelligence and AI Revenue Recovery Engine built specifically for the Razorpay ecosystem. It doesn't guess; it diagnoses payment failures, calculates expected net financial utility, executes bounded omnichannel recovery, and proves measured ROI with an immutable audit trail. Let's look at it live."*
+  > *Welcome to **RECOVEROPS (Revive AI)** — an autonomous Payment SRE Intelligence and AI Revenue Recovery Engine built specifically for the Razorpay ecosystem. It diagnoses failures, calculates expected net financial utility, executes bounded omnichannel recovery, and proves measured ROI with a cryptographic audit trail. Let's see it live."*
 
 ---
 
 ### ⏱️ [0:45 – 1:45] Payment SRE Intelligence & Incidents
-* **Action:** Click on the **"Payment Health"** tab in the navigation bar.
-* **What to Point Out:** Point to the **SRE Blast Radius** cards and the **Circuit Breaker**.
+* **Action:** Click on the **"Payment Health"** tab, then click the **"Incidents"** tab.
+* **What to Point Out:** Point to the **SRE Blast Radius** cards, the **Circuit Breaker**, and the 3 incident cohorts.
 * **What to Say:**
-  > *"First, let's look at our **Payment SRE Intelligence layer**. Here on Payment Health, the system continuously analyzes rolling success rates across every payment rail.*
+  > *"First, let's look at our **Payment SRE Intelligence layer**. On Payment Health, the system continuously analyzes rolling success rates across every payment rail.*
   >
-  > *Notice that **HDFC Bank UPI** has experienced a sharp degradation down to 38%. Instead of spamming retries on a broken bank, RECOVEROPS has tripped a **Recovery Circuit Breaker** to suppress all same-rail retries and steer customers to alternate rails like Cards and Netbanking.*
+  > *Notice that **HDFC Bank UPI** has degraded down to 38%. Instead of spamming retries, RECOVEROPS has tripped a **Recovery Circuit Breaker** to suppress failing same-rail retries and steer customers to Cards and Netbanking.*
   >
-  > *(Click on the **'Incidents'** tab)*
+  > *(Click on **'Incidents'** tab)*
   >
-  > *Here in the **Revenue Incident Inspector**, the system isolates the incident into distinct cohorts. For example, `INC-901` isolates 5 affected customers with ₹59,249 at risk. We can see each customer's individualized diagnosis and AI recovery approach."*
+  > *In the **Revenue Incident Inspector**, the system isolates the outage into distinct cohorts. `INC-901` isolates 5 affected customers with ₹59,249 at risk. We can inspect root-cause evidence and individualized customer recovery plans."*
 
 ---
 
-### ⏱️ [1:45 – 2:45] Recovery Decision Brain & Interactive Omnichannel Execution
-* **Action:** Click on the **"Recovery Cases"** tab. Select **Ananya Roy** or **Sneha Mehta**.
-* **What to Point Out:** Show the **8-Action Economics Matrix**, then click the **`Voice`** button and **`Pay Link`** button.
+### ⏱️ [1:45 – 2:50] 4-Vertical Recovery & Audible Hinglish Voice Agent
+* **Action:** Click on the **"Recovery Cases"** tab. 
+* **What to Point Out:** Click the top filter tabs (**Checkout Drop-Offs**, **Failed Subscriptions**, **B2B Invoices**), then click **"Simulate Hinglish Voice Call"** and play the audio.
 * **What to Say:**
-  > *"Now let's see how RECOVEROPS decides what action to take. In **Recovery Cases**, we see our **Recovery Decision Brain**.*
+  > *"Now let's examine our **Recovery Decision Brain** across all four revenue loss verticals:*
   >
-  > *For every case, the system evaluates an **8-action financial utility matrix**: calculating estimated recovery probability, gross recovery, action cost, and expected net value. It strictly chooses the action that maximizes net financial recovery.*
-  >
-  > *Let's see how it executes:*
-  >
-  > 1. *(Click **'Simulate Voice Call'**)*: *'Here is our bilingual Hinglish voice agent powered by Web Speech API. It engages the customer politely in Hinglish, diagnoses their payment drop, and offers to send an instant recovery link directly to their WhatsApp.' (Play 5 seconds of audio).*
-  > 2. *(Click **'Pay Link'**)*: *'Here is our Razorpay 1-Click Checkout simulator. When the customer completes checkout, payment is captured in test mode with zero API keys required, updating our Bayesian learning models in real time!'*
-  > 3. *'We also feature a **Promise-to-Pay (PTP) tracker** to pause outreach until the customer's promised pay date.'*
+  > 1. *(Click **'Checkout Drop-Offs'**)*: *'Here is Sneha Mehta (₹6,499). The AI detected cart abandonment during friction, generated a 3% dynamic recovery discount, and dispatched an instant WhatsApp link.'*
+  > 2. *(Click **'Failed Subscriptions'**)*: *'Here is Karan Malhotra (₹12,400) on SBI AutoPay. Instead of daily failing debits, our **Salary Window Sequencer** scheduled retry execution between the 1st and 3rd of the month.'*
+  > 3. *(Click **'B2B Invoices'**)*: *'Here is Acme Technologies (₹85,000) with corporate aging follow-ups and Virtual Account settlement.'*
+  > 4. *(Click **'Simulate Hinglish Voice Call'**)*: *'Now listen to our audible Hinglish Voice Agent powered by Web Speech API.'*  
+  >    *(Let the audio play for 5-8 seconds)*:  
+  >    🔊 *'Namaste Ananya ji! Main Razorpay Revive AI payment desk se bol raha hoon...'*
+  > 5. *(Click **'Razorpay 1-Click Pay Link'**)*: *'When the customer completes checkout in our test simulator, payment is captured, updating our Bayesian models in real time!'*
+  > 6. *'We also feature a **Promise-to-Pay (PTP) tracker** to pause cadence until the customer's promised date.'*
 
 ---
 
-### ⏱️ [2:45 – 3:45] Human-in-the-Loop Governance & Policy Control
+### ⏱️ [2:50 – 3:50] Human-in-the-Loop Governance & Live Policy Control
 * **Action:** Click on the **"Approval Queue"** tab, then switch to the **"Autonomy & Policy"** tab.
-* **What to Point Out:** Show the **VIP Orders (≥ ₹20k)** and **Discount Reviews**, then adjust a threshold and click **Save Policy**.
+* **What to Point Out:** Show the **VIP Orders (≥ ₹20k)** and **Discount Reviews**, then adjust a threshold and click **Save Policy Changes**.
 * **What to Say:**
   > *"Next is our **Policy & Governance Gateway**. Real fintech systems require fail-closed compliance.*
   >
@@ -175,11 +183,11 @@ This section explains what every single tab in the platform does in simple langu
   >
   > *(Switch to **'Autonomy & Policy'** tab)*
   >
-  > *In the Policy Control Engine, merchants can configure autonomy modes (OBSERVE, ASSIST, AUTOPILOT), DND quiet hours (22:00 to 08:00 IST), and financial floors. When we click **'Save Policy Changes'**, notice the real-time floating confirmation toast and how all queues dynamically re-evaluate in real time!"*
+  > *In Policy Control, merchants can configure autonomy modes (OBSERVE, ASSIST, AUTOPILOT), DND quiet hours (22:00 to 08:00 IST), and financial floors. When we click **'Save Policy Changes'**, notice the real-time floating confirmation toast and how all queues dynamically re-evaluate in real time!"*
 
 ---
 
-### ⏱️ [3:45 – 4:40] Attribution & 2,000-Event Benchmark
+### ⏱️ [3:50 – 4:45] Attribution & 2,000-Event Benchmark
 * **Action:** Click on the **"2k Batch Evaluation"** tab. Click the blue **"Run 2,000-Event Simulation"** button.
 * **What to Point Out:** Show the **35.1x ROI**, **84.8% Recovery Rate**, and **0 Policy Violations**.
 * **What to Say:**
@@ -191,7 +199,7 @@ This section explains what every single tab in the platform does in simple langu
 
 ---
 
-### ⏱️ [4:40 – 5:00] Conclusion & Razorpay Vision
+### ⏱️ [4:45 – 5:00] Conclusion & Razorpay Vision
 * **Screen:** Return to the **Command Center** dashboard.
 * **What to Say:**
   > *"To summarize: RECOVEROPS is not just another chatbot. It is a comprehensive, production-oriented Payment SRE and Revenue Recovery Engine that turns lost transactions into recovered gross revenue with enterprise safety and mathematical rigor.*
@@ -202,6 +210,6 @@ This section explains what every single tab in the platform does in simple langu
 
 ### 💡 Pro-Tips for Your 5-Minute Recording:
 1. **Resolution:** Record at 1080p (1920x1080) at 100% browser zoom for crisp text.
-2. **Audio:** Unmute the browser tab before clicking "Simulate Voice Call" so the Web Speech API voice is clearly audible.
+2. **Audio:** Unmute the browser tab before clicking "Simulate Hinglish Voice Call" so the Web Speech API voice is clearly audible.
 3. **Pacing:** Keep your mouse movements smooth and deliberate as you switch between tabs.
 4. **Guided Banner:** You can also use the top **"Architecture Demo Journey"** banner to jump between steps effortlessly!
