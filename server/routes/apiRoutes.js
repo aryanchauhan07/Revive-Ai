@@ -2,7 +2,7 @@ import express from 'express';
 import { db } from '../db/database.js';
 import { diagnoseAndPlanCase } from '../core/recoveryPlanner.js';
 import { executeCaseAction } from '../core/actionExecutor.js';
-import { runEvaluationBenchmark } from '../simulation/batchSimulator.js';
+import { runBatchEvaluation } from '../simulation/batchSimulator.js';
 import { evaluatePlanPolicies } from '../core/policyEngine.js';
 
 const router = express.Router();
@@ -280,7 +280,7 @@ router.get('/audit', (req, res) => {
 // 8. 2,000-Event Benchmark Evaluator
 router.post('/evaluation/run', (req, res) => {
   const { sampleSize = 2000 } = req.body;
-  const results = runEvaluationBenchmark(sampleSize);
+  const results = runBatchEvaluation(sampleSize);
   broadcastSSE({ type: 'EVALUATION_COMPLETED', data: results });
   res.json(results);
 });

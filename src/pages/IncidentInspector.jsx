@@ -15,12 +15,12 @@ export default function IncidentInspector({
   cases = [], 
   onOpenCheckout = () => {}
 }) {
-  // Deduplicate open incidents strictly by ID or Title
+  // Deduplicate open incidents strictly by Title so that each distinct incident appears ONLY once
   const openIncidentsMap = new Map();
   (incidents || [])
     .filter(i => i.status === 'OPEN')
     .forEach(i => {
-      const key = i.id || i.title;
+      const key = i.title || (i.dimensions?.issuer + '_' + i.dimensions?.method) || i.id;
       if (!openIncidentsMap.has(key)) {
         openIncidentsMap.set(key, i);
       }
@@ -61,18 +61,18 @@ export default function IncidentInspector({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: List of Incidents */}
+        {/* Left Column: List of Distinct Incidents */}
         <div className="lg:col-span-1 glass-panel rounded-2xl p-4 border border-slate-200 bg-white shadow-card space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
             <h3 className="font-extrabold text-slate-500 text-xs uppercase tracking-wider">Active Incidents</h3>
             <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-              {openIncidents.length} Open
+              {openIncidents.length} Distinct
             </span>
           </div>
 
           <div className="space-y-2 overflow-y-auto max-h-[520px] custom-scrollbar">
             {openIncidents.map((inc) => {
-              const isSelected = selectedIncidentId === inc.id;
+              const isSelected = activeIncident.id === inc.id || activeIncident.title === inc.title;
               const atRiskRupees = Math.round((inc.revenue_at_risk_paise || 0) / 100);
               const matchingCases = (cases || []).filter(c => c.incident_id === inc.id);
               const customerCount = matchingCases.length || inc.affected_count || inc.sre_blast_radius?.affected_customers || 3;
@@ -93,8 +93,8 @@ export default function IncidentInspector({
                     </span>
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       inc.severity === 'HIGH' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
-                      inc.severity === 'MEDIUM' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
-                      'bg-blue-50 text-blue-700 border border-blue-200'
+                      inc.severity === 'MEDIUM' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                      'bg-blue-50 text-blue-700 border-blue-200'
                     }`}>
                       {inc.severity}
                     </span>
