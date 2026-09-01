@@ -46,6 +46,14 @@ test('3. Webhook Idempotency - Duplicate Event ID is a No-Op', () => {
 });
 
 test('4. Per-Action Policy Engine - Evaluates Every Action Individually', () => {
+  db.updateMerchantPolicy({
+    money: {
+      maxAutoDiscountPct: 2,
+      maxDiscountPct: 5,
+      highValueApprovalPaise: 2500000
+    }
+  });
+
   // Standard Order (₹4,850)
   const standardCase = {
     id: "CASE-TEST-01",
