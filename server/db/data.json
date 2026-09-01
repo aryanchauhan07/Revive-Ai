@@ -16,9 +16,9 @@
         "HUMAN_ESCALATION": "REQUIRE_APPROVAL"
       },
       "money": {
-        "maxAutoDiscountPct": 4,
-        "maxDiscountPct": 4,
-        "highValueApprovalPaise": 2000000,
+        "maxAutoDiscountPct": 2,
+        "maxDiscountPct": 5,
+        "highValueApprovalPaise": 2500000,
         "monthlyIncentiveBudgetPaise": 5000000,
         "minGrossMarginPct": 18
       },
@@ -45,6 +45,40 @@
   "payments": [],
   "paymentAttempts": [],
   "webhookInbox": [
+    {
+      "event_id": "evt_self_1788283834819",
+      "received_at": "2026-09-01T17:30:34.819Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.captured",
+      "payload": {
+        "event": "payment.captured",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_self_1788283834813"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_test_dedupe_1788283834757",
+      "received_at": "2026-09-01T17:30:34.757Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.failed",
+      "payload": {
+        "event": "payment.failed",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_dedupe_1"
+            }
+          }
+        }
+      }
+    },
     {
       "event_id": "evt_self_1788245878485",
       "received_at": "2026-09-01T06:57:58.485Z",
@@ -148,7 +182,7 @@
       "title": "HDFC Bank UPI Authorization Degradation",
       "status": "OPEN",
       "severity": "HIGH",
-      "started_at": "2026-09-01T16:04:38.847Z",
+      "started_at": "2026-09-01T17:08:53.360Z",
       "dimensions": {
         "method": "upi",
         "issuer": "HDFC Bank",
@@ -364,7 +398,7 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T16:04:38.856Z",
+      "created_at": "2026-09-01T17:08:53.372Z",
       "recovered_at": "2026-09-01T15:54:47.382Z",
       "payment_method_used": "card",
       "attribution": "RECOVEROPS_ASSISTED"
@@ -440,7 +474,7 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T16:04:38.873Z",
+      "created_at": "2026-09-01T17:08:53.390Z",
       "recovered_at": "2026-09-01T06:56:46.123Z",
       "payment_method_used": "upi",
       "attribution": "RECOVEROPS_ASSISTED"
@@ -455,7 +489,7 @@
       "customer_phone": "+919898989898",
       "amount_paise": 2850000,
       "currency": "INR",
-      "status": "APPROVAL_REQUIRED",
+      "status": "RECOVERED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -515,7 +549,30 @@
         ],
         "reason": "High-value order (₹28,500 >= ₹20,000) requires human manager approval."
       },
-      "created_at": "2026-09-01T16:04:38.887Z"
+      "created_at": "2026-09-01T17:08:53.403Z",
+      "last_execution": {
+        "id": "EXEC-1788282435511",
+        "case_id": "CASE-103",
+        "idempotency_key": "action:CASE-103:v2.0:action_SWITCH_METHOD",
+        "action": "SWITCH_METHOD",
+        "params": {
+          "suggestedMethod": "card_or_netbanking"
+        },
+        "result": {
+          "provider": "razorpay_interactive_sandbox",
+          "is_simulated": true,
+          "payment_link_id": "plink_demo_1788282435511",
+          "payment_url": "http://localhost:5173/?link=plink_demo_1788282435511&case=CASE-103&amt=28500&disc=0",
+          "discount_applied_pct": 0,
+          "final_amount_rupees": 28500,
+          "status": "ACTIVE"
+        },
+        "executed_at": "2026-09-01T17:07:15.511Z",
+        "status": "COMPLETED"
+      },
+      "recovered_at": "2026-09-01T17:09:22.894Z",
+      "payment_method_used": "upi",
+      "attribution": "RECOVEROPS_ASSISTED"
     },
     {
       "id": "CASE-104",
@@ -588,7 +645,7 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T16:04:38.900Z"
+      "created_at": "2026-09-01T17:08:53.415Z"
     },
     {
       "id": "CASE-105",
@@ -651,7 +708,7 @@
         ],
         "reason": "All policy guardrails passed."
       },
-      "created_at": "2026-09-01T16:04:38.910Z"
+      "created_at": "2026-09-01T17:08:53.428Z"
     },
     {
       "id": "CASE-201",
@@ -790,7 +847,7 @@
       "customer_phone": "+919833344455",
       "amount_paise": 2390000,
       "currency": "INR",
-      "status": "APPROVAL_REQUIRED",
+      "status": "CONTACTED",
       "eligibility": "ELIGIBLE",
       "failure_reason": {
         "error_code": "GATEWAY_ERROR",
@@ -842,7 +899,24 @@
         ],
         "reason": "High-value order (₹23,900 >= ₹20,000) requires human manager approval."
       },
-      "created_at": "2026-09-01T09:07:10.655Z"
+      "created_at": "2026-09-01T09:07:10.655Z",
+      "last_execution": {
+        "id": "EXEC-1788282424218",
+        "case_id": "CASE-203",
+        "idempotency_key": "action:CASE-203:v2.0:action_STOP",
+        "action": "STOP",
+        "params": {
+          "reason": "Rejected by manager"
+        },
+        "result": {
+          "provider": "internal_escalation_workflow",
+          "is_simulated": false,
+          "reviewer_id": "human_manager",
+          "status": "HANDLED"
+        },
+        "executed_at": "2026-09-01T17:07:04.218Z",
+        "status": "COMPLETED"
+      }
     },
     {
       "id": "CASE-401",
@@ -972,6 +1046,63 @@
     }
   ],
   "actionExecutions": [
+    {
+      "id": "EXEC-1788282435511",
+      "case_id": "CASE-103",
+      "idempotency_key": "action:CASE-103:v2.0:action_SWITCH_METHOD",
+      "action": "SWITCH_METHOD",
+      "params": {
+        "suggestedMethod": "card_or_netbanking"
+      },
+      "result": {
+        "provider": "razorpay_interactive_sandbox",
+        "is_simulated": true,
+        "payment_link_id": "plink_demo_1788282435511",
+        "payment_url": "http://localhost:5173/?link=plink_demo_1788282435511&case=CASE-103&amt=28500&disc=0",
+        "discount_applied_pct": 0,
+        "final_amount_rupees": 28500,
+        "status": "ACTIVE"
+      },
+      "executed_at": "2026-09-01T17:07:15.511Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788282424218",
+      "case_id": "CASE-203",
+      "idempotency_key": "action:CASE-203:v2.0:action_STOP",
+      "action": "STOP",
+      "params": {
+        "reason": "Rejected by manager"
+      },
+      "result": {
+        "provider": "internal_escalation_workflow",
+        "is_simulated": false,
+        "reviewer_id": "human_manager",
+        "status": "HANDLED"
+      },
+      "executed_at": "2026-09-01T17:07:04.218Z",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "EXEC-1788282397152",
+      "case_id": "CASE-203",
+      "idempotency_key": "action:CASE-203:v2.0:action_CREATE_PAYMENT_LINK",
+      "action": "CREATE_PAYMENT_LINK",
+      "params": {
+        "expiresMinutes": 120
+      },
+      "result": {
+        "provider": "razorpay_interactive_sandbox",
+        "is_simulated": true,
+        "payment_link_id": "plink_demo_1788282397151",
+        "payment_url": "http://localhost:5173/?link=plink_demo_1788282397151&case=CASE-203&amt=23900&disc=0",
+        "discount_applied_pct": 0,
+        "final_amount_rupees": 23900,
+        "status": "ACTIVE"
+      },
+      "executed_at": "2026-09-01T17:06:37.152Z",
+      "status": "COMPLETED"
+    },
     {
       "id": "EXEC-1788189496268",
       "case_id": "CASE-105",
@@ -1599,6 +1730,146 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1788283834855-365",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.855Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788283834851",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788283834848-402",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.848Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788283834843",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788283834827-724",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.827Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_self_1788283834819",
+      "details": "Processed webhook payment.captured for pay_self_1788283834813. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788283834824-921",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.824Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "CUSTOMER_SELF_RECOVERED",
+      "correlation_id": "CASE-TEST-SELF-RECOVER",
+      "details": "Payment pay_self_1788283834813 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+    },
+    {
+      "id": "AUDIT-1788283834767-283",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.767Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "DUPLICATE_WEBHOOK_IGNORED",
+      "correlation_id": "evt_test_dedupe_1788283834757",
+      "details": "No-op: Webhook event evt_test_dedupe_1788283834757 already processed at 2026-09-01T17:30:34.757Z. Duplicate ignored safely."
+    },
+    {
+      "id": "AUDIT-1788283834757-671",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.757Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_test_dedupe_1788283834757",
+      "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788283834747-538",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:30:34.747Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "SECURITY_WEBHOOK_REJECTED",
+      "correlation_id": "evt_1788283834747_kjcue",
+      "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
+    {
+      "id": "AUDIT-1788282562921-826",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:09:22.921Z",
+      "actor_type": "user",
+      "actor_id": "customer",
+      "action": "PAYMENT_CAPTURED_RECOVERED",
+      "correlation_id": "CASE-103",
+      "details": "Payment Captured! Recovered ₹28,500 via upi. Attribution: RECOVEROPS_ASSISTED."
+    },
+    {
+      "id": "AUDIT-1788282562904-314",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:09:22.904Z",
+      "actor_type": "system",
+      "actor_id": "outcome_feedback_loop",
+      "action": "STRATEGY_LEARNING_UPDATED",
+      "correlation_id": "CASE-103",
+      "details": "Outcome Feedback: SWITCH_PAYMENT_METHOD successfully recovered ₹28,500. Model prior updated: 88% -> 91.2% (+3.2% confidence lift)."
+    },
+    {
+      "id": "AUDIT-1788282533439-743",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:08:53.439Z",
+      "actor_type": "system",
+      "actor_id": "health_detector_v1",
+      "action": "INCIDENT_OPENED",
+      "correlation_id": "INC-901",
+      "details": "HDFC Bank UPI Authorization Degradation opened. Blast Radius: 5 customers, ₹59,249 at risk. Circuit breaker: TRIPPED."
+    },
+    {
+      "id": "AUDIT-1788282521630-563",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:08:41.630Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788282521619",
+      "details": "Evaluated 2000 events. Gross Recovered: ₹83,33,900. True Incremental Lift: +₹35,23,921.5 (187.7x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788282435521-823",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:07:15.521Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-103",
+      "details": "Executed SWITCH_METHOD with Idempotency Key action:CASE-103:v2.0:action_SWITCH_METHOD. Provider: razorpay_interactive_sandbox. Status: COMPLETED."
+    },
+    {
+      "id": "AUDIT-1788282424231-489",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:07:04.231Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-203",
+      "details": "Executed STOP with Idempotency Key action:CASE-203:v2.0:action_STOP. Provider: internal_escalation_workflow. Status: COMPLETED."
+    },
+    {
+      "id": "AUDIT-1788282397170-80",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T17:06:37.171Z",
+      "actor_type": "user",
+      "actor_id": "human_manager",
+      "action": "ACTION_EXECUTED",
+      "correlation_id": "CASE-203",
+      "details": "Executed CREATE_PAYMENT_LINK with Idempotency Key action:CASE-203:v2.0:action_CREATE_PAYMENT_LINK. Provider: razorpay_interactive_sandbox. Status: COMPLETED."
+    },
     {
       "id": "AUDIT-1788278695219-164",
       "merchant_id": "merchant_razor_01",
@@ -4508,149 +4779,78 @@
       "action": "INCIDENT_OPENED",
       "correlation_id": "INC-613",
       "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787906826146-894",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T08:47:06.146Z",
-      "actor_type": "user",
-      "actor_id": "customer",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-6718",
-      "details": "Executed action PAYMENT_CAPTURED with Idempotency Key action:CASE-6718:PAYMENT_CAPTURED:1787906826140. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787906787635-537",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T08:46:27.635Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-163",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787906598039-492",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T08:43:18.039Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-431",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787902445111-431",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:34:05.111Z",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-6718",
-      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
-    },
-    {
-      "id": "AUDIT-1787902445105-42",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:34:05.105Z",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-6718",
-      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
-    },
-    {
-      "id": "AUDIT-1787902445061-318",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:34:05.061Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-312",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787902443649-512",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:34:03.649Z",
-      "actor_type": "model",
-      "actor_id": "recovery_planner_v1",
-      "action": "PLAN_PROPOSED",
-      "correlation_id": "CASE-1455",
-      "details": "Diagnosed: INCIDENT_CORRELATED. Primary action: WAIT. Policy decision: ALLOW"
-    },
-    {
-      "id": "AUDIT-1787902443627-849",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:34:03.627Z",
-      "actor_type": "system",
-      "actor_id": "policy_engine_v1",
-      "action": "POLICY_EVALUATED",
-      "correlation_id": "CASE-1455",
-      "details": "Evaluated action WAIT: Decision=ALLOW. Matched: ALL_STANDARD_GUARDRAILS_PASSED"
-    },
-    {
-      "id": "AUDIT-1787902443559-529",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:34:03.559Z",
-      "actor_type": "system",
-      "actor_id": "health_detector_v1",
-      "action": "INCIDENT_OPENED",
-      "correlation_id": "INC-460",
-      "details": "Opened degradation incident for HDFC Bank UPI. Revenue at risk: ₹49,500."
-    },
-    {
-      "id": "AUDIT-1787902383220-944",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:33:03.220Z",
-      "actor_type": "system",
-      "actor_id": "batch_evaluator_v1",
-      "action": "BATCH_EVALUATION_RUN",
-      "correlation_id": "RUN-1787902383214",
-      "details": "Executed 2,000-event benchmark batch. Revenue at risk: ₹1,00,51,400. Recovered: ₹73,48,600 (73.1% Recovery Rate). Violations: 0."
-    },
-    {
-      "id": "AUDIT-1787902363696-119",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:43.696Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363690. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902363494-409",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:43.495Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363487. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902363274-209",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:43.274Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363269. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902363099-214",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:43.099Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902363093. Status: COMPLETED"
     }
   ],
   "batchRuns": [
+    {
+      "id": "RUN-1788283834851",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T17:30:34.851Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
+    {
+      "id": "RUN-1788283834843",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T17:30:34.843Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
+    {
+      "id": "RUN-1788282521619",
+      "batch_size": 2000,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T17:08:41.619Z",
+      "total_revenue_at_risk_paise": 1098680000,
+      "natural_self_recovery_paise": 204480000,
+      "baselineA_recovered_paise": 204480000,
+      "baselineB_recovered_paise": 479120000,
+      "recoverOps_gross_recovered_paise": 833390000,
+      "recoverOps_net_recovered_paise": 831512150,
+      "net_incremental_recovered_paise": 352392150,
+      "incentive_cost_paise": 1860600,
+      "comms_cost_paise": 17250,
+      "total_intervention_cost_paise": 1877850,
+      "roi_multiplier": 187.7,
+      "recovery_rate_pct": 75.9,
+      "incremental_lift_pct": 32.2,
+      "policy_violations": 0,
+      "human_escalations": 96,
+      "safe_stops": 92,
+      "is_reproducible": true
+    },
     {
       "id": "RUN-1788278673498",
       "batch_size": 2000,
@@ -4939,6 +5139,18 @@
     }
   ],
   "strategyLearnings": [
+    {
+      "id": "FB-1788282562904",
+      "case_id": "CASE-103",
+      "strategy_used": "SWITCH_PAYMENT_METHOD",
+      "payment_rail_used": "upi",
+      "recovered_amount_paise": 2850000,
+      "intervention_cost_paise": 500,
+      "time_to_recover_seconds": 48,
+      "prior_confidence": 0.88,
+      "posterior_confidence": 0.912,
+      "timestamp": "2026-09-01T17:09:22.904Z"
+    },
     {
       "id": "FB-1788278087390",
       "case_id": "CASE-101",

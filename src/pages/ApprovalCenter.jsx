@@ -9,11 +9,14 @@ import {
   Loader2, 
   Percent, 
   Crown, 
-  Sparkles,
-  Tag,
-  ShieldAlert,
-  Sliders,
-  Check
+  Sparkles, 
+  Tag, 
+  ShieldAlert, 
+  Sliders, 
+  Check, 
+  X, 
+  Bell,
+  Send
 } from 'lucide-react';
 
 export default function ApprovalCenter({ 
@@ -24,6 +27,9 @@ export default function ApprovalCenter({
   const [processingId, setProcessingId] = useState(null);
   const [approvedIds, setApprovedIds] = useState(new Set());
   const [activeFilter, setActiveFilter] = useState('PENDING'); // 'PENDING' | 'HIGH_VALUE' | 'DISCOUNT' | 'AUTONOMOUS'
+  
+  // Notification Toast State for Executed / Rejected Actions
+  const [notification, setNotification] = useState(null);
 
   const currentHighValuePaise = merchant?.policy?.money?.highValueApprovalPaise || 2000000;
   const currentThresholdRupees = Math.round(currentHighValuePaise / 100);
@@ -96,20 +102,105 @@ export default function ApprovalCenter({
   else if (activeFilter === 'DISCOUNT') displayedCases = discountCases;
   else if (activeFilter === 'AUTONOMOUS') displayedCases = autonomousCases;
 
-  const handleApprove = async (caseId, action) => {
+  const handleApprove = async (caseId, action, caseItem) => {
     setProcessingId(caseId);
+    const isReject = action.action === 'STOP';
+    const amountRupees = Math.round((caseItem?.amount_paise || 0) / 100).toLocaleString();
+    const customerName = caseItem?.customer_name || 'Customer';
+
     try {
       await onApproveAction(caseId, action);
       setApprovedIds(prev => new Set(prev).add(caseId));
+
+      // Trigger rich confirmation toast notification
+      setNotification({
+        id: Date.now(),
+        type: isReject ? 'REJECT' : 'APPROVE',
+        title: isReject 
+          ? `🛑 Recovery Outreach Rejected & Stopped` 
+          : `✅ Recovery Action Approved & Executed!`,
+        customerName: customerName,
+        caseId: caseId,
+        amount: amountRupees,
+        actionName: isReject ? 'STOP Outreach' : `${action.action} (1-Click Link)`,
+        timestamp: new Date().toLocaleTimeString(),
+        description: isReject
+          ? `Outreach for ${customerName} (₹${amountRupees}) permanently halted by manager decision.`
+          : `Manager sign-off complete. Dispatched 1-click recovery payment link (₹${amountRupees}) to ${customerName} via WhatsApp & SMS.`
+      });
+
+      // Auto-dismiss notification after 4 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 4000);
     } catch (err) {
-      console.error("Approval error:", err);
+      console.error("Approval execution error:", err);
     } finally {
       setProcessingId(null);
     }
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in relative">
+      {/* Floating Action Confirmation Toast Notification */}
+      {notification && (
+        <div className={`fixed top-20 right-8 z-50 max-w-md w-full bg-white border-2 rounded-2xl p-4 shadow-2xl animate-slide-in-right space-y-2.5 ${
+          notification.type === 'APPROVE'
+            ? 'border-emerald-500 shadow-emerald-500/20'
+            : 'border-rose-500 shadow-rose-500/20'
+        }`}>
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold ${
+                notification.type === 'APPROVE'
+                  ? 'bg-emerald-100 text-emerald-700'
+                  : 'bg-rose-100 text-rose-700'
+              }`}>
+                {notification.type === 'APPROVE' ? (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                ) : (
+                  <XCircle className="w-5 h-5 text-rose-600" />
+                )}
+              </div>
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-xs tracking-tight">
+                  {notification.title}
+                </h4>
+                <p className="text-[11px] text-slate-500 font-medium font-mono">
+                  {notification.customerName} • Case: {notification.caseId} • {notification.timestamp}
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setNotification(null)}
+              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-100 text-[10px] font-mono">
+            <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
+              Amount: ₹{notification.amount}
+            </span>
+            <span className={`px-2 py-0.5 rounded font-bold border ${
+              notification.type === 'APPROVE'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-rose-50 text-rose-700 border-rose-200'
+            }`}>
+              Action: {notification.actionName}
+            </span>
+            <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200">
+              Status: Executed
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-600 font-medium">
+            {notification.description}
+          </p>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Human Manager Approval Queue</h2>
@@ -249,14 +340,16 @@ export default function ApprovalCenter({
                     <div className="flex items-center space-x-3">
                       <button
                         disabled={isProcessing}
-                        onClick={() => handleApprove(c.id, { action: 'STOP', params: { reason: 'Rejected by manager' } })}
-                        className="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all disabled:opacity-50"
+                        onClick={() => handleApprove(c.id, { action: 'STOP', params: { reason: 'Rejected by manager' } }, c)}
+                        className="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all disabled:opacity-50 flex items-center space-x-1.5"
                       >
-                        Reject & Stop
+                        <XCircle className="w-3.5 h-3.5" />
+                        <span>Reject & Stop</span>
                       </button>
+                      
                       <button
                         disabled={isProcessing}
-                        onClick={() => handleApprove(c.id, targetAction)}
+                        onClick={() => handleApprove(c.id, targetAction, c)}
                         className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center space-x-1.5 transition-all disabled:opacity-50"
                       >
                         {isProcessing ? (
