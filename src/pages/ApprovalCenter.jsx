@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
-import { CheckSquare, CheckCircle2, XCircle, AlertTriangle, ShieldCheck, ArrowRight, Loader2, Sliders } from 'lucide-react';
+import { CheckSquare, CheckCircle2, XCircle, AlertTriangle, ShieldCheck, ArrowRight, Loader2, Filter, IndianRupee } from 'lucide-react';
 
 export default function ApprovalCenter({ 
   cases = [], 
   merchant, 
-  onApproveAction, 
-  onUpdateThreshold = () => {} 
+  onApproveAction 
 }) {
   const [processingId, setProcessingId] = useState(null);
   const [approvedIds, setApprovedIds] = useState(new Set());
+  const [selectedTier, setSelectedTier] = useState('ALL'); // 'ALL' | '20k+' | '10k-20k' | '1k-10k'
 
-  const currentHighValuePaise = merchant?.policy?.money?.highValueApprovalPaise || 2500000;
-  const currentThresholdRupees = Math.round(currentHighValuePaise / 100);
-
-  // Filter strictly by the amount threshold selected
-  const approvalCases = (cases || []).filter(c => {
+  // Filter valid active cases
+  const validCases = (cases || []).filter(c => {
     if (approvedIds.has(c.id)) return false;
     if (c.status === 'RECOVERED' || c.status === 'CANCELLED') return false;
     if (!c.customer_name || c.id?.startsWith('CASE-TEST')) return false;
+    return true;
+  });
 
-    // Strict amount criterion: case amount must be >= active threshold
-    return (c.amount_paise || 0) >= currentHighValuePaise;
+  // Calculate counts for each tier
+  const countVIP = validCases.filter(c => (c.amount_paise || 0) >= 2000000).length;
+  const countHigh = validCases.filter(c => (c.amount_paise || 0) >= 1000000 && (c.amount_paise || 0) < 2000000).length;
+  const countStandard = validCases.filter(c => (c.amount_paise || 0) < 1000000).length;
+
+  // Filter by selected tier
+  const displayedCases = validCases.filter(c => {
+    const amt = (c.amount_paise || 0) / 100;
+    if (selectedTier === '20k+') return amt >= 20000;
+    if (selectedTier === '10k-20k') return amt >= 10000 && amt < 20000;
+    if (selectedTier === '1k-10k') return amt < 10000;
+    return true; // 'ALL'
   });
 
   const handleApprove = async (caseId, action) => {
@@ -35,113 +44,116 @@ export default function ApprovalCenter({
     }
   };
 
-  const handleQuickThresholdChange = (newRupees) => {
-    onUpdateThreshold(newRupees);
-  };
-
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Human Manager Approval Queue</h2>
           <p className="text-xs text-slate-500 mt-0.5 font-medium">
-            Policy governance gate: Filtered strictly for transactions &ge; ₹{currentThresholdRupees.toLocaleString()} (Human-in-the-Loop)
+            Tier-based recovery governance and human-in-the-loop review segmented by transaction value
           </p>
         </div>
 
-        {/* Quick Threshold Toggle for Amount Criterion */}
-        <div className="flex items-center space-x-2 bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
-          <span className="text-[11px] font-bold text-slate-500 pl-2 pr-1 flex items-center space-x-1">
-            <Sliders className="w-3.5 h-3.5 text-blue-600" />
-            <span>Threshold:</span>
-          </span>
+        {/* Segmented Amount Range Selector */}
+        <div className="flex items-center space-x-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
           <button
-            onClick={() => handleQuickThresholdChange(25000)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-              currentThresholdRupees === 25000
+            onClick={() => setSelectedTier('ALL')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
+              selectedTier === 'ALL'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            &ge; ₹25k (1 Case)
+            All Tiers ({validCases.length})
           </button>
           <button
-            onClick={() => handleQuickThresholdChange(15000)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-              currentThresholdRupees === 15000
+            onClick={() => setSelectedTier('20k+')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold font-mono transition-all ${
+              selectedTier === '20k+'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            &ge; ₹15k (2 Cases)
+            ₹20k+ VIP ({countVIP})
           </button>
           <button
-            onClick={() => handleQuickThresholdChange(10000)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-              currentThresholdRupees === 10000
+            onClick={() => setSelectedTier('10k-20k')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold font-mono transition-all ${
+              selectedTier === '10k-20k'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            &ge; ₹10k (5 Cases)
+            ₹10k - ₹20k ({countHigh})
           </button>
           <button
-            onClick={() => handleQuickThresholdChange(5000)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-              currentThresholdRupees === 5000
+            onClick={() => setSelectedTier('1k-10k')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold font-mono transition-all ${
+              selectedTier === '1k-10k'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            &ge; ₹5k (8 Cases)
+            ₹1k - ₹10k ({countStandard})
           </button>
         </div>
       </div>
 
-      {approvalCases.length === 0 ? (
+      {displayedCases.length === 0 ? (
         <div className="glass-panel rounded-2xl p-12 text-center space-y-3 border border-slate-200 bg-white shadow-card animate-fade-in">
           <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-slate-900">All Approvals Cleared!</h3>
+          <h3 className="text-base font-bold text-slate-900">No Cases in this Tier</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium">
-            No pending transactions exceeding the &ge; ₹{currentThresholdRupees.toLocaleString()} threshold. Low-risk actions are executing autonomously.
+            All recovery cases in the selected amount range have been processed or approved.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          {approvalCases.map((c) => {
+          {displayedCases.map((c) => {
             const isProcessing = processingId === c.id;
             const targetAction = c.current_plan?.actions?.find(a => a.action !== 'HUMAN_ESCALATION') || c.current_plan?.actions?.[0] || { action: 'CREATE_PAYMENT_LINK' };
             const amountRupees = Math.round((c.amount_paise || 0) / 100);
 
+            // Determine Tier Category
+            let tierBadge = 'STANDARD ORDER';
+            let tierColor = 'bg-blue-50 text-blue-700 border-blue-200';
+            if (amountRupees >= 20000) {
+              tierBadge = 'VIP ORDER (₹20k+)';
+              tierColor = 'bg-purple-50 text-purple-700 border-purple-200';
+            } else if (amountRupees >= 10000) {
+              tierBadge = 'HIGH-VALUE (₹10k-₹20k)';
+              tierColor = 'bg-amber-50 text-amber-800 border-amber-200';
+            }
+
             return (
-              <div key={c.id} className="glass-panel rounded-2xl p-5 border border-amber-300 bg-amber-50/40 shadow-card space-y-4 animate-fade-in">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/60 pb-3">
+              <div key={c.id} className="glass-panel rounded-2xl p-5 border border-slate-200 bg-white shadow-card space-y-4 animate-fade-in">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-bold border border-amber-300">
-                        APPROVAL REQUIRED
+                      <span className={`px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold border ${tierColor}`}>
+                        {tierBadge}
                       </span>
                       <h3 className="font-extrabold text-slate-900 text-base">{c.customer_name}</h3>
                     </div>
                     <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                      Case: <span className="font-mono">{c.id}</span> • Order Ref: <span className="font-mono">{c.provider_payment_id}</span> • Phone: {c.customer_phone}
+                      Case: <span className="font-mono">{c.id}</span> • Order Ref: <span className="font-mono">{c.provider_payment_id}</span> • Rail: <strong className="text-slate-700">{c.failure_reason?.issuer} ({c.failure_reason?.method?.toUpperCase()})</strong>
                     </p>
                   </div>
                   <div className="text-left sm:text-right">
                     <div className="text-2xl font-extrabold text-slate-900">₹{amountRupees.toLocaleString()}</div>
-                    <span className="text-xs text-amber-800 font-bold">
-                      &ge; ₹{currentThresholdRupees.toLocaleString()} Threshold Met
+                    <span className="text-xs text-slate-400 font-medium">
+                      Failure: {c.failure_reason?.error_reason}
                     </span>
                   </div>
                 </div>
 
-                {/* Policy Trigger Reason */}
-                <div className="p-3.5 rounded-xl bg-white border border-amber-200 text-xs space-y-1">
-                  <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Policy Gate Trigger Reason</span>
+                {/* AI Plan Summary */}
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                  <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">AI Recovery Recommendation</span>
                   <p className="text-slate-800 font-semibold">
-                    Transaction value (₹{amountRupees.toLocaleString()}) meets or exceeds the active policy threshold (₹{currentThresholdRupees.toLocaleString()}). Requires explicit human manager approval before dispatching recovery link.
+                    {c.current_plan?.diagnosis || `Diagnosed ${c.failure_reason?.error_reason} on ${c.failure_reason?.issuer}. Recommended alternate checkout link.`}
                   </p>
                 </div>
 
