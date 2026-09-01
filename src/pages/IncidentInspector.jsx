@@ -5,7 +5,9 @@ import {
   ArrowRight, 
   Sparkles,
   Users,
-  IndianRupee
+  IndianRupee,
+  ShieldAlert,
+  Flame
 } from 'lucide-react';
 
 export default function IncidentInspector({ 
@@ -13,10 +15,17 @@ export default function IncidentInspector({
   cases = [], 
   onOpenCheckout = () => {}
 }) {
-  // Deduplicate open incidents by ID
-  const openIncidents = Array.from(
-    new Map((incidents || []).filter(i => i.status === 'OPEN').map(i => [i.id, i])).values()
-  );
+  // Deduplicate open incidents strictly by ID or Title
+  const openIncidentsMap = new Map();
+  (incidents || [])
+    .filter(i => i.status === 'OPEN')
+    .forEach(i => {
+      const key = i.id || i.title;
+      if (!openIncidentsMap.has(key)) {
+        openIncidentsMap.set(key, i);
+      }
+    });
+  const openIncidents = Array.from(openIncidentsMap.values());
 
   const [selectedIncidentId, setSelectedIncidentId] = useState(openIncidents[0]?.id || 'INC-901');
   const activeIncident = openIncidents.find(i => i.id === selectedIncidentId) || openIncidents[0] || {
@@ -26,27 +35,28 @@ export default function IncidentInspector({
     severity: "HIGH",
     dimensions: { method: "upi", issuer: "HDFC Bank", step: "authorization" },
     baseline_success_rate: 0.88,
-    current_success_rate: 0.41,
+    current_success_rate: 0.38,
     affected_count: 5,
     revenue_at_risk_paise: 5924900,
-    root_cause: "HDFC UPI Auth Gateway timeouts detected. Direct retries are failing at 82%.",
-    recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp.",
-    evidence: [
-      { key: "UPI Success Drop", value: "88% -> 41% baseline delta" },
-      { key: "Razorpay Downtime Match", value: "HDFC PSP degraded status confirmed" },
-      { key: "Method Concentration", value: "92% of failures on UPI rail" }
-    ]
+    root_cause: "HDFC UPI partner gateway timeouts detected. Direct retries failing at 84%.",
+    recommended_approach: "Suppress same-rail retries; dispatch alternate method payment link via WhatsApp."
   };
 
-  // Filter cohort cases belonging to selected incident
-  const cohortCases = (cases || []).filter(c => c.incident_id === activeIncident.id || (!c.incident_id && activeIncident.id === 'INC-901'));
+  // Filter cohort cases strictly belonging to active incident
+  const cohortCases = (cases || []).filter(c => {
+    if (c.incident_id) {
+      return c.incident_id === activeIncident.id;
+    }
+    // Fallback matching by issuer/method if legacy case
+    return activeIncident.id === 'INC-901' && c.failure_reason?.issuer === 'HDFC Bank';
+  });
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
         <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Revenue Incident Inspector</h2>
         <p className="text-xs text-slate-500 font-medium">
-          Closed-loop degradation isolation and customer cohort remediation
+          Closed-loop payment degradation isolation, root-cause diagnosis, and customer cohort remediation
         </p>
       </div>
 
@@ -60,10 +70,13 @@ export default function IncidentInspector({
             </span>
           </div>
 
-          <div className="space-y-2 overflow-y-auto max-h-[500px] custom-scrollbar">
+          <div className="space-y-2 overflow-y-auto max-h-[520px] custom-scrollbar">
             {openIncidents.map((inc) => {
               const isSelected = selectedIncidentId === inc.id;
               const atRiskRupees = Math.round((inc.revenue_at_risk_paise || 0) / 100);
+              const matchingCases = (cases || []).filter(c => c.incident_id === inc.id);
+              const customerCount = matchingCases.length || inc.affected_count || inc.sre_blast_radius?.affected_customers || 3;
+
               return (
                 <div
                   key={inc.id}
@@ -78,7 +91,11 @@ export default function IncidentInspector({
                     <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white border border-slate-200">
                       {inc.id}
                     </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      inc.severity === 'HIGH' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                      inc.severity === 'MEDIUM' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+                      'bg-blue-50 text-blue-700 border border-blue-200'
+                    }`}>
                       {inc.severity}
                     </span>
                   </div>
@@ -86,7 +103,7 @@ export default function IncidentInspector({
                   <h4 className="font-bold text-xs text-slate-900 line-clamp-1">{inc.title}</h4>
 
                   <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono pt-1">
-                    <span>{inc.affected_count || 5} Customers</span>
+                    <span>{customerCount} Customers</span>
                     <strong className="text-rose-700 font-bold">₹{atRiskRupees.toLocaleString()}</strong>
                   </div>
                 </div>
@@ -107,12 +124,14 @@ export default function IncidentInspector({
                 <h3 className="text-base font-extrabold text-slate-900">{activeIncident.title}</h3>
               </div>
               <p className="text-xs text-slate-500 mt-1 font-medium">
-                Method: <strong className="text-slate-800 font-bold">{activeIncident.dimensions?.method?.toUpperCase()}</strong> • Issuer: <strong className="text-slate-800 font-bold">{activeIncident.dimensions?.issuer}</strong>
+                Degraded Rail: <strong className="text-slate-800 font-bold">{activeIncident.dimensions?.issuer} ({activeIncident.dimensions?.method?.toUpperCase()})</strong> • Status: <span className="text-rose-600 font-bold">ACTIVE DEGRADATION</span>
               </p>
             </div>
 
             <div className="text-left sm:text-right">
-              <span className="text-xl font-extrabold text-rose-700">₹{Math.round((activeIncident.revenue_at_risk_paise || 0) / 100).toLocaleString()}</span>
+              <span className="text-xl font-extrabold text-rose-700">
+                ₹{Math.round((activeIncident.revenue_at_risk_paise || 0) / 100).toLocaleString()}
+              </span>
               <span className="text-xs text-slate-400 block font-medium">Revenue at Risk</span>
             </div>
           </div>
@@ -138,8 +157,10 @@ export default function IncidentInspector({
           {/* Affected Customer Cohort Table */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider">Affected Customer Cohort ({cohortCases.length})</h4>
-              <span className="text-xs text-slate-400 font-medium">Customer-specific AI recommendations</span>
+              <h4 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider">
+                Affected Customer Cohort ({cohortCases.length} Customers)
+              </h4>
+              <span className="text-xs text-slate-400 font-medium">Individualized customer interventions</span>
             </div>
 
             <div className="overflow-x-auto custom-scrollbar">
@@ -154,31 +175,40 @@ export default function IncidentInspector({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {cohortCases.map((c) => (
-                    <tr key={c.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-3">
-                        <div className="font-bold text-slate-900">{c.customer_name}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{c.id}</div>
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className="font-semibold text-amber-800">{c.failure_reason?.error_reason}</span>
-                      </td>
-                      <td className="py-3 px-3 font-semibold text-blue-700">
-                        {c.current_plan?.actions?.map(a => a.action).join(' → ') || 'WAIT → SWITCH_METHOD'}
-                      </td>
-                      <td className="py-3 px-3 text-right font-extrabold text-slate-900">
-                        ₹{(c.amount_paise / 100).toLocaleString()}
-                      </td>
-                      <td className="py-3 px-3 text-right">
-                        <button
-                          onClick={() => onOpenCheckout(c)}
-                          className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-all shadow-2xs"
-                        >
-                          Remediate
-                        </button>
+                  {cohortCases.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="py-6 text-center text-slate-400 font-medium">
+                        No active failure cases under this incident.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    cohortCases.map((c) => (
+                      <tr key={c.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-3 px-3">
+                          <div className="font-bold text-slate-900">{c.customer_name}</div>
+                          <div className="text-[10px] text-slate-400 font-mono">{c.id} • {c.customer_phone}</div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span className="font-semibold text-amber-800">{c.failure_reason?.error_reason}</span>
+                          <span className="text-[10px] text-slate-400 block">{c.failure_reason?.issuer} ({c.failure_reason?.method?.toUpperCase()})</span>
+                        </td>
+                        <td className="py-3 px-3 font-semibold text-blue-700">
+                          {c.current_plan?.actions?.map(a => a.action).join(' → ') || 'WAIT → SWITCH_METHOD'}
+                        </td>
+                        <td className="py-3 px-3 text-right font-extrabold text-slate-900">
+                          ₹{(c.amount_paise / 100).toLocaleString()}
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <button
+                            onClick={() => onOpenCheckout(c)}
+                            className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-all shadow-2xs"
+                          >
+                            Remediate
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
