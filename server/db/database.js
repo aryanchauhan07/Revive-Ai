@@ -447,7 +447,31 @@ class Database {
 
   getMerchant() { return this.data.merchant; }
   updateMerchantPolicy(policy) {
-    this.data.merchant.policy = { ...this.data.merchant.policy, ...policy };
+    this.data.merchant.policy = {
+      ...this.data.merchant.policy,
+      ...policy,
+      money: {
+        maxAutoDiscountPct: 2,
+        maxDiscountPct: 5,
+        highValueApprovalPaise: 2500000,
+        monthlyIncentiveBudgetPaise: 5000000,
+        minGrossMarginPct: 18,
+        ...this.data.merchant.policy?.money,
+        ...policy?.money
+      },
+      contact: {
+        maxContacts: 3,
+        minGapMinutes: 45,
+        quietHours: { start: "22:00", end: "08:00" },
+        ...this.data.merchant.policy?.contact,
+        ...policy?.contact
+      },
+      retry: {
+        maxAttempts: 3,
+        ...this.data.merchant.policy?.retry,
+        ...policy?.retry
+      }
+    };
     this.data.merchant.mode = policy.mode || this.data.merchant.mode;
     this.save();
     return this.data.merchant;

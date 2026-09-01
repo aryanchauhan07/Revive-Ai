@@ -3,7 +3,7 @@ import { db } from '../db/database.js';
 import { diagnoseAndPlanCase } from '../core/recoveryPlanner.js';
 import { executeCaseAction } from '../core/actionExecutor.js';
 import { runBatchEvaluation } from '../simulation/batchSimulator.js';
-import { evaluatePlanPolicies } from '../core/policyEngine.js';
+import { evaluatePlanPolicies, reEvaluateAllCasesPolicy } from '../core/policyEngine.js';
 
 const router = express.Router();
 
@@ -41,20 +41,27 @@ router.get('/merchant', (req, res) => {
 
 router.post('/merchant/policy', (req, res) => {
   const updated = db.updateMerchantPolicy(req.body);
+  
+  // Dynamically re-evaluate all active customer cases against the new policy thresholds
+  reEvaluateAllCasesPolicy(updated);
+
   db.addAuditEvent({
     actor_type: 'user',
     actor_id: 'merchant_admin',
     action: 'POLICY_UPDATED',
     correlation_id: 'merchant_razor_01',
-    details: `Updated policy: Mode=${updated.mode}, MaxDiscount=${updated.policy?.money?.maxDiscountPct}%, HighValueFloor=₹${updated.policy?.money?.highValueApprovalPaise / 100}`
+    details: `Updated policy: Mode=${updated.mode}, MaxDiscount=${updated.policy?.money?.maxDiscountPct}%, HighValueFloor=₹${(updated.policy?.money?.highValueApprovalPaise || 2500000) / 100}. Re-evaluated active cases.`
   });
   broadcastSSE({ type: 'MERCHANT_POLICY_UPDATED', data: updated });
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
   res.json(updated);
 });
 
 router.post('/merchant/kill-switch', (req, res) => {
   const { enabled } = req.body;
   const updated = db.setKillSwitch(enabled);
+  reEvaluateAllCasesPolicy(updated);
+
   db.addAuditEvent({
     actor_type: 'user',
     actor_id: 'merchant_admin',
@@ -63,6 +70,7 @@ router.post('/merchant/kill-switch', (req, res) => {
     details: enabled ? 'Emergency kill switch ACTIVATED. All side-effect actions paused.' : 'Emergency kill switch deactivated. Normal execution resumed.'
   });
   broadcastSSE({ type: 'KILL_SWITCH_CHANGED', data: { killSwitch: enabled } });
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
   res.json(updated);
 });
 

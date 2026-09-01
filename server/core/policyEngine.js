@@ -81,12 +81,13 @@ export function evaluateSingleActionPolicy(caseItem, actionProposed, merchant = 
     };
   }
 
-  // 4. High Value Amount Check (Order value threshold >= ₹25,000)
-  if (caseItem.amount_paise >= policy.money.highValueApprovalPaise) {
-    matchedRules.push(`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${policy.money.highValueApprovalPaise / 100})`);
+  // 4. High Value Amount Check (Order value threshold e.g. >= ₹10,000 or >= ₹25,000)
+  const highValuePaise = policy.money?.highValueApprovalPaise || 2500000;
+  if (caseItem.amount_paise >= highValuePaise) {
+    matchedRules.push(`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${highValuePaise / 100})`);
     if (merchant.mode !== 'AUTOPILOT' || actionProposed.action === 'INCENTIVE') {
       decision = 'REVIEW';
-      reason = 'High-value transaction requires explicit human manager approval.';
+      reason = `High-value order (₹${(caseItem.amount_paise / 100).toLocaleString()} >= ₹${(highValuePaise / 100).toLocaleString()}) requires explicit human manager approval.`;
     }
   }
 
@@ -108,12 +109,17 @@ export function evaluateSingleActionPolicy(caseItem, actionProposed, merchant = 
   // 6. Discount / Incentive Cap Check
   if (actionProposed.action === 'INCENTIVE') {
     const discountPct = actionProposed.params?.discountPct || 0;
-    if (discountPct > policy.money.maxDiscountPct) {
-      matchedRules.push(`DISCOUNT_EXCEEDS_MAX_CAP (${discountPct}% > ${policy.money.maxDiscountPct}%)`);
-      decision = 'BLOCK';
-      reason = `Proposed incentive (${discountPct}%) exceeds merchant floor cap (${policy.money.maxDiscountPct}%).`;
-    } else if (discountPct > policy.money.maxAutoDiscountPct) {
-      matchedRules.push(`DISCOUNT_REQUIRES_REVIEW (${discountPct}% > ${policy.money.maxAutoDiscountPct}%)`);
+    const maxDiscount = policy.money?.maxDiscountPct ?? 5;
+    const maxAutoDiscount = policy.money?.maxAutoDiscountPct ?? 2;
+
+    if (discountPct > maxDiscount) {
+      return {
+        decision: 'BLOCK',
+        matched_rules: [`DISCOUNT_EXCEEDS_CEILING (${discountPct}% > ${maxDiscount}%)`],
+        reason: `Proposed discount (${discountPct}%) violates hard policy ceiling (${maxDiscount}%).`
+      };
+    } else if (discountPct > maxAutoDiscount) {
+      matchedRules.push(`DISCOUNT_REQUIRES_REVIEW (${discountPct}% > ${maxAutoDiscount}%)`);
       if (decision !== 'BLOCK') decision = 'REVIEW';
       reason = `Incentive (${discountPct}%) requires human manager approval.`;
     }
@@ -139,6 +145,43 @@ export function evaluateSingleActionPolicy(caseItem, actionProposed, merchant = 
     requires_approval: decision === 'REVIEW',
     reason
   };
+}
+
+/**
+ * Re-evaluates all active recovery cases against a fresh policy update.
+ * Dynamically moves cases in/out of the Human Approval Queue.
+ */
+export function reEvaluateAllCasesPolicy(merchant = null) {
+  if (!merchant) merchant = db.getMerchant();
+  const cases = db.getCases();
+  const highValuePaise = merchant.policy?.money?.highValueApprovalPaise || 2500000;
+  
+  cases.forEach(caseItem => {
+    // Only re-evaluate active non-terminal cases
+    if (caseItem.status === 'RECOVERED' || caseItem.status === 'CANCELLED') return;
+
+    const planActions = caseItem.current_plan?.actions || [{ action: 'CREATE_PAYMENT_LINK' }];
+    const policyResult = evaluatePlanPolicies(caseItem, planActions);
+
+    const requiresReview = policyResult.requires_approval || (caseItem.amount_paise >= highValuePaise && merchant.mode !== 'AUTOPILOT');
+
+    caseItem.policy_decision = {
+      decision: requiresReview ? 'REVIEW' : policyResult.decision,
+      requires_approval: requiresReview,
+      matched_rules: requiresReview ? [`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${highValuePaise / 100})`] : ['ALL_STANDARD_GUARDRAILS_PASSED'],
+      reason: requiresReview
+        ? `High-value order (₹${(caseItem.amount_paise / 100).toLocaleString()} >= ₹${(highValuePaise / 100).toLocaleString()}) requires human manager approval.`
+        : 'All policy guardrails passed.'
+    };
+
+    if (requiresReview) {
+      caseItem.status = 'APPROVAL_REQUIRED';
+    } else if (caseItem.status === 'APPROVAL_REQUIRED' && !requiresReview) {
+      caseItem.status = 'PLANNED';
+    }
+  });
+
+  db.save();
 }
 
 /**
