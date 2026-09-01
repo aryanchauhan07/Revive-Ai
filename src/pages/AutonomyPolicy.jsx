@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Sliders, ShieldAlert, CheckCircle2, Save, Moon, DollarSign, Clock, Lock } from 'lucide-react';
+import { 
+  Sliders, 
+  ShieldAlert, 
+  CheckCircle2, 
+  Save, 
+  Moon, 
+  DollarSign, 
+  Clock, 
+  Lock, 
+  Check, 
+  Sparkles,
+  X,
+  Bell
+} from 'lucide-react';
 
 export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwitch }) {
   const policy = merchant?.policy || {};
@@ -9,12 +22,16 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
   const [quietHoursEnd, setQuietHoursEnd] = useState(policy.contact?.quietHours?.end || '08:00');
   const [maxDiscountPct, setMaxDiscountPct] = useState(policy.money?.maxDiscountPct || 5);
   const [maxAutoDiscountPct, setMaxAutoDiscountPct] = useState(policy.money?.maxAutoDiscountPct || 2);
-  const [highValueThreshold, setHighValueThreshold] = useState((policy.money?.highValueApprovalPaise || 2500000) / 100);
+  const [highValueThreshold, setHighValueThreshold] = useState((policy.money?.highValueApprovalPaise || 2000000) / 100);
   const [maxAttempts, setMaxAttempts] = useState(policy.retry?.maxAttempts || 3);
-  const [isSaved, setIsSaved] = useState(false);
+  
+  // Notification Toast State
+  const [notification, setNotification] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
-    onSavePolicy({
+  const handleSave = async () => {
+    setIsSaving(true);
+    const updatedPolicy = {
       mode,
       contact: { ...policy.contact, quietHours: { start: quietHoursStart, end: quietHoursEnd } },
       money: {
@@ -24,24 +41,99 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
         highValueApprovalPaise: Number(highValueThreshold) * 100
       },
       retry: { maxAttempts: Number(maxAttempts) }
-    });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+    };
+
+    try {
+      await onSavePolicy(updatedPolicy);
+
+      // Trigger rich floating confirmation notification
+      setNotification({
+        id: Date.now(),
+        title: 'Policy Configuration Saved & Synchronized!',
+        mode: mode,
+        threshold: Number(highValueThreshold),
+        discountCap: Number(maxAutoDiscountPct),
+        timestamp: new Date().toLocaleTimeString()
+      });
+
+      // Auto-dismiss after 4 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 4000);
+    } catch (err) {
+      console.error("Save policy error:", err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 relative">
+      {/* Floating Success Toast Notification */}
+      {notification && (
+        <div className="fixed top-20 right-8 z-50 max-w-md w-full bg-white border-2 border-emerald-500 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20 animate-slide-in-right space-y-2.5">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-xs tracking-tight">
+                  {notification.title}
+                </h4>
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Synchronized with Recovery Decision Brain at {notification.timestamp}
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setNotification(null)}
+              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-100 text-[10px] font-mono">
+            <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
+              Mode: {notification.mode}
+            </span>
+            <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200">
+              Floor: ₹{notification.threshold.toLocaleString()}
+            </span>
+            <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
+              Auto Discount: {notification.discountCap}%
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-600 font-medium">
+            ⚡ All customer recovery queues and the Human Approval Center have been dynamically re-evaluated in real time.
+          </p>
+        </div>
+      )}
+
+      {/* Header & Save Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Autonomy & Policy Control Engine</h2>
           <p className="text-xs text-slate-500 mt-1 font-medium">Configure merchant autonomy level, compliance guardrails, quiet hours, and budget floors</p>
         </div>
         <button
           onClick={handleSave}
-          className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-500/20 flex items-center space-x-2 transition-all"
+          disabled={isSaving}
+          className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-500/20 flex items-center space-x-2 transition-all disabled:opacity-50"
         >
-          <Save className="w-4 h-4" />
-          <span>{isSaved ? 'Saved Policy!' : 'Save Policy Changes'}</span>
+          {isSaving ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>Saving Changes...</span>
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4" />
+              <span>Save Policy Changes</span>
+            </>
+          )}
         </button>
       </div>
 
@@ -79,7 +171,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
               <input type="radio" checked={mode === 'ASSIST'} readOnly className="accent-amber-600" />
             </div>
             <p className="text-xs text-slate-500 font-medium leading-relaxed">
-              Low-risk actions execute automatically inside policy; high-value cases require manager approval.
+              Human-in-the-Loop. Executes low-risk actions autonomously, but queues high-value orders and dynamic discounts for manager sign-off.
             </p>
           </div>
 
@@ -96,7 +188,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
               <input type="radio" checked={mode === 'AUTOPILOT'} readOnly className="accent-emerald-600" />
             </div>
             <p className="text-xs text-slate-500 font-medium leading-relaxed">
-              Full autonomous execution inside policy bounds. Only hard policy exceptions flag for approval.
+              Fully autonomous execution within hard policy ceilings. Auto-dispatches links, WhatsApp, and switches payment methods instantly.
             </p>
           </div>
         </div>
@@ -178,7 +270,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
               </div>
 
               <div>
-                <label className="text-slate-600 font-bold block mb-1.5">Hard Max Discount Cap (%)</label>
+                <label className="text-slate-600 font-bold block mb-1.5">Max Absolute Discount (%)</label>
                 <input
                   type="number"
                   value={maxDiscountPct}
@@ -189,6 +281,29 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Emergency Kill Switch */}
+      <div className="glass-panel rounded-2xl p-6 border border-rose-200 bg-rose-50/40 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center space-x-3">
+          <div className="p-3 rounded-2xl bg-rose-100 text-rose-700 border border-rose-200">
+            <Lock className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-extrabold text-slate-900 text-sm">Emergency System Kill Switch</h3>
+            <p className="text-xs text-slate-500 mt-0.5 font-medium">Instantly halts all autonomous messaging, payment retries, and discount dispatches across all rails.</p>
+          </div>
+        </div>
+        <button
+          onClick={() => onToggleKillSwitch(!merchant?.killSwitch)}
+          className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm ${
+            merchant?.killSwitch
+              ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/30'
+              : 'bg-white hover:bg-slate-100 text-rose-700 border border-rose-300'
+          }`}
+        >
+          {merchant?.killSwitch ? 'Emergency Kill Switch ACTIVE (Click to Disengage)' : 'Engage Emergency Kill Switch'}
+        </button>
       </div>
     </div>
   );

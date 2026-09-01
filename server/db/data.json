@@ -46,6 +46,40 @@
   "paymentAttempts": [],
   "webhookInbox": [
     {
+      "event_id": "evt_self_1788249530967",
+      "received_at": "2026-09-01T07:58:50.967Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.captured",
+      "payload": {
+        "event": "payment.captured",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_self_1788249530962"
+            }
+          }
+        }
+      }
+    },
+    {
+      "event_id": "evt_test_dedupe_1788249530910",
+      "received_at": "2026-09-01T07:58:50.910Z",
+      "signature_valid": true,
+      "is_demo": true,
+      "event_type": "payment.failed",
+      "payload": {
+        "event": "payment.failed",
+        "payload": {
+          "payment": {
+            "entity": {
+              "id": "pay_dedupe_1"
+            }
+          }
+        }
+      }
+    },
+    {
       "event_id": "evt_self_1788249283355",
       "received_at": "2026-09-01T07:54:43.355Z",
       "signature_valid": true,
@@ -1663,6 +1697,76 @@
     }
   ],
   "auditEvents": [
+    {
+      "id": "AUDIT-1788249531001-291",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:51.001Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788249530997",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788249530993-405",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:50.993Z",
+      "actor_type": "system",
+      "actor_id": "attribution_engine_v1",
+      "action": "BATCH_EVALUATION_RUN",
+      "correlation_id": "RUN-1788249530989",
+      "details": "Evaluated 100 events. Gross Recovered: ₹4,41,600. True Incremental Lift: +₹2,79,408.5 (187.3x ROI). Policy Violations: 0."
+    },
+    {
+      "id": "AUDIT-1788249530975-218",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:50.975Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_self_1788249530967",
+      "details": "Processed webhook payment.captured for pay_self_1788249530962. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788249530971-453",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:50.971Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "CUSTOMER_SELF_RECOVERED",
+      "correlation_id": "CASE-TEST-SELF-RECOVER",
+      "details": "Payment pay_self_1788249530962 captured independently. CANCELED all queued recovery actions. Attribution = SELF_RECOVERED."
+    },
+    {
+      "id": "AUDIT-1788249530917-370",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:50.917Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "DUPLICATE_WEBHOOK_IGNORED",
+      "correlation_id": "evt_test_dedupe_1788249530910",
+      "details": "No-op: Webhook event evt_test_dedupe_1788249530910 already processed at 2026-09-01T07:58:50.910Z. Duplicate ignored safely."
+    },
+    {
+      "id": "AUDIT-1788249530910-628",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:50.910Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "WEBHOOK_VERIFIED",
+      "correlation_id": "evt_test_dedupe_1788249530910",
+      "details": "Processed webhook payment.failed for pay_dedupe_1. Signature valid: true."
+    },
+    {
+      "id": "AUDIT-1788249530906-860",
+      "merchant_id": "merchant_razor_01",
+      "occurred_at": "2026-09-01T07:58:50.906Z",
+      "actor_type": "provider",
+      "actor_id": "razorpay_webhook",
+      "action": "SECURITY_WEBHOOK_REJECTED",
+      "correlation_id": "evt_1788249530906_e09mu9",
+      "details": "REJECTED 401: Invalid HMAC webhook signature. Reason: CRYPTO_ERROR: Input buffers must have the same byte length. Domain state untouched."
+    },
     {
       "id": "AUDIT-1788249283384-574",
       "merchant_id": "merchant_razor_01",
@@ -4642,79 +4746,55 @@
       "action": "ACTION_EXECUTED",
       "correlation_id": "CASE-102",
       "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362732. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902362064-821",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:42.064Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902362057. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902335413-128",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:15.414Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902335407. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902335209-257",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:15.209Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902335203. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334990-130",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.990Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334987. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334771-177",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.771Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334769. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334576-384",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.576Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334568. Status: COMPLETED"
-    },
-    {
-      "id": "AUDIT-1787902334353-424",
-      "merchant_id": "merchant_razor_01",
-      "occurred_at": "2026-08-28T07:32:14.353Z",
-      "actor_type": "user",
-      "actor_id": "human_manager",
-      "action": "ACTION_EXECUTED",
-      "correlation_id": "CASE-102",
-      "details": "Executed action REJECT with Idempotency Key action:CASE-102:REJECT:1787902334349. Status: COMPLETED"
     }
   ],
   "batchRuns": [
+    {
+      "id": "RUN-1788249530997",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T07:58:50.997Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
+    {
+      "id": "RUN-1788249530989",
+      "batch_size": 100,
+      "seed": 20260828,
+      "executed_at": "2026-09-01T07:58:50.989Z",
+      "total_revenue_at_risk_paise": 58990000,
+      "natural_self_recovery_paise": 7220000,
+      "baselineA_recovered_paise": 7220000,
+      "baselineB_recovered_paise": 16070000,
+      "recoverOps_gross_recovered_paise": 44160000,
+      "recoverOps_net_recovered_paise": 44010850,
+      "net_incremental_recovered_paise": 27940850,
+      "incentive_cost_paise": 148200,
+      "comms_cost_paise": 950,
+      "total_intervention_cost_paise": 149150,
+      "roi_multiplier": 187.3,
+      "recovery_rate_pct": 74.9,
+      "incremental_lift_pct": 47.6,
+      "policy_violations": 0,
+      "human_escalations": 7,
+      "safe_stops": 6,
+      "is_reproducible": true
+    },
     {
       "id": "RUN-1788249283381",
       "batch_size": 100,
