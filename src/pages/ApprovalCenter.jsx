@@ -16,7 +16,8 @@ import {
   Check, 
   X, 
   Bell,
-  Send
+  Send,
+  Zap
 } from 'lucide-react';
 
 export default function ApprovalCenter({ 
@@ -112,13 +113,13 @@ export default function ApprovalCenter({
       await onApproveAction(caseId, action);
       setApprovedIds(prev => new Set(prev).add(caseId));
 
-      // Trigger rich confirmation toast notification
+      // Trigger modern aesthetic toast notification
       setNotification({
         id: Date.now(),
         type: isReject ? 'REJECT' : 'APPROVE',
         title: isReject 
-          ? `🛑 Recovery Outreach Rejected & Stopped` 
-          : `✅ Recovery Action Approved & Executed!`,
+          ? `Outreach Rejected & Stopped` 
+          : `Recovery Action Approved & Executed`,
         customerName: customerName,
         caseId: caseId,
         amount: amountRupees,
@@ -126,7 +127,7 @@ export default function ApprovalCenter({
         timestamp: new Date().toLocaleTimeString(),
         description: isReject
           ? `Outreach for ${customerName} (₹${amountRupees}) permanently halted by manager decision.`
-          : `Manager sign-off complete. Dispatched 1-click recovery payment link (₹${amountRupees}) to ${customerName} via WhatsApp & SMS.`
+          : `Manager sign-off verified. Dispatched 1-click recovery payment link (₹${amountRupees}) to ${customerName} via WhatsApp & SMS.`
       });
 
       // Auto-dismiss notification after 4 seconds
@@ -142,62 +143,83 @@ export default function ApprovalCenter({
 
   return (
     <div className="space-y-6 animate-fade-in relative">
-      {/* Floating Action Confirmation Toast Notification */}
+      {/* Ultra-Aesthetic Floating Dark Glass Toast Notification */}
       {notification && (
-        <div className={`fixed top-20 right-8 z-50 max-w-md w-full bg-white border-2 rounded-2xl p-4 shadow-2xl animate-slide-in-right space-y-2.5 ${
-          notification.type === 'APPROVE'
-            ? 'border-emerald-500 shadow-emerald-500/20'
-            : 'border-rose-500 shadow-rose-500/20'
-        }`}>
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-2.5">
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold ${
-                notification.type === 'APPROVE'
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-rose-100 text-rose-700'
-              }`}>
-                {notification.type === 'APPROVE' ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                ) : (
-                  <XCircle className="w-5 h-5 text-rose-600" />
-                )}
+        <div className="fixed top-20 right-8 z-50 max-w-md w-full animate-slide-in-right overflow-hidden rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-slate-800 shadow-2xl text-white">
+          {/* Glowing Top Accent Bar */}
+          <div className={`h-1 w-full ${
+            notification.type === 'APPROVE'
+              ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500'
+              : 'bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500'
+          }`} />
+
+          <div className="p-4 space-y-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-3">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold relative shrink-0 ${
+                  notification.type === 'APPROVE'
+                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                    : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                }`}>
+                  {notification.type === 'APPROVE' ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 absolute -top-0.5 -right-0.5 animate-ping" />
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                    </>
+                  ) : (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-rose-400 absolute -top-0.5 -right-0.5 animate-ping" />
+                      <XCircle className="w-5 h-5 text-rose-400" />
+                    </>
+                  )}
+                </div>
+
+                <div>
+                  <h4 className="font-extrabold text-white text-xs tracking-tight flex items-center space-x-1.5">
+                    <span>{notification.title}</span>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-medium font-mono mt-0.5">
+                    {notification.customerName} • {notification.caseId} • {notification.timestamp}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-extrabold text-slate-900 text-xs tracking-tight">
-                  {notification.title}
-                </h4>
-                <p className="text-[11px] text-slate-500 font-medium font-mono">
-                  {notification.customerName} • Case: {notification.caseId} • {notification.timestamp}
-                </p>
-              </div>
+
+              <button 
+                onClick={() => setNotification(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <button 
-              onClick={() => setNotification(null)}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+
+            <p className="text-xs text-slate-300 font-medium leading-relaxed pl-0.5">
+              {notification.description}
+            </p>
+
+            <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-800/80 text-[10px] font-mono">
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-slate-300 font-bold border border-slate-700">
+                ₹{notification.amount}
+              </span>
+              <span className={`px-2.5 py-0.5 rounded-full font-bold border ${
+                notification.type === 'APPROVE'
+                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/40'
+                  : 'bg-rose-950/60 text-rose-300 border-rose-500/40'
+              }`}>
+                {notification.actionName}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-950/60 text-blue-300 font-bold border border-blue-500/40">
+                Dispatched
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-100 text-[10px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
-              Amount: ₹{notification.amount}
-            </span>
-            <span className={`px-2 py-0.5 rounded font-bold border ${
-              notification.type === 'APPROVE'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : 'bg-rose-50 text-rose-700 border-rose-200'
-            }`}>
-              Action: {notification.actionName}
-            </span>
-            <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200">
-              Status: Executed
-            </span>
+          {/* Animated Auto-Dismiss Progress Line */}
+          <div className="h-0.5 w-full bg-slate-800">
+            <div className={`h-full animate-toast-timer ${
+              notification.type === 'APPROVE' ? 'bg-emerald-500' : 'bg-rose-500'
+            }`} />
           </div>
-
-          <p className="text-[11px] text-slate-600 font-medium">
-            {notification.description}
-          </p>
         </div>
       )}
 

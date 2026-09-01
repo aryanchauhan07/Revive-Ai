@@ -11,7 +11,8 @@ import {
   Check, 
   Sparkles,
   X,
-  Bell
+  Bell,
+  Zap
 } from 'lucide-react';
 
 export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwitch }) {
@@ -46,10 +47,10 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
     try {
       await onSavePolicy(updatedPolicy);
 
-      // Trigger rich floating confirmation notification
+      // Trigger modern aesthetic floating confirmation notification
       setNotification({
         id: Date.now(),
-        title: 'Policy Configuration Saved & Synchronized!',
+        title: 'Policy Guardrails Saved & Synchronized',
         mode: mode,
         threshold: Number(highValueThreshold),
         discountCap: Number(maxAutoDiscountPct),
@@ -69,46 +70,58 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
 
   return (
     <div className="space-y-6 relative">
-      {/* Floating Success Toast Notification */}
+      {/* Ultra-Aesthetic Floating Dark Glass Toast Notification */}
       {notification && (
-        <div className="fixed top-20 right-8 z-50 max-w-md w-full bg-white border-2 border-emerald-500 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20 animate-slide-in-right space-y-2.5">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+        <div className="fixed top-20 right-8 z-50 max-w-md w-full animate-slide-in-right overflow-hidden rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-slate-800 shadow-2xl text-white">
+          {/* Glowing Top Accent Bar */}
+          <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-indigo-400 to-emerald-400" />
+
+          <div className="p-4 space-y-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30 relative shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 absolute -top-0.5 -right-0.5 animate-ping" />
+                  <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-white text-xs tracking-tight flex items-center space-x-1.5">
+                    <span>{notification.title}</span>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-medium font-mono mt-0.5">
+                    Decision Brain Synced • {notification.timestamp}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-extrabold text-slate-900 text-xs tracking-tight">
-                  {notification.title}
-                </h4>
-                <p className="text-[11px] text-slate-500 font-medium">
-                  Synchronized with Recovery Decision Brain at {notification.timestamp}
-                </p>
-              </div>
+              <button 
+                onClick={() => setNotification(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <button 
-              onClick={() => setNotification(null)}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+
+            <p className="text-xs text-slate-300 font-medium leading-relaxed pl-0.5">
+              Merchant autonomy parameters updated. All active customer recovery cases and approval queues re-evaluated in real time.
+            </p>
+
+            <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-800/80 text-[10px] font-mono">
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-950/60 text-blue-300 font-bold border border-blue-500/40">
+                Mode: {notification.mode}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-purple-950/60 text-purple-300 font-bold border border-purple-500/40">
+                Floor: ₹{notification.threshold.toLocaleString()}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 font-bold border border-emerald-500/40">
+                Auto Discount: {notification.discountCap}%
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center flex-wrap gap-1.5 pt-1 border-t border-slate-100 text-[10px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
-              Mode: {notification.mode}
-            </span>
-            <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200">
-              Floor: ₹{notification.threshold.toLocaleString()}
-            </span>
-            <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
-              Auto Discount: {notification.discountCap}%
-            </span>
+          {/* Animated Auto-Dismiss Progress Line */}
+          <div className="h-0.5 w-full bg-slate-800">
+            <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 animate-toast-timer" />
           </div>
-
-          <p className="text-[11px] text-slate-600 font-medium">
-            ⚡ All customer recovery queues and the Human Approval Center have been dynamically re-evaluated in real time.
-          </p>
         </div>
       )}
 
