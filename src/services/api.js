@@ -126,3 +126,17 @@ export async function triggerDemoPaymentFailure(payload) {
     return null;
   }
 }
+
+export async function runBatchEvaluation(sampleSize = 2000) {
+  try {
+    const res = await fetch(`${API_BASE}/evaluation/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sampleSize })
+    });
+    return await res.json();
+  } catch (err) {
+    console.error("runBatchEvaluation error:", err);
+    return null;
+  }
+}
