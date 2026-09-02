@@ -1,4 +1,4 @@
-# 📘 RECOVEROPS — Tab-by-Tab Plain English Guide & 5-Minute Video Pitch Script
+# 📘 Revive AI — Tab-by-Tab Plain English Guide & 5-Minute Video Pitch Script
 ### Razorpay AI Buildathon — Track 03: AI Revenue Recovery
 
 ---
@@ -86,8 +86,8 @@ This section explains what every single tab in the platform does in simple langu
     - 🔵 **`₹1k - ₹10k`**: Standard orders.
     - 🛡️ **`Pending Approvals`** & **`Autonomous Cases`**.
   * **Explicit Policy Rule Box on Every Card:** Explains the exact rule name (e.g. `RULE: HIGH_VALUE_FLOOR_EXCEEDED` or `RULE: DYNAMIC_INCENTIVE_CAP_EXCEEDED`) and why human review is required.
-  * **`Approve & Execute Action` Button:** Executes the action immediately and removes it from the pending queue.
-  * **`Reject & Stop` Button:** Terminates outreach and blocks side effects.
+  * **`Approve & Execute Action` Button with Floating Alert:** Clicking approve instantly triggers a compact, sleek confirmation toast (`✅ Recovery Action Approved & Executed!`), executes the recovery action, and removes the case from the pending queue.
+  * **`Reject & Stop` Button with Alert:** Halts outreach and blocks further retries with a clear alert confirmation.
 * **Expected Outcome:**
   * Shows enterprise-grade compliance where low-risk actions run autonomously while VIP and sensitive cases are governed by human managers.
 
@@ -101,7 +101,7 @@ This section explains what every single tab in the platform does in simple langu
   * **DND Quiet Hours:** Configurable customer contact windows (default 22:00 to 08:00 IST) to respect anti-spam regulations.
   * **Financial Thresholds:** High-Value Approval Floor (₹), Auto-Discount Cap (%), and Max Absolute Discount Ceiling (%).
   * **Emergency Kill Switch:** Red master button that instantly freezes all autonomous messaging, payment retries, and discount dispatches across all rails.
-  * **Floating Confirmation Toast Notification:** Saving policy changes immediately triggers a green confirmation toast and re-evaluates all active customer queues in real time.
+  * **Compact Floating Confirmation Toast:** Saving policy changes immediately triggers a green confirmation toast and re-evaluates all active customer queues in real time.
 * **Expected Outcome:**
   * Changing a threshold (e.g. lowering the floor to ₹10,000) immediately reflects in the Approval Queue with zero page reloads.
 
@@ -109,7 +109,7 @@ This section explains what every single tab in the platform does in simple langu
 
 ### 7. 📈 2k Batch Evaluation — Attribution & Outcome Feedback (`BatchEvaluator.jsx`)
 * **What is this page for?**
-  * The **attribution and benchmark engine**. Proves that RECOVEROPS delivers measurable ROI over a massive batch of 2,000 real-world payment failure events.
+  * The **attribution and benchmark engine**. Proves that Revive AI delivers measurable ROI over a massive batch of 2,000 real-world payment failure events.
 * **Key Features on this Page:**
   * **Run 2,000-Event Simulation Button:** Executes a deterministic Mulberry32 seeded Monte Carlo simulation across 23 failure scenarios.
   * **Financial ROI Scorecard:**
@@ -138,7 +138,7 @@ This section explains what every single tab in the platform does in simple langu
   >
   > *Most generic AI agents simply wrap LLM prompts to blindly retry payments. But during bank downtime, retries only cause retry storms, bank fines, and customer anger.*
   >
-  > *Welcome to **RECOVEROPS (Revive AI)** — an autonomous Payment SRE Intelligence and AI Revenue Recovery Engine built specifically for the Razorpay ecosystem. It diagnoses failures, calculates expected net financial utility, executes bounded omnichannel recovery, and proves measured ROI with a cryptographic audit trail. Let's see it live."*
+  > *Welcome to **Revive AI** — an autonomous Payment SRE Intelligence and Revenue Recovery Engine built specifically for the Razorpay ecosystem. It diagnoses failures, calculates expected net financial utility, executes bounded omnichannel recovery, and proves measured ROI with a cryptographic audit trail. Let's see it live."*
 
 ---
 
@@ -148,7 +148,7 @@ This section explains what every single tab in the platform does in simple langu
 * **What to Say:**
   > *"First, let's look at our **Payment SRE Intelligence layer**. On Payment Health, the system continuously analyzes rolling success rates across every payment rail.*
   >
-  > *Notice that **HDFC Bank UPI** has degraded down to 38%. Instead of spamming retries, RECOVEROPS has tripped a **Recovery Circuit Breaker** to suppress failing same-rail retries and steer customers to Cards and Netbanking.*
+  > *Notice that **HDFC Bank UPI** has degraded down to 38%. Instead of spamming retries, Revive AI has tripped a **Recovery Circuit Breaker** to suppress failing same-rail retries and steer customers to Cards and Netbanking.*
   >
   > *(Click on **'Incidents'** tab)*
   >
@@ -175,15 +175,17 @@ This section explains what every single tab in the platform does in simple langu
 
 ### ⏱️ [2:50 – 3:50] Human-in-the-Loop Governance & Live Policy Control
 * **Action:** Click on the **"Approval Queue"** tab, then switch to the **"Autonomy & Policy"** tab.
-* **What to Point Out:** Show the **VIP Orders (≥ ₹20k)** and **Discount Reviews**, then adjust a threshold and click **Save Policy Changes**.
+* **What to Point Out:** Show the **VIP Orders (≥ ₹20k)** and **Discount Reviews**, click **"Approve & Execute Action"** to show the compact alert notification, then adjust a threshold in Policy Control and click **Save Policy Changes**.
 * **What to Say:**
   > *"Next is our **Policy & Governance Gateway**. Real fintech systems require fail-closed compliance.*
   >
   > *In the **Approval Queue**, low-risk standard transactions run 100% autonomously, while high-value orders like **Priya Patel (₹28,500)** and dynamic discount reviews like **Sneha Mehta (3% discount)** are automatically flagged for human manager sign-off with clear policy rationale boxes.*
   >
+  > *(Click **'Approve & Execute Action'** on Priya Patel)*: *'Notice the sleek confirmation alert showing the 1-click link dispatched to Priya Patel!'*
+  >
   > *(Switch to **'Autonomy & Policy'** tab)*
   >
-  > *In Policy Control, merchants can configure autonomy modes (OBSERVE, ASSIST, AUTOPILOT), DND quiet hours (22:00 to 08:00 IST), and financial floors. When we click **'Save Policy Changes'**, notice the real-time floating confirmation toast and how all queues dynamically re-evaluate in real time!"*
+  > *In Policy Control, merchants can configure autonomy modes, DND quiet hours (22:00 to 08:00 IST), and financial floors. When we click **'Save Policy Changes'**, notice the compact confirmation toast and how all queues dynamically re-evaluate in real time!"*
 
 ---
 
@@ -195,14 +197,14 @@ This section explains what every single tab in the platform does in simple langu
   >
   > *In the **2k Batch Evaluation** dashboard, we run a deterministic Monte Carlo simulation across 2,000 real-world payment failure scenarios with Mulberry32 seeded PRNG reproducibility.*
   >
-  > *Out of **₹77.6 Lakhs** of revenue at risk, RECOVEROPS recovered **₹65.8 Lakhs** — achieving an **84.8% recovery rate** and an incredible **35.1x return on recovery cost**, with **zero policy violations** and a complete cryptographic audit trail."*
+  > *Out of **₹77.6 Lakhs** of revenue at risk, Revive AI recovered **₹65.8 Lakhs** — achieving an **84.8% recovery rate** and an incredible **35.1x return on recovery cost**, with **zero policy violations** and a complete cryptographic audit trail."*
 
 ---
 
 ### ⏱️ [4:45 – 5:00] Conclusion & Razorpay Vision
 * **Screen:** Return to the **Command Center** dashboard.
 * **What to Say:**
-  > *"To summarize: RECOVEROPS is not just another chatbot. It is a comprehensive, production-oriented Payment SRE and Revenue Recovery Engine that turns lost transactions into recovered gross revenue with enterprise safety and mathematical rigor.*
+  > *"To summarize: Revive AI is not just another chatbot. It is a comprehensive, production-oriented Payment SRE and Revenue Recovery Engine that turns lost transactions into recovered gross revenue with enterprise safety and mathematical rigor.*
   >
   > *Thank you, judges! We look forward to your questions."*
 
