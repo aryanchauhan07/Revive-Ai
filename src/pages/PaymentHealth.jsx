@@ -30,7 +30,9 @@ export default function PaymentHealth({
   cases = [], 
   setActiveTab = () => {}, 
   onTriggerDemo = () => {},
-  onOpenCheckout = () => {}
+  onOpenCheckout = () => {},
+  onNavigateToIncident = () => {},
+  onNavigateToCase = () => {}
 }) {
   const [isSimulating, setIsSimulating] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
@@ -367,7 +369,7 @@ export default function PaymentHealth({
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => setActiveTab('incidents')}
+                      onClick={() => onNavigateToIncident(inc.id)}
                       className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center space-x-1 transition-all shrink-0 shadow-2xs"
                     >
                       <span>Inspect Cohort ({inc.affected_count || 3})</span>
@@ -375,7 +377,10 @@ export default function PaymentHealth({
                     </button>
 
                     <button
-                      onClick={() => setActiveTab('cases')}
+                      onClick={() => {
+                        const firstCase = (cases || []).find(c => c.incident_id === inc.id || c.failure_reason?.issuer === inc.dimensions?.issuer);
+                        onNavigateToCase(firstCase?.id || inc.dimensions?.issuer || 'HDFC');
+                      }}
                       className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center space-x-1 transition-all shrink-0 shadow-2xs"
                     >
                       <span>Remediate in Case Manager</span>

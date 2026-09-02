@@ -54,6 +54,11 @@ export default function App() {
   const [isWebhookModalOpen, setIsWebhookModalOpen] = useState(false);
   const [selectedAICase, setSelectedAICase] = useState(null);
 
+  // Navigation and Filter States
+  const [selectedIncidentId, setSelectedIncidentId] = useState(null);
+  const [selectedCaseId, setSelectedCaseId] = useState(null);
+  const [caseSearchTerm, setCaseSearchTerm] = useState('');
+
   // 1-Click Guided Demo Story State (5-Stage Architecture Journey)
   const [demoStoryStep, setDemoStoryStep] = useState(0); // 0 = Off, 1 to 5
 
@@ -255,6 +260,18 @@ export default function App() {
             setActiveTab={setActiveTab}
             onTriggerDemo={handleTriggerDemo}
             onOpenCheckout={setSelectedCheckoutCase}
+            onNavigateToIncident={(incId) => {
+              setSelectedIncidentId(incId);
+              setActiveTab('incidents');
+            }}
+            onNavigateToCase={(targetBankOrCase) => {
+              if (targetBankOrCase && targetBankOrCase.startsWith('CASE-')) {
+                setSelectedCaseId(targetBankOrCase);
+              } else if (targetBankOrCase) {
+                setCaseSearchTerm(targetBankOrCase);
+              }
+              setActiveTab('cases');
+            }}
           />
         )}
 
@@ -263,6 +280,16 @@ export default function App() {
             incidents={incidents}
             cases={cases}
             onOpenCheckout={setSelectedCheckoutCase}
+            selectedIncidentId={selectedIncidentId}
+            onSelectIncident={setSelectedIncidentId}
+            onNavigateToCase={(targetBankOrCase) => {
+              if (targetBankOrCase && targetBankOrCase.startsWith('CASE-')) {
+                setSelectedCaseId(targetBankOrCase);
+              } else if (targetBankOrCase) {
+                setCaseSearchTerm(targetBankOrCase);
+              }
+              setActiveTab('cases');
+            }}
           />
         )}
 
@@ -275,6 +302,10 @@ export default function App() {
             onOpenAIModal={setSelectedAICase}
             onExecuteAction={handleApproveAction}
             onSetPtpDate={handleSetPtpDate}
+            initialSelectedCaseId={selectedCaseId}
+            initialSearchTerm={caseSearchTerm}
+            onSelectCase={setSelectedCaseId}
+            onSetSearchTerm={setCaseSearchTerm}
           />
         )}
 

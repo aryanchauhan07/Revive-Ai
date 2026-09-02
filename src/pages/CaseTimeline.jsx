@@ -27,7 +27,11 @@ export default function CaseTimeline({
   onOpenWhatsApp = () => {}, 
   onOpenVoiceCall = () => {},
   onOpenAIModal = () => {},
-  onSetPtpDate = () => {} 
+  onSetPtpDate = () => {},
+  initialSelectedCaseId = null,
+  initialSearchTerm = '',
+  onSelectCase = () => {},
+  onSetSearchTerm = () => {}
 }) {
   // Deduplicate cases strictly
   const uniqueCasesMap = new Map(
@@ -37,11 +41,20 @@ export default function CaseTimeline({
   );
   const uniqueCases = Array.from(uniqueCasesMap.values());
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm || '');
   const [categoryFilter, setCategoryFilter] = useState('ALL'); // ALL | DROPOFF | SUBSCRIPTION | B2B | GATEWAY
-  const [selectedCaseId, setSelectedCaseId] = useState(uniqueCases[0]?.id || 'CASE-101');
+  const [selectedCaseId, setSelectedCaseId] = useState(initialSelectedCaseId || uniqueCases[0]?.id || 'CASE-101');
   const [ptpDateInput, setPtpDateInput] = useState('');
   const [showMatrix, setShowMatrix] = useState(true);
+
+  React.useEffect(() => {
+    if (initialSelectedCaseId) {
+      setSelectedCaseId(initialSelectedCaseId);
+    }
+    if (initialSearchTerm) {
+      setSearchTerm(initialSearchTerm);
+    }
+  }, [initialSelectedCaseId, initialSearchTerm]);
 
   // Helper to categorize each case
   const getCaseCategory = (c) => {
@@ -58,11 +71,15 @@ export default function CaseTimeline({
     return 'GATEWAY';
   };
 
-  // Filtered Cases
+  // Filtered Cases matching customer, ID, and Bank / Issuer
   const filteredCases = uniqueCases.filter(c => {
+    const term = searchTerm.toLowerCase();
     const matchesSearch = 
-      c.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      c.id?.toLowerCase().includes(searchTerm.toLowerCase());
+      !searchTerm ||
+      c.customer_name?.toLowerCase().includes(term) || 
+      c.id?.toLowerCase().includes(term) ||
+      c.failure_reason?.issuer?.toLowerCase().includes(term) ||
+      c.failure_reason?.method?.toLowerCase().includes(term);
     const matchesCat = categoryFilter === 'ALL' || getCaseCategory(c) === categoryFilter;
     return matchesSearch && matchesCat;
   });

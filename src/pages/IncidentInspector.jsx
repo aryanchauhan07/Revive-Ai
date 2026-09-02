@@ -13,7 +13,10 @@ import {
 export default function IncidentInspector({ 
   incidents = [], 
   cases = [], 
-  onOpenCheckout = () => {}
+  onOpenCheckout = () => {},
+  selectedIncidentId: externalIncidentId = null,
+  onSelectIncident = () => {},
+  onNavigateToCase = () => {}
 }) {
   // Deduplicate open incidents strictly by Title so that each distinct incident appears ONLY once
   const openIncidentsMap = new Map();
@@ -27,7 +30,14 @@ export default function IncidentInspector({
     });
   const openIncidents = Array.from(openIncidentsMap.values());
 
-  const [selectedIncidentId, setSelectedIncidentId] = useState(openIncidents[0]?.id || 'INC-901');
+  const [selectedIncidentId, setSelectedIncidentId] = useState(externalIncidentId || openIncidents[0]?.id || 'INC-901');
+
+  React.useEffect(() => {
+    if (externalIncidentId) {
+      setSelectedIncidentId(externalIncidentId);
+    }
+  }, [externalIncidentId]);
+
   const activeIncident = openIncidents.find(i => i.id === selectedIncidentId) || openIncidents[0] || {
     id: "INC-901",
     title: "HDFC Bank UPI Authorization Degradation",
