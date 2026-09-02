@@ -49,7 +49,8 @@ export default function ApprovalCenter({
 
     const isKillSwitchActive = Boolean(merchant?.killSwitch);
     const isHighValue = (c.amount_paise || 0) >= currentHighValuePaise && merchant?.mode !== 'AUTOPILOT';
-    const isDiscountExceeded = discountPct > maxAutoDiscountPct;
+    const effectiveDiscountCap = merchant?.mode === 'AUTOPILOT' ? (policy?.money?.maxDiscountPct || 5) : maxAutoDiscountPct;
+    const isDiscountExceeded = discountPct > effectiveDiscountCap;
     const isApproved = 
       approvedIds.has(c.id) || 
       c.status === 'RECOVERED' || 
@@ -214,6 +215,26 @@ export default function ApprovalCenter({
           </div>
           <span className="px-3 py-1 rounded-full bg-rose-600 text-white font-mono text-xs font-black shrink-0">
             AUTO-PILOT HALTED
+          </span>
+        </div>
+      {/* Autopilot Mode Active Banner */}
+      {merchant?.mode === 'AUTOPILOT' && !merchant?.killSwitch && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 shadow-sm flex items-center justify-between animate-fade-in">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-extrabold text-base shadow-md">
+              ⚡
+            </div>
+            <div>
+              <h3 className="font-extrabold text-sm text-blue-950">
+                AUTOPILOT MODE ACTIVE — ZERO MANUAL QUEUE WAIT TIME
+              </h3>
+              <p className="text-xs text-blue-800 font-medium mt-0.5">
+                Revive AI executes all standard recovery plans, VIP orders, and retention incentives automatically in real time without human bottleneck.
+              </p>
+            </div>
+          </div>
+          <span className="px-3 py-1 rounded-full bg-blue-600 text-white font-mono text-[11px] font-black shrink-0">
+            100% AUTONOMOUS
           </span>
         </div>
       )}

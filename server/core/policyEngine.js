@@ -167,7 +167,9 @@ export function reEvaluateAllCasesPolicy(merchant = null) {
     const isHighValue = (caseItem.amount_paise || 0) >= highValuePaise && merchant.mode !== 'AUTOPILOT';
     const discountAction = caseItem.current_plan?.actions?.find(a => a.action === 'INCENTIVE');
     const discountPct = discountAction?.params?.discountPct || 0;
-    const isDiscountReview = discountPct > maxAutoDiscountPct;
+    const isDiscountReview = merchant.mode !== 'AUTOPILOT' 
+      ? (discountPct > maxAutoDiscountPct) 
+      : (discountPct > (policy.money?.maxDiscountPct || 5));
     const isKillSwitchActive = Boolean(merchant.killSwitch);
 
     const requiresReview = isKillSwitchActive || isHighValue || isDiscountReview;
