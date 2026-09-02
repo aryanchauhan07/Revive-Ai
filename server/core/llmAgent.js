@@ -9,10 +9,10 @@ export async function invokeLLMReasoning({ prompt, systemInstruction, temperatur
   const geminiApiKey = process.env.GEMINI_API_KEY;
   const openaiApiKey = process.env.OPENAI_API_KEY;
 
-  // 1. Google Gemini API Integration
+  // 1. Google Gemini API Integration (gemini-2.5-flash)
   if (geminiApiKey) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -27,7 +27,7 @@ export async function invokeLLMReasoning({ prompt, systemInstruction, temperatur
         const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (textContent) {
           return {
-            provider: 'google_gemini_1.5_flash',
+            provider: 'google_gemini_2.5_flash',
             rawText: textContent,
             parsed: JSON.parse(textContent),
             isRealLLM: true
