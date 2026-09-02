@@ -1,4 +1,4 @@
-# ⚡ RECOVEROPS (Revive AI) — Payment SRE & AI Revenue Recovery Engine
+# ⚡ Revive AI — Payment SRE & AI Revenue Recovery Engine
 ### Razorpay AI Buildathon — Track 03: AI Revenue Recovery
 *Find revenue that's slipping away and win it back.*
 
@@ -6,9 +6,9 @@
 
 ## 🌟 Executive Summary
 
-**RECOVEROPS (Revive AI)** is an autonomous, production-grade **Payment SRE Intelligence & AI Revenue Recovery Platform**. It closes the complete loop from real-time payment rail anomaly detection to root-cause diagnosis, expected-net-value recovery planning, bounded omnichannel execution, and continuous Bayesian outcome feedback.
+**Revive AI** is an autonomous, production-grade **Payment SRE Intelligence & AI Revenue Recovery Platform**. It closes the complete loop from real-time payment rail anomaly detection to root-cause diagnosis, expected-net-value recovery planning, bounded omnichannel execution, and continuous Bayesian outcome feedback.
 
-Unlike generic LLM wrappers, **RECOVEROPS** operates as a fail-closed financial decision system built on utility economics, deterministic policy guardrails, and cryptographic webhook idempotency.
+Unlike generic LLM wrappers, **Revive AI** operates as a fail-closed financial decision system built on utility economics, deterministic policy guardrails, and cryptographic webhook idempotency.
 
 ---
 
@@ -44,7 +44,7 @@ graph TD
 
 ## 🎯 Direct Alignment with Track 03 Problem Statement
 
-| Track 03 Requirement | RECOVEROPS Implementation | Key Feature / Component |
+| Track 03 Requirement | Revive AI Implementation | Key Feature / Component |
 | :--- | :--- | :--- |
 | **Payment degradation $\rightarrow$ root cause $\rightarrow$ recovery action** | **Payment SRE Intelligence**: Statistical Z-Score degradation isolation (HDFC UPI success dropped 88% $\rightarrow$ 38%), trips circuit breaker, suppresses same-rail retries, and switches rail to Card/Netbanking links. | `PaymentHealth.jsx`, `IncidentInspector.jsx` |
 | **Checkout drop-off recovery** | **Friction Re-engagement**: Detects abandoned checkouts, generates WhatsApp 1-click payment links with dynamic 3% margin-safe discounts. | `WhatsAppSandboxModal.jsx`, `Case CASE-104` |
@@ -111,8 +111,8 @@ Click the **"Architecture Demo Journey"** button in the top navigation bar to ex
 ---
 
 ## 📜 Documentation Reference
+- [PLATFORM_PAGE_GUIDE_AND_VIDEO_SCRIPT.md](file:///c:/Users/User/OneDrive/Revive%20AI/PLATFORM_PAGE_GUIDE_AND_VIDEO_SCRIPT.md) — Plain English tab-by-tab guide & timed 5-minute video walkthrough pitch script.
 - [SYSTEM_ARCHITECTURE_GUIDE.md](file:///c:/Users/User/OneDrive/Revive%20AI/SYSTEM_ARCHITECTURE_GUIDE.md) — Complete architectural deep dive, mathematical formulas, and policy specifications.
-- [PLATFORM_GUIDE.md](file:///c:/Users/User/OneDrive/Revive%20AI/PLATFORM_GUIDE.md) — Comprehensive user guide and feature breakdown.
 - [PROBLEM_STATEMENT.md](file:///c:/Users/User/OneDrive/Revive%20AI/PROBLEM_STATEMENT.md) — Track 03 problem statement and domain mapping.
 
 ---
