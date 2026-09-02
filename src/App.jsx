@@ -11,6 +11,8 @@ import BatchEvaluator from './pages/BatchEvaluator';
 import RazorpayCheckoutModal from './components/RazorpayCheckoutModal';
 import WhatsAppSandboxModal from './components/WhatsAppSandboxModal';
 import VoiceCallSandboxModal from './components/VoiceCallSandboxModal';
+import WebhookPlaygroundModal from './components/WebhookPlaygroundModal';
+import AIAgentThoughtModal from './components/AIAgentThoughtModal';
 
 import { 
   fetchMerchant, 
@@ -37,6 +39,8 @@ export default function App() {
   const [selectedCheckoutCase, setSelectedCheckoutCase] = useState(null);
   const [selectedWhatsAppCase, setSelectedWhatsAppCase] = useState(null);
   const [selectedVoiceCase, setSelectedVoiceCase] = useState(null);
+  const [isWebhookModalOpen, setIsWebhookModalOpen] = useState(false);
+  const [selectedAICase, setSelectedAICase] = useState(null);
 
   // 1-Click Guided Demo Story State (5-Stage Architecture Journey)
   const [demoStoryStep, setDemoStoryStep] = useState(0); // 0 = Off, 1 to 5
@@ -177,6 +181,7 @@ export default function App() {
         onTriggerDemo={handleTriggerDemo}
         demoStoryStep={demoStoryStep}
         onStartDemoStory={handleStartDemoStory}
+        onOpenWebhookModal={() => setIsWebhookModalOpen(true)}
       />
 
       {/* 1-Click Guided Demo Story Banner for Judges */}
@@ -225,6 +230,7 @@ export default function App() {
             onOpenCheckout={setSelectedCheckoutCase}
             onOpenWhatsApp={setSelectedWhatsAppCase}
             onOpenVoiceCall={setSelectedVoiceCase}
+            onOpenAIModal={setSelectedAICase}
             onTriggerDemo={handleTriggerDemo}
           />
         )}
@@ -253,6 +259,7 @@ export default function App() {
             onOpenCheckout={setSelectedCheckoutCase}
             onOpenWhatsApp={setSelectedWhatsAppCase}
             onOpenVoiceCall={setSelectedVoiceCase}
+            onOpenAIModal={setSelectedAICase}
             onExecuteAction={handleApproveAction}
             onSetPtpDate={handleSetPtpDate}
           />
@@ -300,6 +307,18 @@ export default function App() {
         caseItem={selectedVoiceCase}
         onClose={() => setSelectedVoiceCase(null)}
         onOpenCheckout={setSelectedCheckoutCase}
+      />
+
+      <WebhookPlaygroundModal
+        isOpen={isWebhookModalOpen}
+        onClose={() => setIsWebhookModalOpen(false)}
+        onWebhookDispatched={loadData}
+      />
+
+      <AIAgentThoughtModal
+        isOpen={Boolean(selectedAICase)}
+        caseItem={selectedAICase}
+        onClose={() => setSelectedAICase(null)}
       />
     </div>
   );

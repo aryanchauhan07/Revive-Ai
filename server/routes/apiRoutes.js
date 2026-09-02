@@ -4,6 +4,9 @@ import { diagnoseAndPlanCase } from '../core/recoveryPlanner.js';
 import { executeCaseAction } from '../core/actionExecutor.js';
 import { runBatchEvaluation } from '../simulation/batchSimulator.js';
 import { evaluatePlanPolicies, reEvaluateAllCasesPolicy } from '../core/policyEngine.js';
+import { processIncomingWebhook } from '../core/webhookIngress.js';
+import { generateCaseDiagnosisAndPlan, generateOmnichannelMessage } from '../core/llmAgent.js';
+import { privacyEngine } from '../core/privacyEngine.js';
 
 const router = express.Router();
 
@@ -257,7 +260,76 @@ router.post('/demo/reset-healthy', (req, res) => {
   res.json({ status: 'RESOLVED', incidents: db.getIncidents() });
 });
 
-// 7. Audit Log Endpoint
+// 7. Razorpay Verified Webhook Ingress Endpoint
+router.post('/webhooks/razorpay', (req, res) => {
+  const rawBodyBuffer = req.rawBody ? Buffer.from(req.rawBody) : Buffer.from(JSON.stringify(req.body));
+  const result = processIncomingWebhook(req.body, req.headers, rawBodyBuffer);
+
+  broadcastSSE({ type: 'WEBHOOK_PROCESSED', data: result });
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+  broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
+
+  res.status(result.statusCode || 200).json(result);
+});
+
+// 8. Cryptographic Audit Chain Verification Endpoint
+router.get('/audit/verify-chain', (req, res) => {
+  const verification = db.verifyAuditChain();
+  res.json(verification);
+});
+
+// 9. AI Autonomous Diagnosis & Explainable Reasoning Endpoint
+router.post('/ai/diagnose', async (req, res) => {
+  const { caseId, incidentId } = req.body;
+  const caseItem = db.getCaseById(caseId);
+  if (!caseItem) return res.status(404).json({ error: `Case ${caseId} not found` });
+
+  const incident = incidentId ? db.getIncidents().find(i => i.id === incidentId) : null;
+  const merchant = db.getMerchant();
+  const diagnosisPlan = await generateCaseDiagnosisAndPlan(caseItem, incident, merchant?.policy);
+
+  res.json(diagnosisPlan);
+});
+
+// 10. AI Omnichannel Tone-Aware Message Generator Endpoint
+router.post('/ai/generate-message', async (req, res) => {
+  const { channel = 'whatsapp', caseId, discountPct = 0 } = req.body;
+  const caseItem = db.getCaseById(caseId);
+  if (!caseItem) return res.status(404).json({ error: `Case ${caseId} not found` });
+
+  const messageResult = await generateOmnichannelMessage(channel, caseItem, { discountPct });
+  res.json(messageResult);
+});
+
+// 11. Customer Privacy Opt-Out (STOP / UNSUBSCRIBE) Endpoint
+router.post('/privacy/opt-out', (req, res) => {
+  const { phoneOrEmail, caseId } = req.body;
+  privacyEngine.recordOptOut(phoneOrEmail);
+
+  if (caseId) {
+    const caseObj = db.getCaseById(caseId);
+    if (caseObj) {
+      db.updateCaseStatus(caseId, 'CANCELLED', {
+        stopped_at: new Date().toISOString(),
+        stopped_reason: 'CUSTOMER_STOP_KEYWORD_RECEIVED'
+      });
+
+      db.addAuditEvent({
+        actor_type: 'customer',
+        actor_id: phoneOrEmail || 'customer_sms',
+        action: 'CUSTOMER_OPTED_OUT_STOPPED',
+        correlation_id: caseId,
+        details: `Customer ${caseObj.customer_name} sent STOP keyword. Terminal CANCELLED state applied. All future outreach blocked.`
+      });
+    }
+  }
+
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+  broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
+  res.json({ success: true, optedOut: phoneOrEmail, status: 'TERMINAL_STOPPED' });
+});
+
+// 12. Audit Log Endpoint
 router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
 });
@@ -266,7 +338,7 @@ router.get('/audit-events', (req, res) => {
   res.json(db.getAuditEvents());
 });
 
-// 8. 2,000-Event Benchmark Evaluator
+// 13. 2,000-Event Benchmark Evaluator
 router.post('/evaluation/run', (req, res) => {
   const { sampleSize = 2000 } = req.body;
   const results = runBatchEvaluation(sampleSize);

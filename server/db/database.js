@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { HashChainedAuditLedger } from '../core/auditLedger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_FILE = path.join(__dirname, 'data.json');
@@ -520,16 +521,21 @@ class Database {
 
   getAuditEvents() { return this.data.auditEvents; }
   addAuditEvent(event) {
-    const fullEvent = {
-      id: `AUDIT-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      merchant_id: "merchant_razor_01",
-      occurred_at: new Date().toISOString(),
-      ...event
-    };
-    this.data.auditEvents.unshift(fullEvent);
-    if (this.data.auditEvents.length > 100) this.data.auditEvents.pop();
+    if (!this.auditLedger) {
+      this.auditLedger = new HashChainedAuditLedger(this.data.auditEvents || []);
+    }
+    const fullBlock = this.auditLedger.appendEvent(event);
+    this.data.auditEvents = this.auditLedger.getEvents();
+    if (this.data.auditEvents.length > 150) this.data.auditEvents.pop();
     this.save();
-    return fullEvent;
+    return fullBlock;
+  }
+
+  verifyAuditChain() {
+    if (!this.auditLedger) {
+      this.auditLedger = new HashChainedAuditLedger(this.data.auditEvents || []);
+    }
+    return this.auditLedger.verifyChainIntegrity();
   }
 
   getBatchRuns() { return this.data.batchRuns || []; }

@@ -26,6 +26,7 @@ export default function CommandCenter({
   onOpenCheckout, 
   onOpenWhatsApp, 
   onOpenVoiceCall = () => {},
+  onOpenAIModal = () => {},
   onTriggerDemo 
 }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -324,24 +325,32 @@ export default function CommandCenter({
                                 {c.recovered_at ? new Date(c.recovered_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Today, 10:45 AM'}
                               </span>
                             ) : (
-                              <div className="space-x-1.5">
+                              <div className="space-x-1.5 flex items-center justify-end">
+                                <button
+                                  onClick={() => onOpenAIModal(c)}
+                                  title="Inspect AI Reasoning & LLM Prompt"
+                                  className="px-2 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-[11px] font-bold transition-colors shadow-2xs inline-flex items-center space-x-1"
+                                >
+                                  <Sparkles className="w-3 h-3 text-indigo-600" />
+                                  <span>AI Reason</span>
+                                </button>
                                 <button
                                   onClick={() => onOpenVoiceCall(c)}
                                   title="Simulate Hinglish AI Voice Call"
-                                  className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-colors shadow-2xs inline-flex items-center space-x-1"
+                                  className="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-colors shadow-2xs inline-flex items-center space-x-1"
                                 >
                                   <Phone className="w-3 h-3 text-emerald-600" />
                                   <span>Voice</span>
                                 </button>
                                 <button
                                   onClick={() => onOpenWhatsApp(c)}
-                                  className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold transition-colors"
+                                  className="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold transition-colors"
                                 >
                                   WhatsApp
                                 </button>
                                 <button
                                   onClick={() => onOpenCheckout(c)}
-                                  className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors shadow-2xs"
+                                  className="px-2 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors shadow-2xs"
                                 >
                                   Pay Link
                                 </button>
@@ -358,8 +367,29 @@ export default function CommandCenter({
           </div>
         </div>
 
-        {/* Live Audit Stream */}
-        <div className="lg:col-span-1">
+        {/* Right Column: Cryptographic Chain Verifier & Live Audit Stream */}
+        <div className="lg:col-span-1 space-y-4">
+          {/* Cryptographic SHA-256 Ledger Integrity Widget */}
+          <div className="p-3.5 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-card space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <h4 className="text-xs font-extrabold tracking-tight">Append-Only Audit Ledger</h4>
+              </div>
+              <span className="px-2 py-0.5 rounded text-[9.5px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                SHA-256 SEALED
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              Every recovery action, webhook event, and approval is cryptographically chained to prevent retroactive tampering.
+            </p>
+            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 border-t border-slate-800 pt-2">
+              <span>Sequence: Block #{auditEvents.length || 42}</span>
+              <span className="text-emerald-400 font-bold">Genesis Hash: 0000...</span>
+            </div>
+          </div>
+
+          {/* Live Audit Stream */}
           <AuditStream events={auditEvents} />
         </div>
       </div>

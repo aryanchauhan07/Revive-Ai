@@ -24,7 +24,8 @@ export default function Navbar({
   onToggleKillSwitch, 
   onTriggerDemo,
   demoStoryStep,
-  onStartDemoStory
+  onStartDemoStory,
+  onOpenWebhookModal = () => {}
 }) {
   const [showDemoMenu, setShowDemoMenu] = useState(false);
   const isKillSwitchActive = merchant?.killSwitch;
@@ -57,14 +58,23 @@ export default function Navbar({
           </div>
 
           {/* Controls & Actions */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2.5">
+            {/* Real Signed Webhook Replay Sandbox for Judges */}
+            <button
+              onClick={onOpenWebhookModal}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 text-xs font-bold shadow-2xs transition-all"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+              <span>Signed Webhook Replay</span>
+            </button>
+
             {/* 1-Click Interactive Guided Demo Story Button for Judges */}
             <button
               onClick={onStartDemoStory}
-              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-500 text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all"
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-500 text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all"
             >
-              <Compass className="w-4 h-4 text-emerald-200" />
-              <span>1-Click Guided Demo Story</span>
+              <Compass className="w-3.5 h-3.5 text-emerald-200" />
+              <span>Guided Demo</span>
             </button>
 
             {/* Scenario Dropdown */}

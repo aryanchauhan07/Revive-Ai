@@ -26,6 +26,7 @@ export default function CaseTimeline({
   onOpenCheckout = () => {}, 
   onOpenWhatsApp = () => {}, 
   onOpenVoiceCall = () => {},
+  onOpenAIModal = () => {},
   onSetPtpDate = () => {} 
 }) {
   // Deduplicate cases strictly
@@ -378,6 +379,14 @@ export default function CaseTimeline({
 
             {/* Omnichannel Interactive Action Dispatchers */}
             <div className="flex flex-wrap gap-2 pt-1">
+              <button
+                onClick={() => onOpenAIModal(selectedCase)}
+                className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-xs flex items-center space-x-1.5 transition-all shadow-2xs"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Inspect AI Agent Rationale</span>
+              </button>
+
               <button
                 onClick={() => onOpenVoiceCall(selectedCase)}
                 className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center space-x-1.5 transition-all shadow-xs"
