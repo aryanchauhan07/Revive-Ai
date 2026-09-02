@@ -28,12 +28,24 @@ import {
 
 import { Compass, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight, X, Sparkles, Award } from 'lucide-react';
 
+import { fallbackIncidents, fallbackCases, fallbackAuditEvents } from './services/mockFallback';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('command');
-  const [merchant, setMerchant] = useState(null);
-  const [cases, setCases] = useState([]);
-  const [incidents, setIncidents] = useState([]);
-  const [auditEvents, setAuditEvents] = useState([]);
+  const [merchant, setMerchant] = useState({
+    id: "merchant_razor_01",
+    name: "Revive AI Merchant Store",
+    mode: "ASSIST",
+    killSwitch: false,
+    policy: {
+      mode: "ASSIST",
+      money: { maxAutoDiscountPct: 2, maxDiscountPct: 5, highValueApprovalPaise: 2000000 },
+      contact: { quietHours: { start: "22:00", end: "08:00" }, maxContacts: 3 }
+    }
+  });
+  const [cases, setCases] = useState(fallbackCases);
+  const [incidents, setIncidents] = useState(fallbackIncidents);
+  const [auditEvents, setAuditEvents] = useState(fallbackAuditEvents);
 
   // Modals & Drawers
   const [selectedCheckoutCase, setSelectedCheckoutCase] = useState(null);
