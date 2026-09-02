@@ -43,16 +43,25 @@ export default function App() {
 
   const loadData = async () => {
     try {
-      const [m, c, i, a] = await Promise.all([
+      const results = await Promise.allSettled([
         fetchMerchant(),
         fetchCases(),
         fetchIncidents(),
         fetchAuditEvents()
       ]);
-      setMerchant(m);
-      setCases(c);
-      setIncidents(i);
-      setAuditEvents(a);
+
+      if (results[0].status === 'fulfilled' && results[0].value) {
+        setMerchant(results[0].value);
+      }
+      if (results[1].status === 'fulfilled' && Array.isArray(results[1].value) && results[1].value.length > 0) {
+        setCases(results[1].value);
+      }
+      if (results[2].status === 'fulfilled' && Array.isArray(results[2].value) && results[2].value.length > 0) {
+        setIncidents(results[2].value);
+      }
+      if (results[3].status === 'fulfilled' && Array.isArray(results[3].value)) {
+        setAuditEvents(results[3].value);
+      }
     } catch (err) {
       console.error("Error loading application data:", err);
     }
@@ -62,19 +71,27 @@ export default function App() {
     loadData();
 
     // SSE Listener for real-time live feed
-    const eventSource = new EventSource('/api/events/stream');
-    eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        console.log("SSE Received:", data);
-        loadData();
-      } catch (e) {
-        console.error("SSE parse error:", e);
-      }
-    };
+    let eventSource = null;
+    try {
+      eventSource = new EventSource('/api/events/stream');
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log("SSE Received:", data);
+          loadData();
+        } catch (e) {
+          console.error("SSE parse error:", e);
+        }
+      };
+      eventSource.onerror = (err) => {
+        console.warn("SSE stream closed or reconnecting:", err);
+      };
+    } catch (err) {
+      console.warn("SSE not supported or failed:", err);
+    }
 
     return () => {
-      eventSource.close();
+      if (eventSource) eventSource.close();
     };
   }, []);
 

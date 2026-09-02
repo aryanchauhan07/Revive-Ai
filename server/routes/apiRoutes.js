@@ -285,6 +285,10 @@ router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
 });
 
+router.get('/audit-events', (req, res) => {
+  res.json(db.getAuditEvents());
+});
+
 // 8. 2,000-Event Benchmark Evaluator
 router.post('/evaluation/run', (req, res) => {
   const { sampleSize = 2000 } = req.body;
