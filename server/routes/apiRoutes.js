@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import { db } from '../db/database.js';
 import { diagnoseAndPlanCase } from '../core/recoveryPlanner.js';
 import { executeCaseAction } from '../core/actionExecutor.js';
@@ -329,7 +330,231 @@ router.post('/privacy/opt-out', (req, res) => {
   res.json({ success: true, optedOut: phoneOrEmail, status: 'TERMINAL_STOPPED' });
 });
 
-// 12. Audit Log Endpoint
+// 12. Standard Web Checkout — Create Order
+router.post('/create-order', async (req, res) => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  // Fail-fast configuration validation
+  if (!keyId || !keySecret) {
+    const missing = !keyId ? 'RAZORPAY_KEY_ID' : 'RAZORPAY_KEY_SECRET';
+    console.error(`Razorpay configuration error: Missing environment variable ${missing}`);
+    return res.status(500).json({ error: "payment provider misconfigured" });
+  }
+
+  const { caseId, orderId } = req.body;
+  const targetId = caseId || orderId || 'CASE-101';
+  const caseItem = db.getCaseById(targetId);
+
+  // Compute amount strictly server-side from internal database record
+  let amountPaise = 50000; // default 500 INR
+  if (caseItem && caseItem.amount_paise) {
+    amountPaise = caseItem.amount_paise;
+  } else if (req.body.internal_order_id) {
+    const fallbackCase = db.getCases().find(c => c.provider_payment_id === req.body.internal_order_id);
+    if (fallbackCase) amountPaise = fallbackCase.amount_paise;
+  }
+
+  // Validate amount >= 100 paise (smallest currency unit)
+  if (!Number.isInteger(amountPaise) || amountPaise < 100) {
+    return res.status(400).json({ error: "Amount must resolve to an integer >= 100 paise" });
+  }
+
+  const currency = req.body.currency || 'INR';
+  const receipt = `rcpt_${targetId}_${Date.now()}`.substring(0, 40);
+  const notes = {
+    case_id: targetId,
+    customer_name: caseItem?.customer_name || 'Valued Customer'
+  };
+
+  const payload = {
+    amount: amountPaise,
+    currency,
+    receipt,
+    notes
+  };
+
+  const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+  let attempt = 0;
+  const maxRetries = 2;
+
+  while (attempt <= maxRetries) {
+    try {
+      const response = await fetch('https://api.razorpay.com/v1/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.status === 401) {
+        console.error("Razorpay 401 Unauthorized: Invalid API credentials configured.");
+        return res.status(500).json({ error: "payment provider misconfigured" });
+      }
+
+      if (response.status === 400) {
+        const errJson = await response.json();
+        console.error("Razorpay 400 Bad Request:", errJson?.error?.description);
+        return res.status(400).json({ error: errJson?.error?.description || "BAD_REQUEST_ERROR" });
+      }
+
+      if (response.ok) {
+        const orderData = await response.json();
+        if (!orderData.id) {
+          console.error("Contract mismatch: Order response missing id");
+          return res.status(502).json({ error: "Invalid response from payment provider" });
+        }
+
+        // Persist order_id against case
+        if (caseItem) {
+          db.updateCaseStatus(targetId, caseItem.status, {
+            razorpay_order_id: orderData.id,
+            active_checkout_amount_paise: orderData.amount
+          });
+        }
+
+        return res.json({
+          order_id: orderData.id,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          key_id: keyId
+        });
+      }
+
+      // If 5xx or server error, retry with exponential backoff
+      if (response.status >= 500 && attempt < maxRetries) {
+        attempt++;
+        await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 200));
+        continue;
+      }
+
+      return res.status(503).json({ error: "Payment gateway temporarily unavailable" });
+    } catch (networkErr) {
+      if (attempt < maxRetries) {
+        attempt++;
+        await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 200));
+        continue;
+      }
+      console.error("Razorpay network timeout/error:", networkErr.message);
+      return res.status(503).json({ error: "Payment gateway network timeout" });
+    }
+  }
+});
+
+// 13. Standard Web Checkout — Verify Payment Signature
+router.post('/verify-payment', (req, res) => {
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  if (!keySecret) {
+    console.error("Razorpay configuration error: Missing RAZORPAY_KEY_SECRET");
+    return res.status(500).json({ error: "payment provider misconfigured" });
+  }
+
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature, case_id } = req.body;
+
+  // Validate required fields
+  if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
+    return res.status(400).json({ 
+      error: "Missing required verification fields: razorpay_payment_id, razorpay_order_id, and razorpay_signature must all be provided" 
+    });
+  }
+
+  // Constant-time HMAC-SHA256 signature verification
+  try {
+    const expectedSignature = crypto
+      .createHmac('sha256', keySecret)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest('hex');
+
+    const isSignatureValid = crypto.timingSafeEqual(
+      Buffer.from(razorpay_signature, 'utf-8'),
+      Buffer.from(expectedSignature, 'utf-8')
+    );
+
+    if (!isSignatureValid) {
+      console.warn("Payment signature mismatch. Tampered request rejected.");
+      return res.status(400).json({ error: "Invalid payment signature" });
+    }
+  } catch (err) {
+    return res.status(400).json({ error: "Cryptographic signature validation failed" });
+  }
+
+  // Idempotent order update
+  const targetCaseId = case_id || 'CASE-101';
+  const existingCase = db.getCaseById(targetCaseId) || db.getCases().find(c => c.razorpay_order_id === razorpay_order_id);
+
+  if (existingCase) {
+    if (existingCase.status === 'RECOVERED') {
+      return res.json({
+        success: true,
+        status: 'PAID',
+        already_paid: true,
+        payment_id: razorpay_payment_id,
+        order_id: razorpay_order_id
+      });
+    }
+
+    db.updateCaseStatus(existingCase.id, 'RECOVERED', {
+      provider_payment_id: razorpay_payment_id,
+      razorpay_order_id: razorpay_order_id,
+      recovered_at: new Date().toISOString(),
+      payment_method_used: 'razorpay_standard_checkout',
+      attribution: 'RECOVEROPS_STANDARD_CHECKOUT'
+    });
+
+    db.addAuditEvent({
+      actor_type: 'customer',
+      actor_id: razorpay_payment_id,
+      action: 'PAYMENT_CAPTURED_VERIFIED',
+      correlation_id: existingCase.id,
+      details: `Razorpay Standard Web Checkout payment verified via HMAC signature. Order ${razorpay_order_id}, Payment ${razorpay_payment_id}. Case marked RECOVERED.`
+    });
+
+    broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+    broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
+  }
+
+  return res.json({
+    success: true,
+    status: 'PAID',
+    payment_id: razorpay_payment_id,
+    order_id: razorpay_order_id
+  });
+});
+
+// 14. Standard Web Checkout — Order Status Fallback
+router.get('/order-status/:order_id', async (req, res) => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!keyId || !keySecret) {
+    return res.status(500).json({ error: "payment provider misconfigured" });
+  }
+
+  const { order_id } = req.params;
+  const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+
+  try {
+    const response = await fetch(`https://api.razorpay.com/v1/orders/${order_id}/payments`, {
+      headers: { 'Authorization': authHeader }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: "Could not fetch order payments" });
+    }
+
+    const data = await response.json();
+    res.json({
+      order_id,
+      payments: data.items || []
+    });
+  } catch (err) {
+    res.status(503).json({ error: "Network error checking order status" });
+  }
+});
+
+// 15. Audit Log Endpoint
 router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
 });
@@ -338,7 +563,7 @@ router.get('/audit-events', (req, res) => {
   res.json(db.getAuditEvents());
 });
 
-// 13. 2,000-Event Benchmark Evaluator
+// 16. 2,000-Event Benchmark Evaluator
 router.post('/evaluation/run', (req, res) => {
   const { sampleSize = 2000 } = req.body;
   const results = runBatchEvaluation(sampleSize);
