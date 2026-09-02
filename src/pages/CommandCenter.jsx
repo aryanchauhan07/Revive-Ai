@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import MetricCard from '../components/MetricCard';
 import AuditStream from '../components/AuditStream';
-import { IndianRupee, TrendingUp, AlertTriangle, ShieldCheck, PlayCircle, Search, Phone } from 'lucide-react';
+import { 
+  IndianRupee, 
+  TrendingUp, 
+  AlertTriangle, 
+  ShieldCheck, 
+  PlayCircle, 
+  Search, 
+  Phone,
+  CheckCircle2,
+  Crown,
+  Zap,
+  History,
+  Activity,
+  ArrowRight
+} from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function CommandCenter({ 
@@ -16,6 +30,7 @@ export default function CommandCenter({
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [viewMode, setViewMode] = useState('ACTIVE'); // 'ACTIVE' | 'RECOVERED_HISTORY'
 
   // Deduplicate cases & incidents strictly
   const uniqueCasesMap = new Map(
@@ -44,7 +59,7 @@ export default function CommandCenter({
 
   const recoveryRate = totalAtRiskPaise > 0 
     ? (((alreadyRecoveredPaise + Math.round(expectedRemainingPaise * 0.5)) / totalAtRiskPaise) * 100).toFixed(1) 
-    : "74.2";
+    : "84.8";
 
   // Trend Chart Data
   const trendChartData = [
@@ -56,7 +71,11 @@ export default function CommandCenter({
   ];
 
   // Filtered Cases
-  const filteredCases = uniqueCases.filter(c => {
+  const displayCases = viewMode === 'RECOVERED_HISTORY'
+    ? uniqueCases.filter(c => c.status === 'RECOVERED' || c.status === 'CONTACTED')
+    : uniqueCases.filter(c => c.status !== 'RECOVERED');
+
+  const filteredCases = displayCases.filter(c => {
     const matchesSearch = c.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) || c.id?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -79,7 +98,7 @@ export default function CommandCenter({
           className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-sm shadow-blue-500/20 flex items-center space-x-2 transition-all shrink-0"
         >
           <PlayCircle className="w-4 h-4" />
-          <span>Simulate HDFC UPI Anomaly</span>
+          <span>Simulate Ecosystem Anomaly</span>
         </button>
       </div>
 
@@ -88,7 +107,7 @@ export default function CommandCenter({
         <MetricCard
           title="Revenue at Risk"
           value={`₹${Math.round(totalAtRiskPaise / 100).toLocaleString()}`}
-          subtext={`${uniqueCases.length} active failure cases`}
+          subtext={`${uniqueCases.length} total failure cases`}
           icon={AlertTriangle}
           color="amber"
         />
@@ -101,32 +120,33 @@ export default function CommandCenter({
           color="emerald"
         />
         <MetricCard
-          title="Recovery Success Rate"
-          value={`${recoveryRate}%`}
-          subtext="Net incremental lift"
+          title="Active Degradations"
+          value={openIncidents.length.toString()}
+          subtext={`${openIncidents.reduce((acc, i) => acc + (i.affected_count || 0), 0)} transactions affected`}
           icon={TrendingUp}
-          color="cyan"
+          color={openIncidents.length > 0 ? "rose" : "slate"}
         />
         <MetricCard
-          title="Active Incidents"
-          value={openIncidents.length}
-          subtext={`${pendingApprovals.length} pending review`}
+          title="Recovery Success Rate"
+          value={`${recoveryRate}%`}
+          subtext={`${pendingApprovals.length} requiring manager review`}
           icon={ShieldCheck}
+          trend="+4.2%"
           color="blue"
         />
       </div>
 
-      {/* Main Split: Trend Chart & Cases Table on Left, Live Audit Feed on Right */}
+      {/* Main Grid: Telemetry Chart + Table & Live Audit Stream */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          {/* Success Rate Chart */}
-          <div className="glass-panel rounded-2xl p-5 border border-slate-200 bg-white shadow-card space-y-3">
-            <div className="flex items-center justify-between">
+          {/* Rail Health & Recovery Telemetry Curve */}
+          <div className="glass-panel rounded-2xl p-5 border border-slate-200 bg-white shadow-card space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h3 className="font-extrabold text-slate-900 text-sm">Hourly Success Rate & Anomaly Dip</h3>
-                <p className="text-xs text-slate-500 font-medium">Real-time baseline vs actual recovery curve</p>
+                <h3 className="font-extrabold text-slate-900 text-sm">Payment Rail Health & Recovery Telemetry</h3>
+                <p className="text-xs text-slate-500 font-medium">Real-time success rate curve vs. historical baseline</p>
               </div>
-              <div className="flex items-center space-x-3 text-xs font-bold">
+              <div className="flex items-center space-x-3 text-xs font-medium">
                 <span className="flex items-center space-x-1 text-slate-400">
                   <span className="w-2 h-2 rounded-full bg-slate-300"></span>
                   <span>Baseline (92%)</span>
@@ -159,12 +179,34 @@ export default function CommandCenter({
             </div>
           </div>
 
-          {/* Active Cases Table */}
+          {/* Active Cases vs Recovered Revenue History Ledger */}
           <div className="glass-panel rounded-2xl p-5 border border-slate-200 bg-white shadow-card space-y-4">
+            {/* View Mode Switcher Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-              <div>
-                <h3 className="font-extrabold text-slate-900 text-sm">Active Recovery Cohort ({filteredCases.length})</h3>
-                <p className="text-xs text-slate-500 font-medium">Individualized customer interventions</p>
+              <div className="flex items-center space-x-2 bg-slate-100 p-1 rounded-xl">
+                <button
+                  onClick={() => setViewMode('ACTIVE')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center space-x-1.5 transition-all ${
+                    viewMode === 'ACTIVE'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <Activity className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Active Recovery Cohort ({pendingCases.length})</span>
+                </button>
+
+                <button
+                  onClick={() => setViewMode('RECOVERED_HISTORY')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center space-x-1.5 transition-all ${
+                    viewMode === 'RECOVERED_HISTORY'
+                      ? 'bg-white text-emerald-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <History className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Recovered History & Attribution ({recoveredCases.length})</span>
+                </button>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -193,73 +235,122 @@ export default function CommandCenter({
               </div>
             </div>
 
+            {/* Table Content */}
             <div className="overflow-x-auto custom-scrollbar">
               <table className="w-full text-left text-xs text-slate-700">
                 <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 uppercase tracking-wider text-[10px]">
                   <tr>
                     <th className="py-2.5 px-3">Customer</th>
                     <th className="py-2.5 px-3">Failure Reason</th>
-                    <th className="py-2.5 px-3">Action Plan</th>
+                    <th className="py-2.5 px-3">
+                      {viewMode === 'RECOVERED_HISTORY' ? 'Attribution & Executor' : 'Action Plan'}
+                    </th>
                     <th className="py-2.5 px-3 text-right">Amount</th>
                     <th className="py-2.5 px-3">Status</th>
-                    <th className="py-2.5 px-3 text-right">Action</th>
+                    <th className="py-2.5 px-3 text-right">
+                      {viewMode === 'RECOVERED_HISTORY' ? 'Recovery Timestamp' : 'Intervention'}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredCases.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="py-6 text-center text-slate-400 font-medium">No matching cases found.</td>
+                      <td colSpan="6" className="py-8 text-center text-slate-400 font-medium">
+                        {viewMode === 'RECOVERED_HISTORY' 
+                          ? "No recovered cases recorded yet. Trigger a payment recovery link to see attribution ledger here!" 
+                          : "No active cases matching filter."}
+                      </td>
                     </tr>
                   ) : (
-                    filteredCases.map((c) => (
-                      <tr key={c.id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3 px-3">
-                          <div className="font-bold text-slate-900">{c.customer_name}</div>
-                          <div className="text-[10px] text-slate-400 font-mono">{c.id}</div>
-                        </td>
-                        <td className="py-3 px-3">
-                          <span className="font-semibold text-slate-800">{c.failure_reason?.error_reason}</span>
-                          <span className="text-[10px] text-slate-400 block">{c.failure_reason?.issuer}</span>
-                        </td>
-                        <td className="py-3 px-3 font-semibold text-blue-700">
-                          {c.current_plan?.actions?.map(a => a.action).join(' → ') || 'WAIT → SWITCH_METHOD'}
-                        </td>
-                        <td className="py-3 px-3 text-right font-extrabold text-slate-900">
-                          ₹{(c.amount_paise / 100).toLocaleString()}
-                        </td>
-                        <td className="py-3 px-3">
-                          <span className={`px-2 py-0.5 rounded-full border text-[10px] font-bold ${
-                            c.status === 'RECOVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                            c.status === 'APPROVAL_REQUIRED' ? 'bg-amber-50 text-amber-800 border-amber-200' :
-                            'bg-blue-50 text-blue-700 border-blue-200'
-                          }`}>
-                            {c.status}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 text-right space-x-1.5">
-                          <button
-                            onClick={() => onOpenVoiceCall(c)}
-                            title="Simulate Hinglish AI Voice Call"
-                            className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-colors shadow-2xs inline-flex items-center space-x-1"
-                          >
-                            <Phone className="w-3 h-3 text-emerald-600" />
-                            <span>Voice</span>
-                          </button>
-                          <button
-                            onClick={() => onOpenWhatsApp(c)}
-                            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold transition-colors"
-                          >
-                            WhatsApp
-                          </button>
-                          <button
-                            onClick={() => onOpenCheckout(c)}
-                            className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors shadow-2xs"
-                          >
-                            Pay Link
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+                    filteredCases.map((c) => {
+                      const isManagerApproved = Boolean(
+                        c.attribution === 'HUMAN_MANAGER_APPROVED' ||
+                        c.last_execution?.reviewer_id === 'human_manager' ||
+                        c.policy_decision?.requires_approval
+                      );
+
+                      return (
+                        <tr key={c.id} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="py-3 px-3">
+                            <div className="font-bold text-slate-900">{c.customer_name}</div>
+                            <div className="text-[10px] text-slate-400 font-mono">{c.id}</div>
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <span className="font-semibold text-slate-800">{c.failure_reason?.error_reason}</span>
+                            <span className="text-[10px] text-slate-400 block">{c.failure_reason?.issuer}</span>
+                          </td>
+
+                          <td className="py-3 px-3">
+                            {viewMode === 'RECOVERED_HISTORY' ? (
+                              <div className="flex items-center space-x-1.5">
+                                {isManagerApproved ? (
+                                  <span className="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-800 border border-purple-200 text-[10.5px] font-bold flex items-center space-x-1">
+                                    <Crown className="w-3.5 h-3.5 text-purple-600" />
+                                    <span>Done by Human Manager</span>
+                                  </span>
+                                ) : (
+                                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10.5px] font-bold flex items-center space-x-1">
+                                    <Zap className="w-3.5 h-3.5 text-emerald-600" />
+                                    <span>Done by Revive AI (Autonomous)</span>
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="font-semibold text-blue-700">
+                                {c.current_plan?.actions?.map(a => a.action).join(' → ') || 'WAIT → SWITCH_METHOD'}
+                              </span>
+                            )}
+                          </td>
+
+                          <td className="py-3 px-3 text-right font-extrabold text-slate-900">
+                            ₹{(c.amount_paise / 100).toLocaleString()}
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <span className={`px-2 py-0.5 rounded-full border text-[10px] font-bold ${
+                              c.status === 'RECOVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                              c.status === 'APPROVAL_REQUIRED' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                              c.status === 'CONTACTED' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
+                              'bg-blue-50 text-blue-700 border-blue-200'
+                            }`}>
+                              {c.status}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3 text-right">
+                            {viewMode === 'RECOVERED_HISTORY' ? (
+                              <span className="text-[11px] font-mono text-emerald-700 font-bold">
+                                {c.recovered_at ? new Date(c.recovered_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Today, 10:45 AM'}
+                              </span>
+                            ) : (
+                              <div className="space-x-1.5">
+                                <button
+                                  onClick={() => onOpenVoiceCall(c)}
+                                  title="Simulate Hinglish AI Voice Call"
+                                  className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-colors shadow-2xs inline-flex items-center space-x-1"
+                                >
+                                  <Phone className="w-3 h-3 text-emerald-600" />
+                                  <span>Voice</span>
+                                </button>
+                                <button
+                                  onClick={() => onOpenWhatsApp(c)}
+                                  className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold transition-colors"
+                                >
+                                  WhatsApp
+                                </button>
+                                <button
+                                  onClick={() => onOpenCheckout(c)}
+                                  className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors shadow-2xs"
+                                >
+                                  Pay Link
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>

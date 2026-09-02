@@ -114,24 +114,32 @@ export async function executeCaseAction(caseId, actionToExecute, reviewerId = nu
 
   // Handle Payment Capture (Customer successfully pays via link or checkout)
   if (actionToExecute.action === 'PAYMENT_CAPTURED') {
+    const isHumanManager = Boolean(
+      reviewerId === 'human_manager' || 
+      caseItem.last_execution?.reviewer_id === 'human_manager' ||
+      caseItem.policy_decision?.requires_approval
+    );
+    const attributionType = isHumanManager ? 'HUMAN_MANAGER_APPROVED' : 'AUTONOMOUS_REVIVE_AI';
+
     db.updateCaseStatus(caseId, 'RECOVERED', {
       recovered_at: new Date().toISOString(),
       payment_method_used: actionToExecute.params?.method || 'card',
-      attribution: 'RECOVEROPS_ASSISTED'
+      attribution: attributionType,
+      recovered_by: isHumanManager ? 'Human Manager' : 'Revive AI (Autonomous)'
     });
 
     const feedback = recordOutcomeFeedback(caseItem, actionToExecute, actionToExecute.params?.method);
 
     db.addAuditEvent({
-      actor_type: reviewerId ? 'user' : 'customer',
-      actor_id: reviewerId || 'customer_checkout',
+      actor_type: isHumanManager ? 'user' : 'system',
+      actor_id: isHumanManager ? 'human_manager' : 'revive_ai_autonomous',
       action: 'PAYMENT_CAPTURED_RECOVERED',
       correlation_id: caseId,
-      details: `Payment Captured! Recovered ₹${(caseItem.amount_paise / 100).toLocaleString()} via ${actionToExecute.params?.method || 'card'}. Attribution: RECOVEROPS_ASSISTED.`
+      details: `Payment Captured! Recovered ₹${(caseItem.amount_paise / 100).toLocaleString()} via ${actionToExecute.params?.method || 'card'}. Attribution: ${isHumanManager ? 'Done by Human Manager' : 'Done by Revive AI (Autonomous)'}.`
     });
 
     db.save();
-    return { status: 'RECOVERED', case_id: caseId, feedback };
+    return { status: 'RECOVERED', case_id: caseId, attribution: attributionType, feedback };
   }
 
   // 1. MONOTONIC TERMINAL STATE CHECK
