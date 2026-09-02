@@ -50,15 +50,12 @@ export default function BrandLogo({ size = 36, showText = true }) {
       {showText && (
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-black text-[17px] tracking-tight text-slate-900 leading-none">
-              RECOVER<span className="text-blue-600">OPS</span>
-            </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/90 tracking-wide font-mono">
-              v2.0 PROD
+            <span className="font-black text-[18px] tracking-tight text-slate-900 leading-none">
+              Revive <span className="text-blue-600">AI</span>
             </span>
           </div>
           <p className="text-[11px] text-slate-500 font-medium tracking-tight mt-0.5">
-            AI Payment SRE & Revenue Recovery Engine
+            Autonomous Payment SRE & Revenue Recovery
           </p>
         </div>
       )}

@@ -66,10 +66,10 @@ export default function BatchEvaluator() {
               </div>
             </div>
 
-            {/* RECOVEROPS Agent */}
+            {/* Revive AI Agent */}
             <div className="glass-panel rounded-2xl p-5 border border-emerald-300 bg-emerald-50/50 shadow-card space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-xs text-emerald-800 font-bold uppercase tracking-wider block">RECOVEROPS Agent</span>
+                <span className="text-xs text-emerald-800 font-bold uppercase tracking-wider block">Revive AI Agent</span>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-extrabold flex items-center space-x-1">
                   <Award className="w-3 h-3 text-emerald-700" />
                   <span>WINNER</span>
@@ -100,13 +100,13 @@ export default function BatchEvaluator() {
               <div className="p-3.5 rounded-xl bg-blue-50/70 border border-blue-200 space-y-1 text-blue-950">
                 <span className="text-blue-900 font-medium block">Natural Self-Recovery</span>
                 <strong className="text-blue-900 text-lg font-extrabold block">₹{(latestResult.natural_self_recovery_paise / 100).toLocaleString()}</strong>
-                <span className="text-[10px] text-blue-700 font-medium">Excluded from RECOVEROPS attribution</span>
+                <span className="text-[10px] text-blue-700 font-medium">Excluded from Revive AI attribution</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-300 space-y-1 text-emerald-950">
                 <span className="text-emerald-900 font-bold block">True Incremental Lift</span>
                 <strong className="text-emerald-700 text-lg font-extrabold block">+₹{(latestResult.net_incremental_recovered_paise / 100).toLocaleString()}</strong>
-                <span className="text-[10px] text-emerald-800 font-bold">Pure value created by RECOVEROPS</span>
+                <span className="text-[10px] text-emerald-800 font-bold">Pure value created by Revive AI</span>
               </div>
 
               <div className="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200 space-y-1 text-indigo-950">
@@ -114,7 +114,7 @@ export default function BatchEvaluator() {
                 <strong className="text-indigo-900 text-lg font-extrabold block">
                   {latestResult.roi_multiplier || 28.4}x ROI
                 </strong>
-                <span className="text-[10px] text-indigo-700 font-medium">Cost: ₹{((latestResult.total_intervention_cost_paise || 120000) / 100).toLocaleString()}</span>
+                <span className="text-[10px] text-indigo-700 font-medium">₹{(latestResult.action_costs_paise / 100).toLocaleString()} execution cost</span>
               </div>
             </div>
 
