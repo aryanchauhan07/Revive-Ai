@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BrandLogo from './BrandLogo';
 import { 
   ShieldAlert, 
+  ShieldCheck,
   Activity, 
   Layers, 
   CheckSquare, 

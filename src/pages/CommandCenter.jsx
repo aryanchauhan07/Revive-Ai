@@ -14,7 +14,8 @@ import {
   Zap,
   History,
   Activity,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
