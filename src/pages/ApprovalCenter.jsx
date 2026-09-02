@@ -47,9 +47,12 @@ export default function ApprovalCenter({
     const discountAction = c.current_plan?.actions?.find(a => a.action === 'INCENTIVE');
     const discountPct = discountAction?.params?.discountPct || 0;
 
-    const isHighValue = (c.amount_paise || 0) >= currentHighValuePaise && merchant?.mode !== 'AUTOPILOT';
-    const isDiscountExceeded = discountPct > maxAutoDiscountPct;
-    const isApproved = approvedIds.has(c.id) || c.status === 'RECOVERED';
+    const isApproved = 
+      approvedIds.has(c.id) || 
+      c.status === 'RECOVERED' || 
+      c.status === 'CONTACTED' || 
+      c.status === 'CANCELLED' || 
+      Boolean(c.last_execution);
 
     let ruleId = 'AUTONOMOUS_EXECUTION';
     let ruleName = 'No Exception (Autonomous Auto-Execution)';
