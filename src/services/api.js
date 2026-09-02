@@ -127,6 +127,19 @@ export async function triggerDemoPaymentFailure(payload) {
   }
 }
 
+export async function resetHealthyRails() {
+  try {
+    const res = await fetch(`${API_BASE}/demo/reset-healthy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return await res.json();
+  } catch (err) {
+    console.error("resetHealthyRails error:", err);
+    return null;
+  }
+}
+
 export async function runBatchEvaluation(sampleSize = 2000) {
   try {
     const res = await fetch(`${API_BASE}/evaluation/run`, {

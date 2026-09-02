@@ -17,8 +17,13 @@ import {
   X,
   Radio,
   ChevronDown,
-  Building2
+  Building2,
+  ArrowUpRight,
+  GitBranch,
+  Bot,
+  MessageSquare
 } from 'lucide-react';
+import { resetHealthyRails } from '../services/api';
 
 export default function PaymentHealth({ 
   incidents = [], 
@@ -28,6 +33,7 @@ export default function PaymentHealth({
   onOpenCheckout = () => {}
 }) {
   const [isSimulating, setIsSimulating] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [sreNotification, setSreNotification] = useState(null);
   
   // Custom Dynamic Bank Selector State
@@ -124,6 +130,7 @@ export default function PaymentHealth({
       await onTriggerDemo(bank, method);
       setSreNotification({
         id: Date.now(),
+        type: 'OUTAGE',
         title: `🚨 SRE Anomaly Triggered: ${title}!`,
         details: `Success Rate dropped to ${dropRate} (-2.8 Z-score). Circuit Breaker automatically TRIPPED to suppress failing same-rail retries for ${bank}.`,
         timestamp: new Date().toLocaleTimeString()
@@ -139,22 +146,56 @@ export default function PaymentHealth({
     }
   };
 
+  const handleResetHealthy = async () => {
+    setIsResetting(true);
+    try {
+      await resetHealthyRails();
+      setSreNotification({
+        id: Date.now(),
+        type: 'HEALTHY',
+        title: `✅ All Payment Rails Restored to Healthy!`,
+        details: `Ecosystem status normal (94%+ success). Circuit breakers reset to CLOSED. Normal traffic resumed.`,
+        timestamp: new Date().toLocaleTimeString()
+      });
+
+      setTimeout(() => {
+        setSreNotification(null);
+      }, 5000);
+    } catch (err) {
+      console.error("Reset error:", err);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in relative">
-      {/* Floating SRE Outage Alert Notification */}
+      {/* Floating SRE Notification */}
       {sreNotification && (
-        <div className="fixed top-20 right-6 z-50 max-w-sm w-full bg-white border-2 border-rose-500 rounded-xl p-3 shadow-xl shadow-rose-500/10 animate-slide-in-right space-y-1.5">
+        <div className={`fixed top-20 right-6 z-50 max-w-sm w-full bg-white border-2 rounded-xl p-3 shadow-xl animate-slide-in-right space-y-1.5 ${
+          sreNotification.type === 'HEALTHY' 
+            ? 'border-emerald-500 shadow-emerald-500/10' 
+            : 'border-rose-500 shadow-rose-500/10'
+        }`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold shrink-0">
-                <ShieldAlert className="w-4 h-4 text-rose-600" />
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold shrink-0 ${
+                sreNotification.type === 'HEALTHY' 
+                  ? 'bg-emerald-100 text-emerald-700' 
+                  : 'bg-rose-100 text-rose-700'
+              }`}>
+                {sreNotification.type === 'HEALTHY' ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <ShieldAlert className="w-4 h-4 text-rose-600" />
+                )}
               </div>
               <div>
                 <h4 className="font-extrabold text-slate-900 text-xs leading-tight">
                   {sreNotification.title}
                 </h4>
                 <p className="text-[10px] text-slate-500 font-medium font-mono">
-                  SRE Circuit Breaker Activated • {sreNotification.timestamp}
+                  SRE Telemetry • {sreNotification.timestamp}
                 </p>
               </div>
             </div>
@@ -172,7 +213,7 @@ export default function PaymentHealth({
         </div>
       )}
 
-      {/* Header & Universal Anomaly Generator Controls */}
+      {/* Header & 2 Top Action Buttons */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Payment SRE Intelligence & Rail Health</h2>
@@ -181,52 +222,69 @@ export default function PaymentHealth({
           </p>
         </div>
 
-        {/* Universal Bank Anomaly Simulation Bar */}
-        <div className="flex items-center flex-wrap gap-2 bg-white border border-slate-200 rounded-xl p-1.5 shadow-2xs">
-          <div className="flex items-center space-x-1.5 pl-1">
-            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+        {/* 2 Top Action Controls */}
+        <div className="flex items-center flex-wrap gap-2">
+          {/* Button 1: Universal Bank Anomaly Trigger Bar */}
+          <div className="flex items-center flex-wrap gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
+            <div className="flex items-center space-x-1.5 pl-1">
+              <Building2 className="w-3.5 h-3.5 text-slate-400" />
+              <select
+                value={selectedBank}
+                onChange={e => setSelectedBank(e.target.value)}
+                className="text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500"
+              >
+                {MAJOR_BANKS.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+
             <select
-              value={selectedBank}
-              onChange={e => setSelectedBank(e.target.value)}
-              className="text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500"
+              value={selectedMethod}
+              onChange={e => setSelectedMethod(e.target.value)}
+              className="text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500 uppercase font-mono text-[11px]"
             >
-              {MAJOR_BANKS.map(b => (
-                <option key={b} value={b}>{b}</option>
-              ))}
+              <option value="upi">UPI Rail</option>
+              <option value="card">Cards 3DS</option>
+              <option value="mandate">AutoPay Mandate</option>
             </select>
+
+            <button
+              disabled={isSimulating}
+              onClick={() => handleSimulateOutage(
+                selectedBank, 
+                selectedMethod, 
+                `${selectedBank} ${selectedMethod.toUpperCase()} Outage`, 
+                selectedMethod === 'upi' ? '38%' : selectedMethod === 'card' ? '68%' : '72%'
+              )}
+              className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-extrabold flex items-center space-x-1.5 transition-all shadow-xs disabled:opacity-50"
+            >
+              {isSimulating ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Simulating...</span>
+                </>
+              ) : (
+                <>
+                  <Flame className="w-3.5 h-3.5" />
+                  <span>Simulate Outage</span>
+                </>
+              )}
+            </button>
           </div>
 
-          <select
-            value={selectedMethod}
-            onChange={e => setSelectedMethod(e.target.value)}
-            className="text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500 uppercase font-mono text-[11px]"
-          >
-            <option value="upi">UPI Rail</option>
-            <option value="card">Cards 3DS</option>
-            <option value="mandate">AutoPay Mandate</option>
-          </select>
-
+          {/* Button 2: Reset to Healthy Baseline */}
           <button
-            disabled={isSimulating}
-            onClick={() => handleSimulateOutage(
-              selectedBank, 
-              selectedMethod, 
-              `${selectedBank} ${selectedMethod.toUpperCase()} Outage`, 
-              selectedMethod === 'upi' ? '38%' : selectedMethod === 'card' ? '68%' : '72%'
-            )}
-            className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-extrabold flex items-center space-x-1.5 transition-all shadow-xs disabled:opacity-50"
+            disabled={isResetting}
+            onClick={handleResetHealthy}
+            className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-bold flex items-center space-x-1.5 transition-all shadow-2xs disabled:opacity-50"
           >
-            {isSimulating ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Simulating...</span>
-              </>
+            {isResetting ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
             ) : (
-              <>
-                <Flame className="w-3.5 h-3.5" />
-                <span>Simulate Outage</span>
-              </>
+              <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
             )}
+            <span>Reset Rails to Healthy</span>
           </button>
         </div>
       </div>
@@ -307,13 +365,23 @@ export default function PaymentHealth({
                     <span className="font-extrabold text-slate-900 block">Root-Cause Diagnosis</span>
                     <p className="text-slate-600 font-medium">{inc.root_cause || "Issuer bank auth server timeout. Spike in gateway technical errors."}</p>
                   </div>
-                  <button
-                    onClick={() => setActiveTab('incidents')}
-                    className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center space-x-1 transition-all shrink-0 shadow-2xs"
-                  >
-                    <span>Inspect Cohort</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setActiveTab('incidents')}
+                      className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center space-x-1 transition-all shrink-0 shadow-2xs"
+                    >
+                      <span>Inspect Cohort ({inc.affected_count || 3})</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+
+                    <button
+                      onClick={() => setActiveTab('cases')}
+                      className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center space-x-1 transition-all shrink-0 shadow-2xs"
+                    >
+                      <span>Remediate in Case Manager</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -326,6 +394,45 @@ export default function PaymentHealth({
           <p className="text-xs text-slate-500">Zero active ecosystem degradation incidents detected.</p>
         </div>
       )}
+
+      {/* CLOSED-LOOP PIPELINE ARCHITECTURE CARD (FEATURE CONNECTION) */}
+      <div className="glass-panel rounded-2xl p-5 border border-slate-200 bg-white shadow-card space-y-3">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+          <div className="flex items-center space-x-2">
+            <GitBranch className="w-4 h-4 text-indigo-600" />
+            <h3 className="font-extrabold text-slate-900 text-xs tracking-tight">Closed-Loop AI Revenue Protection Pipeline</h3>
+          </div>
+          <span className="text-[11px] font-mono text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+            Active Real-Time Bridge
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span className="text-[10px] text-slate-400 font-bold uppercase block">1. SRE Detection</span>
+            <strong className="font-bold text-slate-900 block">Anomaly Isolated</strong>
+            <p className="text-[10.5px] text-slate-500">Detects -2.8 Z-score drop across any bank issuer.</p>
+          </div>
+
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 space-y-1 text-rose-950">
+            <span className="text-[10px] text-rose-700 font-bold uppercase block">2. Circuit Breaker</span>
+            <strong className="font-bold text-rose-900 block">Retries Blocked</strong>
+            <p className="text-[10.5px] text-rose-800">Halts failing attempts on degraded bank rails.</p>
+          </div>
+
+          <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 space-y-1 text-blue-950">
+            <span className="text-[10px] text-blue-700 font-bold uppercase block">3. Decision Brain</span>
+            <strong className="font-bold text-blue-900 block">E[Net] Optimized</strong>
+            <p className="text-[10.5px] text-blue-800">Evaluates 8-action economics for each customer.</p>
+          </div>
+
+          <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1 text-emerald-950">
+            <span className="text-[10px] text-emerald-700 font-bold uppercase block">4. Omnichannel Recovery</span>
+            <strong className="font-bold text-emerald-900 block">1-Click Links</strong>
+            <p className="text-[10.5px] text-emerald-800">Dispatches WhatsApp & Voice recovery links.</p>
+          </div>
+        </div>
+      </div>
 
       {/* Real-Time Payment Rail Performance Telemetry Matrix */}
       <div className="glass-panel rounded-2xl p-5 border border-slate-200 bg-white shadow-card space-y-4">

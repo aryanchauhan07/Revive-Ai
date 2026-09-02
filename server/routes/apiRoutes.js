@@ -229,6 +229,34 @@ router.post('/demo/trigger-incident', (req, res) => {
   res.json({ incident, casesCount: 3 });
 });
 
+// 6b. Reset System to Healthy Baseline
+router.post('/demo/reset-healthy', (req, res) => {
+  db.data.incidents = (db.data.incidents || []).map(inc => ({
+    ...inc,
+    status: "RESOLVED",
+    current_success_rate: inc.baseline_success_rate || 0.92,
+    circuit_breaker: {
+      status: "CLOSED",
+      suppress_same_rail_retries: false,
+      recommended_alternate_rail: "Normal Routing",
+      cooldown_remaining_minutes: 0
+    }
+  }));
+
+  db.addAuditEvent({
+    actor_type: 'system',
+    actor_id: 'sre_circuit_breaker',
+    action: 'RAILS_RESTORED_HEALTHY',
+    correlation_id: 'SYSTEM_ALL_RAILS',
+    details: 'All payment rails restored to baseline health. Circuit breakers reset to CLOSED.'
+  });
+
+  db.save();
+  broadcastSSE({ type: 'INCIDENTS_UPDATED', data: db.getIncidents() });
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+  res.json({ status: 'RESOLVED', incidents: db.getIncidents() });
+});
+
 // 7. Audit Log Endpoint
 router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
