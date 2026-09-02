@@ -1,41 +1,40 @@
 import React, { useState } from 'react';
 import { 
-  Layers, 
-  ExternalLink, 
+  History, 
+  ArrowRight, 
+  CheckCircle2, 
+  AlertTriangle, 
+  ShieldCheck, 
   MessageSquare, 
-  Search, 
   Phone, 
-  Calendar, 
-  ShieldCheck,
+  ExternalLink, 
+  Search, 
+  Calendar,
   Sparkles,
-  Calculator,
-  Award,
-  ChevronDown,
-  ChevronUp,
-  ShoppingCart,
-  RefreshCw,
-  Building2,
   Zap,
-  CheckCircle2,
-  Clock
+  Tag,
+  Building2,
+  RefreshCw,
+  ShoppingCart
 } from 'lucide-react';
+import VoiceCallSandboxModal from '../components/VoiceCallSandboxModal';
+import { Calculator } from 'lucide-react';
 
 export default function CaseTimeline({ 
   cases = [], 
+  onExecuteAction = () => {}, 
   onOpenCheckout = () => {}, 
   onOpenWhatsApp = () => {}, 
-  onOpenVoiceCall = () => {}, 
-  onExecuteAction = () => {}, 
+  onOpenVoiceCall = () => {},
   onSetPtpDate = () => {} 
 }) {
-  // Deduplicate valid cases by ID
-  const uniqueCases = Array.from(
-    new Map(
-      (cases || [])
-        .filter(c => c.customer_name && !c.id?.startsWith('CASE-TEST'))
-        .map(c => [c.id, c])
-    ).values()
+  // Deduplicate cases strictly
+  const uniqueCasesMap = new Map(
+    (cases || [])
+      .filter(c => c.customer_name && !c.id?.startsWith('CASE-TEST'))
+      .map(c => [c.id, c])
   );
+  const uniqueCases = Array.from(uniqueCasesMap.values());
 
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL'); // ALL | DROPOFF | SUBSCRIPTION | B2B | GATEWAY
@@ -45,6 +44,7 @@ export default function CaseTimeline({
 
   // Helper to categorize each case
   const getCaseCategory = (c) => {
+    if (!c) return 'GATEWAY';
     if (c.id === 'CASE-104' || c.failure_reason?.error_reason?.includes('abandoned') || c.failure_reason?.error_reason?.includes('cancelled')) {
       return 'DROPOFF';
     }
@@ -69,6 +69,91 @@ export default function CaseTimeline({
   const selectedCase = uniqueCases.find(c => c.id === selectedCaseId) || filteredCases[0] || uniqueCases[0] || {};
   const currentCategory = getCaseCategory(selectedCase);
 
+  // Dynamic 8-Action Economics Generator Tailored Specifically to Each Case & Problem Statement
+  const getActionUtilityMatrix = (caseItem, cat) => {
+    if (!caseItem || !caseItem.amount_paise) return [];
+    const amountRupees = Math.round((caseItem.amount_paise || 0) / 100);
+    const isHighValue = amountRupees >= 20000;
+
+    let actions = [];
+
+    if (cat === 'DROPOFF') {
+      // Checkout Drop-Off (Sneha Mehta ₹6,499)
+      actions = [
+        { name: '1. WAIT (No outreach)', prob: 0.08, cost: 0.00, status: 'LOW_INTENT', isOptimal: false, rationale: 'User abandoned cart; passive wait will not convert' },
+        { name: '2. RETRY (Same Rail)', prob: 0.10, cost: 1.50, status: 'NOT_RECOMMENDED', isOptimal: false, rationale: 'Customer explicitly cancelled checkout screen' },
+        { name: '3. SWITCH_PAYMENT_METHOD', prob: 0.45, cost: 0.50, status: 'FEASIBLE', isOptimal: false, rationale: 'Generic link without incentive has modest cart conversion' },
+        { name: '4. CREATE_PAYMENT_LINK', prob: 0.62, cost: 0.50, status: 'FEASIBLE', isOptimal: false, rationale: 'Clean 1-click cart resume link' },
+        { name: '5. WHATSAPP_MESSAGE', prob: 0.68, cost: 0.75, status: 'FEASIBLE', isOptimal: false, rationale: 'Friendly cart abandonment reminder' },
+        { name: '6. INCENTIVE (Dynamic 3% Discount)', prob: 0.86, cost: Math.round(amountRupees * 0.03), status: 'OPTIMAL PLAN', isOptimal: true, rationale: 'ArgMax E[Net]: Dynamic 3% discount converts abandoned cart immediately' },
+        { name: '7. HUMAN_ESCALATION', prob: 0.88, cost: 45.00, status: 'EXPENSIVE', isOptimal: false, rationale: 'Unnecessary ₹45 human agent cost for ₹6.5k cart' },
+        { name: '8. STOP', prob: 0.00, cost: 0.00, status: 'FALLBACK', isOptimal: false, rationale: 'Surrenders cart revenue permanently' }
+      ];
+    } else if (cat === 'SUBSCRIPTION') {
+      // Subscriptions / e-Mandates (Karan Malhotra ₹12,400 / Divya Joshi ₹8,900)
+      actions = [
+        { name: '1. WAIT (Salary Window Cooldown)', prob: 0.82, cost: 0.00, status: 'FEASIBLE', isOptimal: false, rationale: 'Wait for 1st-3rd monthly salary credit window' },
+        { name: '2. RETRY (Immediate Same-Day Debit)', prob: 0.12, cost: 1.50, status: 'CIRCUIT BLOCKED', isOptimal: false, rationale: 'Bank balance deficit; immediate retries guaranteed to fail' },
+        { name: '3. SWITCH_PAYMENT_METHOD', prob: 0.35, cost: 0.50, status: 'FEASIBLE', isOptimal: false, rationale: 'Customer must manually enter new payment details' },
+        { name: '4. RETRY (Scheduled on Salary Cycle 1st-3rd)', prob: 0.89, cost: 0.50, status: 'OPTIMAL PLAN', isOptimal: true, rationale: 'ArgMax E[Net]: Automated AutoPay debit sequencer on salary window' },
+        { name: '5. WHATSAPP_MESSAGE', prob: 0.70, cost: 0.75, status: 'FEASIBLE', isOptimal: false, rationale: 'Polite upcoming subscription debit reminder' },
+        { name: '6. INCENTIVE (Dynamic Discount)', prob: 0.00, cost: 0.00, status: 'NOT_APPLICABLE', isOptimal: false, rationale: 'Discounts prohibited on recurring mandate contracts' },
+        { name: '7. HUMAN_ESCALATION', prob: 0.80, cost: 45.00, status: 'EXPENSIVE', isOptimal: false, rationale: 'Overkill for automated recurring subscriptions' },
+        { name: '8. STOP', prob: 0.00, cost: 0.00, status: 'FALLBACK', isOptimal: false, rationale: 'Cancels recurring subscriber membership' }
+      ];
+    } else if (cat === 'B2B') {
+      // B2B Corporate Invoice (Acme Technologies ₹85,000)
+      actions = [
+        { name: '1. WAIT (Invoice Aging Grace Period)', prob: 0.20, cost: 0.00, status: 'FEASIBLE', isOptimal: false, rationale: 'Standard 7-day payment terms window' },
+        { name: '2. RETRY (Same Rail)', prob: 0.15, cost: 1.50, status: 'NOT_RECOMMENDED', isOptimal: false, rationale: 'Corporate finance needs formal invoice link' },
+        { name: '3. SWITCH_PAYMENT_METHOD', prob: 0.55, cost: 0.50, status: 'FEASIBLE', isOptimal: false, rationale: 'Switch from card to Virtual Account / NEFT' },
+        { name: '4. CREATE_PAYMENT_LINK (Virtual Account / RTGS)', prob: 0.91, cost: 0.50, status: 'OPTIMAL PLAN', isOptimal: true, rationale: 'ArgMax E[Net]: Dedicated Razorpay Smart Collect Virtual Account for B2B reconciliation' },
+        { name: '5. WHATSAPP_MESSAGE', prob: 0.60, cost: 0.75, status: 'FEASIBLE', isOptimal: false, rationale: 'Finance department WhatsApp invoice dispatch' },
+        { name: '6. INCENTIVE (Early Payment Discount)', prob: 0.85, cost: Math.round(amountRupees * 0.02), status: 'MARGIN_IMPACT', isOptimal: false, rationale: '2% cash discount reduces merchant B2B margin' },
+        { name: '7. HUMAN_ESCALATION (Key Account Manager)', prob: 0.94, cost: 45.00, status: 'REVIEW REQ', isOptimal: false, rationale: 'High-touch B2B invoice escalation' },
+        { name: '8. STOP', prob: 0.00, cost: 0.00, status: 'FALLBACK', isOptimal: false, rationale: 'Write off invoice as bad debt' }
+      ];
+    } else if (isHighValue) {
+      // High-Value VIP Orders >= ₹20k (Priya Patel ₹28,500 / Aditya Verma ₹23,900)
+      actions = [
+        { name: '1. WAIT (Cooldown 15m)', prob: 0.12, cost: 0.00, status: 'FEASIBLE', isOptimal: false, rationale: 'Passive wait during bank outage' },
+        { name: '2. RETRY (Same Rail)', prob: 0.14, cost: 1.50, status: 'CIRCUIT BLOCKED', isOptimal: false, rationale: 'Circuit breaker tripped on degraded bank' },
+        { name: '3. SWITCH_PAYMENT_METHOD', prob: 0.78, cost: 0.50, status: 'REQUIRES_APPROVAL', isOptimal: false, rationale: 'High-value order (₹28.5k >= ₹20k floor) requires manager review' },
+        { name: '4. CREATE_PAYMENT_LINK', prob: 0.80, cost: 0.50, status: 'REQUIRES_APPROVAL', isOptimal: false, rationale: 'Payment link creation blocked pending approval' },
+        { name: '5. WHATSAPP_MESSAGE', prob: 0.75, cost: 0.75, status: 'FEASIBLE', isOptimal: false, rationale: 'Customer concierge notification' },
+        { name: '6. INCENTIVE (Dynamic Discount)', prob: 0.00, cost: 0.00, status: 'POLICY_BLOCKED', isOptimal: false, rationale: 'Autonomous discounts prohibited on high-value orders' },
+        { name: '7. HUMAN_ESCALATION (Manager Sign-Off)', prob: 0.95, cost: 45.00, status: 'OPTIMAL PLAN', isOptimal: true, rationale: 'ArgMax E[Net]: Senior manager review protects against high-ticket exposure while maximizing VIP conversion' },
+        { name: '8. STOP', prob: 0.00, cost: 0.00, status: 'FALLBACK', isOptimal: false, rationale: 'Halt recovery attempt' }
+      ];
+    } else {
+      // Technical Bank Outage (Ananya Roy ₹4,850 / Rahul Sharma ₹7,200 / Vikram Singh ₹12,200)
+      actions = [
+        { name: '1. WAIT (Cooldown 15m)', prob: 0.12, cost: 0.00, status: 'FEASIBLE', isOptimal: false, rationale: 'Wait for bank auth server recovery' },
+        { name: '2. RETRY (Same Rail)', prob: 0.16, cost: 1.50, status: 'CIRCUIT BLOCKED', isOptimal: false, rationale: 'SRE Circuit Breaker tripped: 84% failure rate on degraded bank' },
+        { name: '3. SWITCH_PAYMENT_METHOD (Cards / Netbanking)', prob: 0.88, cost: 0.50, status: 'OPTIMAL PLAN', isOptimal: true, rationale: 'ArgMax E[Net]: Bypass broken UPI rail to 95% healthy Cards/Netbanking via 1-click link' },
+        { name: '4. CREATE_PAYMENT_LINK', prob: 0.78, cost: 0.50, status: 'FEASIBLE', isOptimal: false, rationale: 'Clean 1-click recovery checkout link' },
+        { name: '5. WHATSAPP_MESSAGE', prob: 0.74, cost: 0.75, status: 'FEASIBLE', isOptimal: false, rationale: 'Dispatches alternate method prompt to customer' },
+        { name: '6. INCENTIVE (Dynamic Discount)', prob: 0.88, cost: Math.round(amountRupees * 0.03), status: 'UNNECESSARY', isOptimal: false, rationale: '₹0 discount needed because user had 100% purchase intent before bank failed' },
+        { name: '7. HUMAN_ESCALATION', prob: 0.90, cost: 45.00, status: 'EXPENSIVE', isOptimal: false, rationale: 'Unnecessary ₹45 human cost for technical bank error' },
+        { name: '8. STOP', prob: 0.00, cost: 0.00, status: 'FALLBACK', isOptimal: false, rationale: 'Surrenders revenue to bank downtime' }
+      ];
+    }
+
+    return actions.map(act => {
+      const grossPaise = Math.round(caseItem.amount_paise * act.prob);
+      const grossRupees = Math.round(grossPaise / 100);
+      const netRupees = Math.max(0, Math.round(grossRupees - act.cost));
+
+      return {
+        ...act,
+        grossRupees,
+        netRupees
+      };
+    });
+  };
+
+  const actionMatrix = getActionUtilityMatrix(selectedCase, currentCategory);
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -79,17 +164,17 @@ export default function CaseTimeline({
           </p>
         </div>
 
-        {/* 4 Problem Statement Vertical Filter Tabs */}
+        {/* 4 Dedicated Problem Statement Vertical Filter Tabs */}
         <div className="flex items-center flex-wrap gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
           <button
             onClick={() => setCategoryFilter('ALL')}
             className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
               categoryFilter === 'ALL'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-slate-700 hover:bg-slate-100'
             }`}
           >
-            All Cases ({uniqueCases.length})
+            All Verticals ({uniqueCases.length})
           </button>
 
           <button
@@ -226,7 +311,7 @@ export default function CaseTimeline({
                   <ShoppingCart className="w-4 h-4 text-amber-600 shrink-0" />
                   <div>
                     <strong className="font-extrabold block">Checkout Drop-Off Recovery Workflow Active</strong>
-                    <span>Customer abandoned checkout during bank friction. 3% Dynamic Incentive discount generated to incentivize instant conversion.</span>
+                    <span>Customer abandoned checkout during bank friction. Dynamic 3% Incentive generated to maximize conversion.</span>
                   </div>
                 </div>
                 <button
@@ -258,64 +343,60 @@ export default function CaseTimeline({
                 <div className="flex items-center space-x-2">
                   <Building2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <div>
-                    <strong className="font-extrabold block">B2B Overdue Receivables Chaser Active</strong>
-                    <span>Corporate invoice past due by 21 days. Automated AP reconciliation follow-up and Axis Bank Virtual Account link attached.</span>
+                    <strong className="font-extrabold block">B2B Overdue Invoice Aging & Virtual Account Recovery</strong>
+                    <span>Corporate invoice aging. Automated Razorpay Smart Collect Virtual Account created for RTGS/NEFT settlement.</span>
                   </div>
                 </div>
-                <button
-                  onClick={() => onOpenCheckout(selectedCase)}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shrink-0 transition-all"
-                >
-                  Settle Virtual Account
-                </button>
+                <div className="px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-mono font-bold text-[10px] border border-emerald-300">
+                  Virtual Account: RAZOR_VA_85000
+                </div>
               </div>
             )}
 
-            {/* Case Details */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-xs font-bold border border-blue-200">
-                    {selectedCase.id}
-                  </span>
-                  <h3 className="font-extrabold text-slate-900 text-base">{selectedCase.customer_name}</h3>
+                  <h3 className="font-extrabold text-slate-900 text-lg">{selectedCase.customer_name}</h3>
+                  <span className="text-xs font-mono text-slate-400">({selectedCase.id})</span>
                 </div>
-                <p className="text-xs text-slate-500 mt-1 font-medium">
-                  Ref: <span className="font-mono">{selectedCase.provider_payment_id}</span> • Phone: {selectedCase.customer_phone} • Email: {selectedCase.customer_email}
-                </p>
+                <p className="text-xs text-slate-500 font-medium">{selectedCase.customer_email} • {selectedCase.customer_phone}</p>
               </div>
 
-              <div className="text-left sm:text-right">
-                <div className="text-2xl font-extrabold text-slate-900">
+              <div className="text-right">
+                <div className="text-2xl font-extrabold font-mono text-slate-900">
                   ₹{Math.round((selectedCase.amount_paise || 0) / 100).toLocaleString()}
                 </div>
-                <span className="text-xs text-slate-400 font-medium">
-                  {selectedCase.failure_reason?.issuer} ({selectedCase.failure_reason?.method?.toUpperCase()})
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                  selectedCase.status === 'RECOVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                  selectedCase.status === 'APPROVAL_REQUIRED' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                  'bg-blue-50 text-blue-700 border-blue-200'
+                }`}>
+                  {selectedCase.status}
                 </span>
               </div>
             </div>
 
-            {/* Omnichannel Interactive Sandbox Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2 pt-1">
+            {/* Omnichannel Interactive Action Dispatchers */}
+            <div className="flex flex-wrap gap-2 pt-1">
               <button
                 onClick={() => onOpenVoiceCall(selectedCase)}
-                className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-sm flex items-center space-x-1.5 transition-all"
+                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center space-x-1.5 transition-all shadow-xs"
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>Simulate Hinglish Voice Call</span>
+                <span>Simulate Hinglish AI Voice Call</span>
               </button>
 
               <button
                 onClick={() => onOpenWhatsApp(selectedCase)}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm flex items-center space-x-1.5 transition-all"
+                className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center space-x-1.5 transition-all shadow-2xs"
               >
-                <MessageSquare className="w-3.5 h-3.5" />
-                <span>Dispatch WhatsApp Link</span>
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Dispatch WhatsApp Pay Link</span>
               </button>
 
               <button
                 onClick={() => onOpenCheckout(selectedCase)}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-sm flex items-center space-x-1.5 transition-all"
+                className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center space-x-1.5 transition-all shadow-xs"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Razorpay 1-Click Pay Link</span>
@@ -378,77 +459,48 @@ export default function CaseTimeline({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">1. WAIT (Cooldown 15m)</td>
-                    <td className="py-2.5 px-3">12.0%</td>
-                    <td className="py-2.5 px-3 text-right">₹{Math.round(selectedCase.amount_paise * 0.12 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-emerald-700">₹0.00</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-slate-900">₹{Math.round(selectedCase.amount_paise * 0.12 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 font-bold">FEASIBLE</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">2. RETRY (Same Rail)</td>
-                    <td className="py-2.5 px-3 text-rose-700 font-bold">16.0%</td>
-                    <td className="py-2.5 px-3 text-right">₹{Math.round(selectedCase.amount_paise * 0.16 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-rose-700">₹1.50</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-rose-700">₹{Math.round(selectedCase.amount_paise * 0.16 / 100 - 1.5).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-rose-100 text-rose-700 font-bold">CIRCUIT BLOCKED</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-blue-50/60 bg-blue-50/30 transition-colors border-l-4 border-blue-600">
-                    <td className="py-2.5 px-3 font-extrabold text-blue-900 font-sans">3. SWITCH_PAYMENT_METHOD</td>
-                    <td className="py-2.5 px-3 font-bold text-emerald-700">82.0%</td>
-                    <td className="py-2.5 px-3 text-right font-bold">₹{Math.round(selectedCase.amount_paise * 0.82 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-slate-600">₹0.50</td>
-                    <td className="py-2.5 px-3 text-right font-extrabold text-emerald-700">₹{Math.round(selectedCase.amount_paise * 0.82 / 100 - 0.5).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-blue-600 text-white font-extrabold">OPTIMAL PLAN</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">4. CREATE_PAYMENT_LINK</td>
-                    <td className="py-2.5 px-3">78.0%</td>
-                    <td className="py-2.5 px-3 text-right">₹{Math.round(selectedCase.amount_paise * 0.78 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-slate-600">₹0.50</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-slate-900">₹{Math.round(selectedCase.amount_paise * 0.78 / 100 - 0.5).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 font-bold">FEASIBLE</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">5. WHATSAPP_MESSAGE</td>
-                    <td className="py-2.5 px-3">74.0%</td>
-                    <td className="py-2.5 px-3 text-right">₹{Math.round(selectedCase.amount_paise * 0.74 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-slate-600">₹0.75</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-slate-900">₹{Math.round(selectedCase.amount_paise * 0.74 / 100 - 0.75).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 font-bold">FEASIBLE</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">6. INCENTIVE (Dynamic Discount)</td>
-                    <td className="py-2.5 px-3">88.0%</td>
-                    <td className="py-2.5 px-3 text-right">₹{Math.round(selectedCase.amount_paise * 0.88 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-amber-700">₹{Math.round(selectedCase.amount_paise * 0.03 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-slate-900">₹{Math.round(selectedCase.amount_paise * 0.85 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-800 font-bold">REVIEW REQ</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">7. HUMAN_ESCALATION</td>
-                    <td className="py-2.5 px-3">92.0%</td>
-                    <td className="py-2.5 px-3 text-right">₹{Math.round(selectedCase.amount_paise * 0.92 / 100).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right text-rose-700">₹45.00</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-slate-900">₹{Math.round(selectedCase.amount_paise * 0.92 / 100 - 45).toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-purple-100 text-purple-800 font-bold">HIGH-VALUE ONLY</span></td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 font-sans">8. STOP</td>
-                    <td className="py-2.5 px-3 text-slate-400">0.0%</td>
-                    <td className="py-2.5 px-3 text-right text-slate-400">₹0.00</td>
-                    <td className="py-2.5 px-3 text-right text-slate-400">₹0.00</td>
-                    <td className="py-2.5 px-3 text-right text-slate-400">₹0.00</td>
-                    <td className="py-2.5 px-3 text-center"><span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-400 font-bold">FALLBACK</span></td>
-                  </tr>
+                  {actionMatrix.map((act, idx) => (
+                    <tr 
+                      key={idx} 
+                      className={`transition-colors ${
+                        act.isOptimal 
+                          ? 'hover:bg-blue-50/60 bg-blue-50/30 border-l-4 border-blue-600' 
+                          : 'hover:bg-slate-50'
+                      }`}
+                    >
+                      <td className={`py-2.5 px-3 font-sans ${act.isOptimal ? 'font-extrabold text-blue-900' : 'font-bold text-slate-900'}`}>
+                        {act.name}
+                        <span className="text-[10px] text-slate-500 font-normal font-sans block">
+                          {act.rationale}
+                        </span>
+                      </td>
+                      <td className={`py-2.5 px-3 ${act.isOptimal ? 'font-bold text-emerald-700' : ''}`}>
+                        {(act.prob * 100).toFixed(1)}%
+                      </td>
+                      <td className={`py-2.5 px-3 text-right ${act.isOptimal ? 'font-bold' : ''}`}>
+                        ₹{act.grossRupees.toLocaleString()}
+                      </td>
+                      <td className={`py-2.5 px-3 text-right ${act.cost > 0 ? (act.cost > 20 ? 'text-rose-700' : 'text-slate-600') : 'text-emerald-700'}`}>
+                        ₹{act.cost.toFixed(2)}
+                      </td>
+                      <td className={`py-2.5 px-3 text-right ${act.isOptimal ? 'font-extrabold text-emerald-700 text-xs' : 'font-bold text-slate-900'}`}>
+                        ₹{act.netRupees.toLocaleString()}
+                      </td>
+                      <td className="py-2.5 px-3 text-center">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                          act.isOptimal 
+                            ? 'bg-blue-600 text-white' 
+                            : act.status.includes('BLOCKED') 
+                              ? 'bg-rose-100 text-rose-700' 
+                              : act.status.includes('REQ') || act.status.includes('APPROVAL') 
+                                ? 'bg-amber-100 text-amber-800' 
+                                : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {act.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
