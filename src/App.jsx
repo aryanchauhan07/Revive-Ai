@@ -190,6 +190,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         merchant={merchant}
         onToggleKillSwitch={handleToggleKillSwitch}
+        onUpdateMode={(newMode) => handleSavePolicy({ ...(merchant?.policy || {}), mode: newMode })}
         onTriggerDemo={handleTriggerDemo}
         demoStoryStep={demoStoryStep}
         onStartDemoStory={handleStartDemoStory}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sliders, 
   ShieldAlert, 
@@ -25,9 +25,53 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
   const [highValueThreshold, setHighValueThreshold] = useState((policy.money?.highValueApprovalPaise || 2000000) / 100);
   const [maxAttempts, setMaxAttempts] = useState(policy.retry?.maxAttempts || 3);
   
+  // Sync state when merchant prop updates
+  useEffect(() => {
+    if (merchant?.mode) setMode(merchant.mode);
+    if (merchant?.policy?.money?.highValueApprovalPaise) {
+      setHighValueThreshold(merchant.policy.money.highValueApprovalPaise / 100);
+    }
+    if (merchant?.policy?.money?.maxDiscountPct) {
+      setMaxDiscountPct(merchant.policy.money.maxDiscountPct);
+    }
+    if (merchant?.policy?.money?.maxAutoDiscountPct) {
+      setMaxAutoDiscountPct(merchant.policy.money.maxAutoDiscountPct);
+    }
+  }, [merchant]);
+
   // Notification Toast State
   const [notification, setNotification] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  const handleModeSwitch = async (newMode) => {
+    setMode(newMode);
+    const updatedPolicy = {
+      mode: newMode,
+      contact: { ...policy.contact, quietHours: { start: quietHoursStart, end: quietHoursEnd } },
+      money: {
+        ...policy.money,
+        maxDiscountPct: Number(maxDiscountPct),
+        maxAutoDiscountPct: Number(maxAutoDiscountPct),
+        highValueApprovalPaise: Number(highValueThreshold) * 100
+      },
+      retry: { maxAttempts: Number(maxAttempts) }
+    };
+
+    try {
+      await onSavePolicy(updatedPolicy);
+      setNotification({
+        id: Date.now(),
+        title: `Switched Autonomy Mode to ${newMode}!`,
+        mode: newMode,
+        threshold: Number(highValueThreshold),
+        discountCap: Number(maxAutoDiscountPct),
+        timestamp: new Date().toLocaleTimeString()
+      });
+      setTimeout(() => setNotification(null), 4000);
+    } catch (err) {
+      console.error("Mode switch error:", err);
+    }
+  };
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -45,8 +89,6 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
 
     try {
       await onSavePolicy(updatedPolicy);
-
-      // Trigger rich floating confirmation notification
       setNotification({
         id: Date.now(),
         title: 'Policy Configuration Saved & Synchronized!',
@@ -55,11 +97,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
         discountCap: Number(maxAutoDiscountPct),
         timestamp: new Date().toLocaleTimeString()
       });
-
-      // Auto-dismiss after 4 seconds
-      setTimeout(() => {
-        setNotification(null);
-      }, 4000);
+      setTimeout(() => setNotification(null), 4000);
     } catch (err) {
       console.error("Save policy error:", err);
     } finally {
@@ -130,7 +168,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
         <h3 className="font-extrabold text-slate-900 text-sm">Merchant Agent Autonomy Mode</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div
-            onClick={() => setMode('OBSERVE')}
+            onClick={() => handleModeSwitch('OBSERVE')}
             className={`p-5 rounded-2xl border transition-all cursor-pointer space-y-2 ${
               mode === 'OBSERVE'
                 ? 'bg-blue-50 border-blue-500 text-slate-900 shadow-sm'
@@ -147,7 +185,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
           </div>
 
           <div
-            onClick={() => setMode('ASSIST')}
+            onClick={() => handleModeSwitch('ASSIST')}
             className={`p-5 rounded-2xl border transition-all cursor-pointer space-y-2 ${
               mode === 'ASSIST'
                 ? 'bg-amber-50 border-amber-500 text-slate-900 shadow-sm'
@@ -164,7 +202,7 @@ export default function AutonomyPolicy({ merchant, onSavePolicy, onToggleKillSwi
           </div>
 
           <div
-            onClick={() => setMode('AUTOPILOT')}
+            onClick={() => handleModeSwitch('AUTOPILOT')}
             className={`p-5 rounded-2xl border transition-all cursor-pointer space-y-2 ${
               mode === 'AUTOPILOT'
                 ? 'bg-emerald-50 border-emerald-500 text-slate-900 shadow-sm'
