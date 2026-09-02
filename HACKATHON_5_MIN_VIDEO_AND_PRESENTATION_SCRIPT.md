@@ -1,121 +1,123 @@
-# 🎙️ Revive AI: Simple & Clear 5-Minute Hackathon Presentation Script
+# 🎙️ Revive AI: 5-Minute Hackathon Winning Presentation Script
 
-> **Goal:** Explain Revive AI in **plain, simple everyday English** so any judge or listener instantly understands what you built, how the tech works, and why it's a game-changer.
+> **Goal:** Complete line-by-line script in simple everyday English, starting with a **thorough Dashboard / Command Center walkthrough**, followed by the SRE engine, Google Gemini AI diagnosis, Policy approvals, and real Razorpay checkout.
 > **Total Time:** 5 Minutes (300 seconds)
 
 ---
 
 ## ⏱️ Video & Presentation Timeline at a Glance
 
-| Time | Page to Show | What You Click | What You Explain in Simple Words |
+| Time | Page to Show | Screen Actions | What You Explain in Simple English |
 | :--- | :--- | :--- | :--- |
-| **0:00 – 0:50** | **Command Center** | Hover over top 4 numbers | The Problem: Why ₹10,000 Cr of online orders fail every day in India. |
-| **0:50 – 1:40** | **Payment Health** | Scroll to HDFC Bank card | How Revive AI catches bank crashes before customers complain. |
-| **1:40 – 2:40** | **Recovery Cases** | Click **"AI Reason"** on Ananya Roy | How Google Gemini AI diagnoses the problem and picks the cheapest fix. |
-| **2:40 – 3:40** | **Approval Queue** | Click **"Approve"** on Rajesh Sharma | Safety & Control: Why high-value orders need human manager sign-off. |
-| **3:40 – 4:30** | **Recovery Cases** | Click **"Pay Link"** $\rightarrow$ complete test card | Real Razorpay checkout modal with cryptographic server verification. |
-| **4:30 – 5:00** | **Command Center** | Point to ledger & wrap up | Summary: 49.7% more revenue recovered without giving away wasteful discounts. |
+| **0:00 – 1:15** | **Command Center (Dashboard)** | Walk through the 4 top metrics, live incident banner, and activity stream | **The Hook & Dashboard:** Why ₹10k Cr fails daily, what Revive AI does, and how the dashboard tracks every recovered Rupee. |
+| **1:15 – 2:00** | **Payment Health** | Show HDFC UPI drop (38%) & Circuit Breaker | **Payment SRE:** How Revive AI catches bank crashes before customers churn. |
+| **2:00 – 3:00** | **Recovery Cases** | Click **"AI Reason"** on Ananya Roy | **Google Gemini AI:** Root-cause diagnosis and picking the cheapest fix (₹0 discount). |
+| **3:00 – 3:50** | **Approval Queue & Policy** | Approve Rajesh Sharma (₹34k) & point to Kill Switch | **Safety & Governance:** High-value order controls and instant emergency stop. |
+| **3:50 – 4:35** | **Recovery Cases (Live Checkout)** | Click **"Pay Link"** $\rightarrow$ complete test card | **Real Razorpay Checkout:** `checkout.js` modal + HMAC-SHA256 server signature check. |
+| **4:35 – 5:00** | **Command Center & Wrap-up** | Point to SHA-256 Ledger & final ROI | **The Result:** 49.7% more revenue recovered without eating merchant profits. |
 
 ---
 
-## 📜 Full Spoken Script (Word-for-Word in Simple English)
+## 📜 Full Word-for-Word Spoken Script
 
 ---
 
-### 🎬 ACT 1: Introduction & The Problem (0:00 – 0:50)
+### 🎬 ACT 1: Introduction & Dashboard Walkthrough (0:00 – 1:15)
 📍 **Page:** `Command Center` (Main Dashboard)  
-🖱️ **Action:** Slowly hover mouse over the top 4 metric boxes (Total Recovered ₹2.41L, Success Rate 88.4%).
+🖱️ **Actions:** 
+1. Hover cursor over the **4 top metric cards** one by one.
+2. Point to the **Active Incident Alert Banner** (HDFC Bank degradation).
+3. Scroll down slightly to show the **Live Recovery Activity Stream**.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Hello everyone! 
+> "Hello everyone and respected judges!
 > 
-> Imagine you are shopping online. You add something to your cart, click Pay with UPI, but your bank server times out and the transaction fails. 
+> Did you know that every single day in India, over **₹10,000 Crores of valid online transactions fail** due to bank server timeouts, UPI glitches, and checkout drops?
 > 
-> What happens next? Most customers just give up and leave.
+> When this happens, merchants lose customers forever, or they panic and give away huge 20% discounts that destroy their profit margins.
 > 
-> In India, over **₹10,000 Crores of valid payments fail every single day** because of temporary bank glitches, network drops, or confusing checkout screens.
+> **Meet Revive AI** — an intelligent, autonomous revenue recovery agent built directly on top of Razorpay infrastructure.
 > 
-> When this happens, merchants make two big mistakes:
-> 1. They keep retrying the broken bank, which fails again and again.
-> 2. Or they panic and send a huge 10% or 20% discount code, which kills their profit margin.
+> Let's start right here on our **Command Center Dashboard**, which gives merchants a 360-degree real-time view of their recovered revenue:
 > 
-> **That is why we built Revive AI.** 
+> - **Card 1: Total Revenue Recovered (₹2,41,400)** — This is real money that would have been lost to payment drop-offs, recovered with an 88.4% success rate.
+> - **Card 2: Net Recovery Rate (49.7%)** — Nearly half of all failed checkout attempts are successfully rescued on autopilot.
+> - **Card 3: Bank Outage Risk Prevented (₹3,42,000)** — Revenue saved by suppressing failing bank retries during outages.
+> - **Card 4: Human Approvals Queue (0 Pending)** — Shows whether high-value VIP orders need manager attention.
 > 
-> Revive AI is an intelligent revenue recovery agent built on top of Razorpay. It catches payment failures in real time, uses **Google Gemini AI** to understand why it failed, and recovers the order with **zero wasted discounts**."
+> Right below the numbers, our dashboard shows an **Active Bank Degradation Alert** and a **Live Real-Time Activity Feed** tracking every customer recovery as it happens."
 
 ---
 
-### 🎬 ACT 2: Detecting Bank Failures in Real Time (0:50 – 1:40)
-📍 **Page:** Click on the `Payment Health` tab in the top navigation bar.  
-🖱️ **Action:** Scroll down to the **HDFC Bank UPI Authorization Degradation** box. Point to the red **38% Success Rate** and the green **Circuit Breaker** badge.
+### 🎬 ACT 2: Real-Time Payment SRE Intelligence (1:15 – 2:00)
+📍 **Page:** Click on the `Payment Health` tab in the navbar.  
+🖱️ **Action:** Scroll down to the **HDFC Bank UPI Authorization Degradation** card. Point to the red **38% Success Rate** and the green **Circuit Breaker Active** badge.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Let’s start by looking at **Payment Health**.
+> "Now let's see how Revive AI detects problems before customers even complain.
 > 
-> Think of this page like an SRE health monitor for all payment methods in India.
+> Under **Payment Health**, Revive AI acts as an SRE monitoring system for Indian payment rails.
 > 
-> Right here, Revive AI noticed that **HDFC Bank UPI success rates suddenly crashed from 88% down to 38%**.
+> Right here, our telemetry noticed that **HDFC Bank UPI success rates suddenly plummeted from 88% down to 38%**.
 > 
-> An ordinary payment system would keep spamming the broken HDFC UPI rail. 
+> A standard payment gateway would keep blindly retrying the failing HDFC UPI rail, which fails again and blocks the customer's bank account.
 > 
-> But Revive AI is smarter: it automatically turned on a **Circuit Breaker**. 
-> 
-> This means it stops all failing UPI retries so the customer’s bank account doesn't get blocked with penalty fees, and automatically switches to healthy payment rails like Cards or Netbanking."
+> But Revive AI instantly triggered an automated **Circuit Breaker**. It suppressed same-rail retries to prevent customer frustration and bank penalty fees, and prepared an alternate recovery rail."
 
 ---
 
-### 🎬 ACT 3: AI Diagnosis with Google Gemini 2.5 Flash (1:40 – 2:40)
+### 🎬 ACT 3: Autonomous AI Diagnosis with Google Gemini (2:00 – 3:00)
 📍 **Page:** Click on the `Recovery Cases` tab.  
 🖱️ **Action:** 
-1. Point to the first customer: **Ananya Roy (₹4,850 - HDFC UPI)**.
-2. Click the blue **"AI Reason"** button to open the modal.
-3. Show the 3 clean sections inside: *1. What Happened*, *2. Recommended Action*, *3. Guardrails Verified*.
+1. Point to customer **Ananya Roy (₹4,850 - HDFC UPI)**.
+2. Click the blue **"AI Reason"** button to open the Gemini Decision Modal.
+3. Show the 3 clean sections: *1. What Happened*, *2. Recommended Action*, *3. Guardrails Verified*.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Now let's see how our AI handles individual customer cases.
+> "Now let’s look at how Revive AI handles individual customer cases.
 > 
-> Here is Ananya Roy. She tried to buy something for ₹4,850 during the HDFC UPI downtime.
+> Here is Ananya Roy, who was trying to complete a ₹4,850 order during the HDFC UPI outage.
 > 
-> Let’s click **'AI Reason'** to see what the AI decided.
+> Let’s click **'AI Reason'** to inspect the AI's thought process.
 > 
-> Powered by **Google Gemini 2.5 Flash**, the AI looks at the transaction telemetry in real time:
+> Powered by **Google Gemini 2.5 Flash**, the AI analyzes the live failure telemetry:
 > 
-> 1. **What Happened?** Gemini tells us: this was a temporary bank server timeout. Ananya's money was not deducted.
-> 2. **What should we do?** Instead of giving away a discount, Gemini recommends sending a **1-Click WhatsApp Pay Link allowing her to pay via Cards or Netbanking**. This has an **88% recovery chance** with **₹0 discount waste**.
-> 3. **Are we following safety rules?** It automatically confirms that the order value is safe and sent during active daytime hours."
+> 1. **What Happened?** Gemini explains in plain English: this was a temporary bank server timeout during checkout. Ananya's account was not charged.
+> 2. **What is the best fix?** Instead of giving away a wasteful discount, Gemini calculated that sending a **1-Click WhatsApp Pay Link switching her to Cards or Netbanking** has an **88% chance of immediate recovery** with **₹0 discount cost**.
+> 3. **Are we safe?** It automatically verified that the order is within safety limits and sent during active daytime hours."
 
 ---
 
-### 🎬 ACT 4: Human Approval Queue & Emergency Kill Switch (2:40 – 3:40)
-📍 **Page:** Click on the `Approval Queue` tab, then show the `Autonomy & Policy` tab.  
+### 🎬 ACT 4: Human Approval Queue & Emergency Kill Switch (3:00 – 3:50)
+📍 **Page:** Click on `Approval Queue` tab, then show `Autonomy & Policy` tab.  
 🖱️ **Action:** 
 1. In the **Approval Queue**, point to Rajesh Sharma's high-value order (₹34,999).
-2. Click the green **"Approve & Execute Action"** button (watch it approve live!).
-3. Point to the **Kill Switch** and **Mode Switcher** in the top navbar.
+2. Click the green **"Approve & Execute Action"** button.
+3. In the top navbar, point to the **Kill Switch** and the **Autonomy Mode Switcher** (`OBSERVE`, `ASSIST`, `AUTOPILOT`).
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Businesses will never let an AI run wild without human supervision. That is why Revive AI has built-in **Human-in-the-Loop Governance**.
+> "Enterprise merchants will never trust an AI without strict safety guardrails. That’s why Revive AI has **Human-in-the-Loop Policy Governance**.
 > 
-> In **`ASSIST` mode**, standard small orders are recovered automatically. But if an order is large — like Rajesh Sharma's ₹34,999 order — it is held right here in the **Approval Queue** so a human manager can approve it with one click.
+> In **`ASSIST` mode**, standard small orders are recovered automatically. But if an order is large — like Rajesh Sharma's ₹34,999 VIP order — it is held right here in the **Approval Queue** for a manager's 1-click authorization.
 > 
-> We also give merchants 3 simple modes:
-> - **`OBSERVE`**: Read-only mode for testing.
-> - **`ASSIST`**: The AI handles standard cases and asks humans for high-risk ones.
-> - **`AUTOPILOT`**: 100% automatic recovery for busy flash sales.
+> In the top bar, merchants can switch between 3 modes:
+> - **`OBSERVE`**: Read-only shadow mode for testing.
+> - **`ASSIST`**: Hybrid mode (AI handles small cases, humans approve high-value).
+> - **`AUTOPILOT`**: 100% autonomous recovery for high-traffic flash sales.
 > 
-> And if there is ever an emergency, clicking the **Kill Switch** stops all automated actions in less than a millisecond."
+> And if there is ever an emergency, one click on the **Emergency Kill Switch** halts all automated outreach in under 1 millisecond."
 
 ---
 
-### 🎬 ACT 5: Real Razorpay Web Checkout (3:40 – 4:30)
-📍 **Page:** Go back to `Recovery Cases` tab.  
+### 🎬 ACT 5: Real Razorpay Web Checkout & Server Signature (3:50 – 4:35)
+📍 **Page:** Back to `Recovery Cases` tab.  
 🖱️ **Action:** 
 1. Click the green **"Pay Link"** button on Ananya Roy.
-2. In the drawer, click **"Launch Razorpay Standard Modal (All Methods)"**.
+2. Click **"Launch Razorpay Standard Modal (All Methods)"**.
 3. The official Razorpay modal opens. Enter test card: `4111 1111 1111 1111`, expiry `12/28`, CVV `123`, and click Success.
 4. Watch the green **"Payment Verified & Settled!"** screen appear.
 
@@ -126,32 +128,32 @@
 > When the customer clicks their WhatsApp recovery link, it opens the official **Razorpay Standard Checkout modal** (`checkout.js`) with UPI, Cards, and Netbanking.
 > 
 > Notice what happens behind the scenes:
-> 1. Our backend created a real Razorpay Order ID to lock the price.
+> 1. Our backend generated a real server-authorized Razorpay Order ID to lock the price.
 > 2. When I pay with this test card, Razorpay sends the payment ID and signature back to our server.
-> 3. Our backend cryptographically verifies the **HMAC-SHA256 signature** before marking the money as recovered.
+> 3. Our backend cryptographically verifies the **HMAC-SHA256 signature** before marking the order as **RECOVERED**.
 > 
-> This is not a mockup — this is a real, policy-bounded payment recovery loop on live Razorpay rails."
+> This is a complete, closed-loop recovery pipeline on real Razorpay rails."
 
 ---
 
-### 🎬 ACT 6: Tamper-Proof Audit Trail & Conclusion (4:30 – 5:00)
+### 🎬 ACT 6: Tamper-Proof Audit Trail & Conclusion (4:35 – 5:00)
 📍 **Page:** Click on the `Command Center` tab.  
-🖱️ **Action:** Scroll down to show the **Append-Only Audit Ledger** (SHA-256 SEALED) and end on the main overview.
+🖱️ **Action:** Scroll down to the **Append-Only Audit Ledger** (SHA-256 SEALED) and end on the main overview.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Finally, every action — from the initial bank failure to the AI decision to the verified payment — is sealed into a **SHA-256 Hash-Chained Audit Ledger**. This gives finance teams a 100% tamper-proof record of all recovered revenue.
+> "Finally, every action taken — from webhook ingress to AI diagnosis to verified payment capture — is cryptographically sealed into an **Append-Only SHA-256 Audit Ledger**. This gives finance teams a 100% tamper-proof audit trail.
 > 
-> In short, Revive AI provides:
+> In summary, Revive AI delivers:
 > - **49.7% higher revenue recovery** from failed payments.
 > - **Zero wasted discounts** by using smart payment rail switching.
-> - **100% safety and control** with real Razorpay signature verification.
+> - **100% enterprise safety and governance** with real Razorpay signature verification.
 > 
-> Revive AI turns lost transactions into recovered revenue. Thank you!"
+> Revive AI turns lost transactions into recovered profit. Thank you!"
 
 ---
 
-## 🎯 Presentation Tips:
-1. **Talk like you are telling a story:** You are solving a real problem that every online shopper in India faces.
-2. **Move your mouse deliberately:** Hover on the button you are about to click for 1 second before clicking.
-3. **Keep browser zoom at 100% or 90%:** Makes all cards look sharp and modern on 1080p video.
+## 💡 Quick Tips for a Smooth Recording:
+1. **Pacing:** Speak clearly and calmly. Don't rush; the timing above leaves comfortable pauses between sentences.
+2. **Cursor Movement:** Move your mouse smoothly to each button 1 second before you click it.
+3. **Zoom Level:** Keep your browser at 100% (or 90%) for the best looking 1080p video recording.
