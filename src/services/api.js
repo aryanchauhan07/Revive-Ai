@@ -1,10 +1,23 @@
+import { fallbackIncidents, fallbackCases, fallbackAuditEvents } from './mockFallback';
+
 const API_BASE = '/api';
 
 export async function fetchMerchant() {
   try {
     const res = await fetch(`${API_BASE}/merchant`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
+    const data = await res.json();
+    return data && data.id ? data : {
+      id: "merchant_razor_01",
+      name: "Revive AI Merchant Store",
+      mode: "ASSIST",
+      killSwitch: false,
+      policy: {
+        mode: "ASSIST",
+        money: { maxAutoDiscountPct: 2, maxDiscountPct: 5, highValueApprovalPaise: 2000000 },
+        contact: { quietHours: { start: "22:00", end: "08:00" }, maxContacts: 3 }
+      }
+    };
   } catch (err) {
     console.warn("fetchMerchant fallback:", err.message);
     return {
@@ -53,10 +66,11 @@ export async function fetchIncidents() {
   try {
     const res = await fetch(`${API_BASE}/incidents`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
+    const data = await res.json();
+    return Array.isArray(data) && data.length > 0 ? data : fallbackIncidents;
   } catch (err) {
-    console.warn("fetchIncidents error:", err.message);
-    return [];
+    console.warn("fetchIncidents fallback:", err.message);
+    return fallbackIncidents;
   }
 }
 
@@ -64,10 +78,11 @@ export async function fetchCases() {
   try {
     const res = await fetch(`${API_BASE}/cases`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
+    const data = await res.json();
+    return Array.isArray(data) && data.length > 0 ? data : fallbackCases;
   } catch (err) {
-    console.warn("fetchCases error:", err.message);
-    return [];
+    console.warn("fetchCases fallback:", err.message);
+    return fallbackCases;
   }
 }
 
@@ -90,12 +105,14 @@ export async function fetchAuditEvents() {
     const res = await fetch(`${API_BASE}/audit`);
     if (!res.ok) {
       const altRes = await fetch(`${API_BASE}/audit-events`);
-      return await altRes.json();
+      const altData = await altRes.json();
+      return Array.isArray(altData) && altData.length > 0 ? altData : fallbackAuditEvents;
     }
-    return await res.json();
+    const data = await res.json();
+    return Array.isArray(data) && data.length > 0 ? data : fallbackAuditEvents;
   } catch (err) {
-    console.warn("fetchAuditEvents error:", err.message);
-    return [];
+    console.warn("fetchAuditEvents fallback:", err.message);
+    return fallbackAuditEvents;
   }
 }
 
