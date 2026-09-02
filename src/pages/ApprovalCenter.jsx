@@ -35,18 +35,14 @@ export default function ApprovalCenter({
   const currentThresholdRupees = Math.round(currentHighValuePaise / 100);
   const maxAutoDiscountPct = merchant?.policy?.money?.maxAutoDiscountPct || 2;
 
-  // Filter valid cases
-  const validCases = (cases || []).filter(c => {
-    if (!c.customer_name || c.id?.startsWith('CASE-TEST')) return false;
-    return true;
-  });
-
   // Evaluate which rule (if any) flags each case for human approval
   const annotatedCases = validCases.map(c => {
     const amountRupees = Math.round((c.amount_paise || 0) / 100);
     const discountAction = c.current_plan?.actions?.find(a => a.action === 'INCENTIVE');
     const discountPct = discountAction?.params?.discountPct || 0;
 
+    const isHighValue = (c.amount_paise || 0) >= currentHighValuePaise && merchant?.mode !== 'AUTOPILOT';
+    const isDiscountExceeded = discountPct > maxAutoDiscountPct;
     const isApproved = 
       approvedIds.has(c.id) || 
       c.status === 'RECOVERED' || 
