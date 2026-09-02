@@ -47,6 +47,7 @@ export default function ApprovalCenter({
     const discountAction = c.current_plan?.actions?.find(a => a.action === 'INCENTIVE');
     const discountPct = discountAction?.params?.discountPct || 0;
 
+    const isKillSwitchActive = Boolean(merchant?.killSwitch);
     const isHighValue = (c.amount_paise || 0) >= currentHighValuePaise && merchant?.mode !== 'AUTOPILOT';
     const isDiscountExceeded = discountPct > maxAutoDiscountPct;
     const isApproved = 
@@ -61,7 +62,12 @@ export default function ApprovalCenter({
     let ruleCategory = 'NONE';
     let reviewRationale = 'Transaction amount and recovery action are within standard policy guardrails. Handled autonomously by AI.';
 
-    if (isHighValue && isDiscountExceeded) {
+    if (isKillSwitchActive) {
+      ruleId = 'EMERGENCY_KILL_SWITCH_ACTIVE';
+      ruleName = `RULE: EMERGENCY_KILL_SWITCH_ACTIVE (100% Human Review)`;
+      ruleCategory = 'KILL_SWITCH';
+      reviewRationale = `Emergency Kill Switch is active on the merchant account. All autonomous side-effects are held; explicit human manager authorization is required before any payment link or message is dispatched.`;
+    } else if (isHighValue && isDiscountExceeded) {
       ruleId = 'HIGH_VALUE_AND_DISCOUNT_CAP';
       ruleName = `RULE: HIGH_VALUE_FLOOR & INCENTIVE_CAP`;
       ruleCategory = 'BOTH';
@@ -78,7 +84,7 @@ export default function ApprovalCenter({
       reviewRationale = `AI proposed a ${discountPct}% dynamic recovery discount (saves ₹${Math.round((amountRupees * discountPct)/100).toLocaleString()}) to recover an abandoned checkout. Because this exceeds the ${maxAutoDiscountPct}% autonomous discount limit, human manager authorization is required to protect merchant gross margins.`;
     }
 
-    const requiresHumanReview = (isHighValue || isDiscountExceeded) && !isApproved;
+    const requiresHumanReview = (isKillSwitchActive || isHighValue || isDiscountExceeded) && !isApproved;
 
     return {
       ...c,
@@ -187,6 +193,28 @@ export default function ApprovalCenter({
           <p className="text-[10.5px] text-slate-600 font-medium leading-normal pl-9">
             {notification.description}
           </p>
+        </div>
+      )}
+
+      {/* Emergency Kill Switch Alert Banner */}
+      {merchant?.killSwitch && (
+        <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-500 shadow-lg shadow-rose-500/10 flex items-center justify-between animate-pulse">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-extrabold text-base shadow-md">
+              🛑
+            </div>
+            <div>
+              <h3 className="font-extrabold text-sm text-rose-950">
+                EMERGENCY KILL SWITCH ACTIVE — 100% OF ACTIONS HELD FOR HUMAN APPROVAL
+              </h3>
+              <p className="text-xs text-rose-800 font-medium mt-0.5">
+                All autonomous background executions are frozen. Every pending recovery action ({pendingApprovals.length} cases) requires manual review below.
+              </p>
+            </div>
+          </div>
+          <span className="px-3 py-1 rounded-full bg-rose-600 text-white font-mono text-xs font-black shrink-0">
+            AUTO-PILOT HALTED
+          </span>
         </div>
       )}
 

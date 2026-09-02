@@ -165,34 +165,41 @@ export function reEvaluateAllCasesPolicy(merchant = null) {
     const policyResult = evaluatePlanPolicies(caseItem, planActions);
 
     const isHighValue = (caseItem.amount_paise || 0) >= highValuePaise && merchant.mode !== 'AUTOPILOT';
-    const discountAction = planActions.find(a => a.action === 'INCENTIVE');
+    const discountAction = caseItem.current_plan?.actions?.find(a => a.action === 'INCENTIVE');
     const discountPct = discountAction?.params?.discountPct || 0;
     const isDiscountReview = discountPct > maxAutoDiscountPct;
+    const isKillSwitchActive = Boolean(merchant.killSwitch);
 
-    const requiresReview = isHighValue || isDiscountReview;
+    const requiresReview = isKillSwitchActive || isHighValue || isDiscountReview;
 
     let reason = 'All policy guardrails passed.';
-    if (isHighValue) {
+    if (isKillSwitchActive) {
+      reason = 'Emergency Kill Switch is ACTIVE. All autonomous outreach is paused; explicit human manager approval required for all cases.';
+    } else if (isHighValue) {
       reason = `High-value order (₹${(caseItem.amount_paise / 100).toLocaleString()} >= ₹${(highValuePaise / 100).toLocaleString()}) requires human manager approval.`;
     } else if (isDiscountReview) {
       reason = `Proposed incentive (${discountPct}% dynamic discount) exceeds auto-discount ceiling (${maxAutoDiscountPct}%). Requires manager review.`;
     }
 
     caseItem.policy_decision = {
-      decision: requiresReview ? 'REVIEW' : policyResult.decision,
+      decision: requiresReview ? 'REVIEW' : (isKillSwitchActive ? 'BLOCK' : policyResult.decision),
       requires_approval: requiresReview,
-      matched_rules: isHighValue 
-        ? [`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${highValuePaise / 100})`]
-        : isDiscountReview
-          ? [`DISCOUNT_REQUIRES_REVIEW (${discountPct}% > ${maxAutoDiscountPct}%)`]
-          : ['ALL_STANDARD_GUARDRAILS_PASSED'],
+      matched_rules: isKillSwitchActive
+        ? ['MERCHANT_KILL_SWITCH_ACTIVE_FORCES_100_PCT_REVIEW']
+        : isHighValue 
+          ? [`HIGH_VALUE_THRESHOLD (${caseItem.amount_paise / 100} >= ₹${highValuePaise / 100})`]
+          : isDiscountReview
+            ? [`DISCOUNT_REQUIRES_REVIEW (${discountPct}% > ${maxAutoDiscountPct}%)`]
+            : ['ALL_STANDARD_GUARDRAILS_PASSED'],
       reason
     };
 
-    if (requiresReview) {
-      caseItem.status = 'APPROVAL_REQUIRED';
-    } else if (caseItem.status === 'APPROVAL_REQUIRED' && !requiresReview) {
-      caseItem.status = 'PLANNED';
+    if (caseItem.status !== 'RECOVERED' && caseItem.status !== 'CANCELLED') {
+      if (requiresReview) {
+        caseItem.status = 'APPROVAL_REQUIRED';
+      } else if (caseItem.status === 'APPROVAL_REQUIRED' && !requiresReview) {
+        caseItem.status = 'PLANNED';
+      }
     }
   });
 
