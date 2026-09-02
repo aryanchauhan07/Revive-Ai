@@ -16,7 +16,8 @@ import {
   Loader2,
   X,
   Radio,
-  ChevronDown
+  ChevronDown,
+  Building2
 } from 'lucide-react';
 
 export default function PaymentHealth({ 
@@ -28,7 +29,24 @@ export default function PaymentHealth({
 }) {
   const [isSimulating, setIsSimulating] = useState(false);
   const [sreNotification, setSreNotification] = useState(null);
-  const [selectedScenario, setSelectedScenario] = useState('HDFC Bank UPI');
+  
+  // Custom Dynamic Bank Selector State
+  const [selectedBank, setSelectedBank] = useState('Axis Bank');
+  const [selectedMethod, setSelectedMethod] = useState('upi');
+
+  const MAJOR_BANKS = [
+    'Axis Bank',
+    'Kotak Mahindra Bank',
+    'HDFC Bank',
+    'ICICI Bank',
+    'State Bank of India',
+    'Punjab National Bank (PNB)',
+    'Bank of Baroda',
+    'Yes Bank',
+    'IndusInd Bank',
+    'Canara Bank',
+    'Federal Bank'
+  ];
 
   // Deduplicate open anomaly incidents strictly by unique Title
   const openIncidentsMap = new Map();
@@ -107,7 +125,7 @@ export default function PaymentHealth({
       setSreNotification({
         id: Date.now(),
         title: `🚨 SRE Anomaly Triggered: ${title}!`,
-        details: `Success Rate dropped to ${dropRate} (-2.8 Z-score). Circuit Breaker automatically TRIPPED to suppress failing retries and protect merchants from retry storms.`,
+        details: `Success Rate dropped to ${dropRate} (-2.8 Z-score). Circuit Breaker automatically TRIPPED to suppress failing same-rail retries for ${bank}.`,
         timestamp: new Date().toLocaleTimeString()
       });
 
@@ -154,42 +172,61 @@ export default function PaymentHealth({
         </div>
       )}
 
-      {/* Header & Outage Simulation Toolkit */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* Header & Universal Anomaly Generator Controls */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Payment SRE Intelligence & Rail Health</h2>
           <p className="text-xs text-slate-500 font-medium">
-            Real-time payment ecosystem observability, blast-radius analysis, and recovery circuit breakers
+            Universal payment ecosystem observability across all Indian banks, card networks, and AutoPay rails
           </p>
         </div>
 
-        {/* Live Outage Simulation Buttons */}
-        <div className="flex items-center flex-wrap gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
-          <button
-            disabled={isSimulating}
-            onClick={() => handleSimulateOutage('HDFC Bank', 'upi', 'HDFC Bank UPI Outage', '38%')}
-            className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-bold flex items-center space-x-1.5 transition-all disabled:opacity-50"
+        {/* Universal Bank Anomaly Simulation Bar */}
+        <div className="flex items-center flex-wrap gap-2 bg-white border border-slate-200 rounded-xl p-1.5 shadow-2xs">
+          <div className="flex items-center space-x-1.5 pl-1">
+            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+            <select
+              value={selectedBank}
+              onChange={e => setSelectedBank(e.target.value)}
+              className="text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500"
+            >
+              {MAJOR_BANKS.map(b => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
+          </div>
+
+          <select
+            value={selectedMethod}
+            onChange={e => setSelectedMethod(e.target.value)}
+            className="text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-500 uppercase font-mono text-[11px]"
           >
-            {isSimulating ? <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-600" /> : <Flame className="w-3.5 h-3.5 text-rose-600" />}
-            <span>Simulate HDFC UPI Outage</span>
-          </button>
+            <option value="upi">UPI Rail</option>
+            <option value="card">Cards 3DS</option>
+            <option value="mandate">AutoPay Mandate</option>
+          </select>
 
           <button
             disabled={isSimulating}
-            onClick={() => handleSimulateOutage('ICICI Bank', 'card', 'ICICI Card 3DS Spike', '68%')}
-            className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold flex items-center space-x-1.5 transition-all disabled:opacity-50"
+            onClick={() => handleSimulateOutage(
+              selectedBank, 
+              selectedMethod, 
+              `${selectedBank} ${selectedMethod.toUpperCase()} Outage`, 
+              selectedMethod === 'upi' ? '38%' : selectedMethod === 'card' ? '68%' : '72%'
+            )}
+            className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-extrabold flex items-center space-x-1.5 transition-all shadow-xs disabled:opacity-50"
           >
-            <Zap className="w-3.5 h-3.5 text-amber-600" />
-            <span>Simulate ICICI 3DS Lag</span>
-          </button>
-
-          <button
-            disabled={isSimulating}
-            onClick={() => handleSimulateOutage('SBI Bank', 'mandate', 'SBI AutoPay Deficit', '72%')}
-            className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 text-xs font-bold flex items-center space-x-1.5 transition-all disabled:opacity-50"
-          >
-            <RefreshCw className="w-3.5 h-3.5 text-purple-600" />
-            <span>Simulate SBI AutoPay</span>
+            {isSimulating ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Simulating...</span>
+              </>
+            ) : (
+              <>
+                <Flame className="w-3.5 h-3.5" />
+                <span>Simulate Outage</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -238,7 +275,7 @@ export default function PaymentHealth({
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-0.5">
                     <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Degraded Rail</span>
                     <strong className="text-rose-700 font-bold text-xs block">
-                      {inc.sre_blast_radius?.degraded_rail || 'HDFC Bank UPI'}
+                      {inc.sre_blast_radius?.degraded_rail || inc.title}
                     </strong>
                     <span className="text-[10px] text-rose-600 font-medium">
                       Success dropped to {Math.round((inc.current_success_rate || 0.38) * 100)}%
@@ -248,7 +285,7 @@ export default function PaymentHealth({
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-0.5">
                     <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Blast Radius (Impact)</span>
                     <strong className="text-slate-900 font-bold text-xs block">
-                      {inc.sre_blast_radius?.affected_customers || inc.affected_count || 5} Users • {inc.sre_blast_radius?.affected_txns || 5} Transactions
+                      {inc.sre_blast_radius?.affected_customers || inc.affected_count || 3} Users • {inc.sre_blast_radius?.affected_txns || 3} Transactions
                     </strong>
                     <span className="text-[10px] text-slate-500 font-medium">
                       ₹{atRiskRupees.toLocaleString()} Revenue at Risk
