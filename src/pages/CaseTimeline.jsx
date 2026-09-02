@@ -50,9 +50,10 @@ export default function CaseTimeline({
   React.useEffect(() => {
     if (initialSelectedCaseId) {
       setSelectedCaseId(initialSelectedCaseId);
+      setCategoryFilter('ALL');
     }
-    if (initialSearchTerm) {
-      setSearchTerm(initialSearchTerm);
+    if (initialSearchTerm !== undefined) {
+      setSearchTerm(initialSearchTerm || '');
     }
   }, [initialSelectedCaseId, initialSearchTerm]);
 
@@ -79,12 +80,13 @@ export default function CaseTimeline({
       c.customer_name?.toLowerCase().includes(term) || 
       c.id?.toLowerCase().includes(term) ||
       c.failure_reason?.issuer?.toLowerCase().includes(term) ||
-      c.failure_reason?.method?.toLowerCase().includes(term);
+      c.failure_reason?.method?.toLowerCase().includes(term) ||
+      c.id === selectedCaseId;
     const matchesCat = categoryFilter === 'ALL' || getCaseCategory(c) === categoryFilter;
     return matchesSearch && matchesCat;
   });
 
-  const selectedCase = uniqueCases.find(c => c.id === selectedCaseId) || filteredCases[0] || uniqueCases[0] || {};
+  const selectedCase = (selectedCaseId && uniqueCases.find(c => c.id === selectedCaseId)) || filteredCases[0] || uniqueCases[0] || {};
   const currentCategory = getCaseCategory(selectedCase);
 
   // Dynamic 8-Action Economics Generator Tailored Specifically to Each Case & Problem Statement

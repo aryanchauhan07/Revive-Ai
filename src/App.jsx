@@ -267,8 +267,16 @@ export default function App() {
             onNavigateToCase={(targetBankOrCase) => {
               if (targetBankOrCase && targetBankOrCase.startsWith('CASE-')) {
                 setSelectedCaseId(targetBankOrCase);
+                const targetCase = cases.find(c => c.id === targetBankOrCase);
+                if (targetCase?.failure_reason?.issuer) {
+                  setCaseSearchTerm(targetCase.failure_reason.issuer.split(' ')[0]);
+                } else {
+                  setCaseSearchTerm('');
+                }
               } else if (targetBankOrCase) {
                 setCaseSearchTerm(targetBankOrCase);
+                const firstCase = cases.find(c => c.failure_reason?.issuer?.toLowerCase().includes(targetBankOrCase.toLowerCase()));
+                if (firstCase) setSelectedCaseId(firstCase.id);
               }
               setActiveTab('cases');
             }}
