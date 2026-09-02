@@ -35,6 +35,12 @@ export default function ApprovalCenter({
   const currentThresholdRupees = Math.round(currentHighValuePaise / 100);
   const maxAutoDiscountPct = merchant?.policy?.money?.maxAutoDiscountPct || 2;
 
+  // Filter valid cases
+  const validCases = (cases || []).filter(c => {
+    if (!c || !c.customer_name || c.id?.startsWith('CASE-TEST')) return false;
+    return true;
+  });
+
   // Evaluate which rule (if any) flags each case for human approval
   const annotatedCases = validCases.map(c => {
     const amountRupees = Math.round((c.amount_paise || 0) / 100);
