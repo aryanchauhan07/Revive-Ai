@@ -217,6 +217,8 @@ export default function ApprovalCenter({
             AUTO-PILOT HALTED
           </span>
         </div>
+      )}
+
       {/* Autopilot Mode Active Banner */}
       {merchant?.mode === 'AUTOPILOT' && !merchant?.killSwitch && (
         <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 shadow-sm flex items-center justify-between animate-fade-in">
