@@ -480,40 +480,43 @@ router.post('/verify-payment', (req, res) => {
     return res.status(400).json({ error: "Cryptographic signature validation failed" });
   }
 
-  // Idempotent order update
-  const targetCaseId = case_id || 'CASE-101';
-  const existingCase = db.getCaseById(targetCaseId) || db.getCases().find(c => c.razorpay_order_id === razorpay_order_id);
+  // Strict Case Correlation: Order must map to an existing recovery case
+  const existingCase = db.getCases().find(c => c.razorpay_order_id === razorpay_order_id);
 
-  if (existingCase) {
-    if (existingCase.status === 'RECOVERED') {
-      return res.json({
-        success: true,
-        status: 'PAID',
-        already_paid: true,
-        payment_id: razorpay_payment_id,
-        order_id: razorpay_order_id
-      });
-    }
-
-    db.updateCaseStatus(existingCase.id, 'RECOVERED', {
-      provider_payment_id: razorpay_payment_id,
-      razorpay_order_id: razorpay_order_id,
-      recovered_at: new Date().toISOString(),
-      payment_method_used: 'razorpay_standard_checkout',
-      attribution: 'RECOVEROPS_STANDARD_CHECKOUT'
-    });
-
-    db.addAuditEvent({
-      actor_type: 'customer',
-      actor_id: razorpay_payment_id,
-      action: 'PAYMENT_CAPTURED_VERIFIED',
-      correlation_id: existingCase.id,
-      details: `Razorpay Standard Web Checkout payment verified via HMAC signature. Order ${razorpay_order_id}, Payment ${razorpay_payment_id}. Case marked RECOVERED.`
-    });
-
-    broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
-    broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
+  if (!existingCase) {
+    return res.status(409).json({ error: "Order is not mapped to a recovery case" });
   }
+
+  if (existingCase.status === 'RECOVERED') {
+    return res.json({
+      success: true,
+      status: 'PAID',
+      already_paid: true,
+      payment_id: razorpay_payment_id,
+      order_id: razorpay_order_id
+    });
+  }
+
+  db.updateCaseStatus(existingCase.id, 'RECOVERED', {
+    provider_payment_id: razorpay_payment_id,
+    razorpay_order_id: razorpay_order_id,
+    recovered_at: new Date().toISOString(),
+    payment_method_used: 'razorpay_standard_checkout',
+    attribution: 'RECOVEROPS_STANDARD_CHECKOUT',
+    canceled_queued_actions: true
+  });
+
+  db.addAuditEvent({
+    actor_type: 'customer',
+    actor_id: razorpay_payment_id,
+    action: 'PAYMENT_CAPTURED_VERIFIED',
+    correlation_id: existingCase.id,
+    details: `Razorpay Standard Web Checkout payment verified via HMAC signature. Order ${razorpay_order_id}, Payment ${razorpay_payment_id}. Case marked RECOVERED.`
+  });
+
+  db.save();
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+  broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
 
   return res.json({
     success: true,
@@ -554,13 +557,21 @@ router.get('/order-status/:order_id', async (req, res) => {
   }
 });
 
-// 15. Audit Log Endpoint
+// 15. Audit Log Endpoints
 router.get('/audit', (req, res) => {
   res.json(db.getAuditEvents());
 });
 
 router.get('/audit-events', (req, res) => {
   res.json(db.getAuditEvents());
+});
+
+// 16. 2,000-Event Benchmark Evaluator (Batch Measurement)
+router.post('/evaluation/run', (req, res) => {
+  const { sampleSize = 2000, seed = 20260828 } = req.body;
+  const results = runBatchEvaluation(sampleSize, seed);
+  broadcastSSE({ type: 'EVALUATION_COMPLETED', data: results });
+  res.json(results);
 });
 
 // 17. Razorpay Webhook Ingress (Cryptographic HMAC & Idempotency)
@@ -570,7 +581,6 @@ router.post('/webhooks/razorpay', (req, res) => {
   
   broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
   broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
-  broadcastSSE({ type: 'METRICS_UPDATED', data: db.getMetrics() });
   
   res.status(result.statusCode || 200).json(result);
 });

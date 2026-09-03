@@ -92,7 +92,7 @@ export function evaluateSingleActionPolicy(caseItem, actionProposed, merchant = 
   }
 
   // 5. Quiet Hours DND Check (for customer messaging)
-  if (actionProposed.action === 'MESSAGE' || actionProposed.action === 'INCENTIVE') {
+  if (actionProposed.action === 'MESSAGE' || actionProposed.action === 'WHATSAPP_MESSAGE' || actionProposed.action === 'INCENTIVE') {
     const now = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000;
     const istDate = new Date(now.getTime() + istOffset);

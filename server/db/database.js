@@ -6,16 +6,18 @@ import { HashChainedAuditLedger } from '../core/auditLedger.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_FILE = path.join(__dirname, 'data.json');
 
-// Realistic Cohort for HDFC UPI Degradation Incident
-const hdfcUpiCohort = [
+// Clean, deterministic 6-case demo cohort covering all 4 Problem Statements
+const canonicalDemoCohort = [
   {
     id: "CASE-101",
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
     provider_payment_id: "pay_hdfc_01",
+    razorpay_order_id: "order_hdfc_01",
     customer_name: "Ananya Roy",
     customer_email: "ananya.roy@example.com",
     customer_phone: "+919876543210",
+    customer_contact: { phone: "+919876543210", email: "ananya.roy@example.com" },
     amount_paise: 485000, // ₹4,850
     currency: "INR",
     status: "PLANNED",
@@ -29,14 +31,18 @@ const hdfcUpiCohort = [
       issuer: "HDFC Bank"
     },
     current_plan: {
+      plan_version: "v2.0",
+      planner_source: "RECOVERY_DECISION_BRAIN",
       diagnosis: "Temporary HDFC UPI auth server timeout.",
+      diagnosisCategory: "GATEWAY_DEGRADATION",
+      optimal_action: "SWITCH_PAYMENT_METHOD",
       recoverability: { eligible: true, probability: 0.88, confidenceBand: "HIGH" },
       expectedEconomics: { grossRecoveryValuePaise: 485000, actionCostPaise: 50, expectedNetValuePaise: 484950 },
       actions: [
-        { action: "WAIT", params: { waitMinutes: 15 }, reasonCodes: ["SUPPRESS_SAME_RAIL_DURING_OUTAGE"] },
-        { action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
-        { action: "CREATE_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["PROVIDE_CLEAN_RECOVERY_SURFACE"] },
-        { action: "MESSAGE", params: { channel: "whatsapp", template: "recovery_alt_method" }, reasonCodes: ["INFORM_CUSTOMER_OPTION"] }
+        { id: "act_1", action: "WAIT", params: { waitMinutes: 15 }, reasonCodes: ["SUPPRESS_SAME_RAIL_DURING_OUTAGE"] },
+        { id: "act_2", action: "SWITCH_PAYMENT_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
+        { id: "act_3", action: "CREATE_PAYMENT_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["PROVIDE_CLEAN_RECOVERY_SURFACE"] },
+        { id: "act_4", action: "WHATSAPP_MESSAGE", params: { channel: "whatsapp", template: "recovery_alt_method" }, reasonCodes: ["INFORM_CUSTOMER_OPTION"] }
       ]
     },
     policy_decision: {
@@ -51,9 +57,11 @@ const hdfcUpiCohort = [
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
     provider_payment_id: "pay_hdfc_02",
+    razorpay_order_id: "order_hdfc_02",
     customer_name: "Rahul Sharma",
     customer_email: "rahul.sharma@example.com",
     customer_phone: "+919812345678",
+    customer_contact: { phone: "+919812345678", email: "rahul.sharma@example.com" },
     amount_paise: 720000, // ₹7,200
     currency: "INR",
     status: "CONTACTED",
@@ -67,13 +75,17 @@ const hdfcUpiCohort = [
       issuer: "HDFC Bank"
     },
     current_plan: {
+      plan_version: "v2.0",
+      planner_source: "RECOVERY_DECISION_BRAIN",
       diagnosis: "HDFC UPI partner PSP degradation.",
+      diagnosisCategory: "GATEWAY_DEGRADATION",
+      optimal_action: "SWITCH_PAYMENT_METHOD",
       recoverability: { eligible: true, probability: 0.82, confidenceBand: "HIGH" },
       expectedEconomics: { grossRecoveryValuePaise: 720000, actionCostPaise: 50, expectedNetValuePaise: 719950 },
       actions: [
-        { action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["REROUTE_HEALTHY_RAIL"] },
-        { action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["INSTANT_CHECKOUT_RESUME"] },
-        { action: "MESSAGE", params: { channel: "whatsapp", template: "payment_help" }, reasonCodes: ["FRIENDLY_NUDGE"] }
+        { id: "act_1", action: "SWITCH_PAYMENT_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["REROUTE_HEALTHY_RAIL"] },
+        { id: "act_2", action: "CREATE_PAYMENT_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["INSTANT_CHECKOUT_RESUME"] },
+        { id: "act_3", action: "WHATSAPP_MESSAGE", params: { channel: "whatsapp", template: "payment_help" }, reasonCodes: ["FRIENDLY_NUDGE"] }
       ]
     },
     policy_decision: {
@@ -88,10 +100,12 @@ const hdfcUpiCohort = [
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
     provider_payment_id: "pay_hdfc_03",
-    customer_name: "Priya Patel",
-    customer_email: "priya.p@example.com",
+    razorpay_order_id: "order_hdfc_03",
+    customer_name: "Rajesh Sharma",
+    customer_email: "rajesh.s@example.com",
     customer_phone: "+919898989898",
-    amount_paise: 2850000, // ₹28,500
+    customer_contact: { phone: "+919898989898", email: "rajesh.s@example.com" },
+    amount_paise: 3499900, // ₹34,999
     currency: "INR",
     status: "APPROVAL_REQUIRED",
     eligibility: "ELIGIBLE",
@@ -104,18 +118,22 @@ const hdfcUpiCohort = [
       issuer: "HDFC Bank"
     },
     current_plan: {
-      diagnosis: "High-value transaction during HDFC UPI partner degradation.",
+      plan_version: "v2.0",
+      planner_source: "RECOVERY_DECISION_BRAIN",
+      diagnosis: "High-value VIP transaction during HDFC UPI partner degradation.",
+      diagnosisCategory: "HIGH_VALUE_VIP",
+      optimal_action: "HUMAN_ESCALATION",
       recoverability: { eligible: true, probability: 0.95, confidenceBand: "HIGH" },
-      expectedEconomics: { grossRecoveryValuePaise: 2850000, actionCostPaise: 500, expectedNetValuePaise: 2849500 },
+      expectedEconomics: { grossRecoveryValuePaise: 3499900, actionCostPaise: 5000, expectedNetValuePaise: 3494900 },
       actions: [
-        { action: "HUMAN_ESCALATION", params: { reason: "High-value transaction >= ₹25,000 threshold" }, reasonCodes: ["MONEY_SAFETY_FLOOR"] },
-        { action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
-        { action: "CREATE_LINK", params: { expiresMinutes: 180 }, reasonCodes: ["MANAGER_APPROVED_LINK"] }
+        { id: "act_1", action: "HUMAN_ESCALATION", params: { reason: "High-value transaction >= ₹25,000 threshold" }, reasonCodes: ["MONEY_SAFETY_FLOOR"] },
+        { id: "act_2", action: "SWITCH_PAYMENT_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
+        { id: "act_3", action: "CREATE_PAYMENT_LINK", params: { expiresMinutes: 180 }, reasonCodes: ["MANAGER_APPROVED_LINK"] }
       ]
     },
     policy_decision: {
       decision: "REVIEW",
-      matched_rules: ["HIGH_VALUE_THRESHOLD (28500 >= ₹25,000)"],
+      matched_rules: ["HIGH_VALUE_THRESHOLD (₹34,999 >= ₹25,000)"],
       requires_approval: true,
       reason: "High-value transaction requires explicit human manager approval before dispatching recovery link."
     },
@@ -126,9 +144,11 @@ const hdfcUpiCohort = [
     incident_id: "INC-901",
     merchant_id: "merchant_razor_01",
     provider_payment_id: "pay_hdfc_04",
+    razorpay_order_id: "order_hdfc_04",
     customer_name: "Sneha Mehta",
     customer_email: "sneha.m@example.com",
     customer_phone: "+919877766554",
+    customer_contact: { phone: "+919877766554", email: "sneha.m@example.com" },
     amount_paise: 649900, // ₹6,499
     currency: "INR",
     status: "CONTACTED",
@@ -142,13 +162,17 @@ const hdfcUpiCohort = [
       issuer: "HDFC Bank"
     },
     current_plan: {
-      diagnosis: "Customer abandoned checkout due to friction during bank timeout.",
-      recoverability: { eligible: true, probability: 0.78, confidenceBand: "MEDIUM" },
+      plan_version: "v2.0",
+      planner_source: "RECOVERY_DECISION_BRAIN",
+      diagnosis: "Customer abandoned checkout screen due to friction during bank timeout.",
+      diagnosisCategory: "CHECKOUT_DROPOFF",
+      optimal_action: "INCENTIVE",
+      recoverability: { eligible: true, probability: 0.86, confidenceBand: "HIGH" },
       expectedEconomics: { grossRecoveryValuePaise: 649900, actionCostPaise: 19500, expectedNetValuePaise: 630400 },
       actions: [
-        { action: "MESSAGE", params: { channel: "whatsapp", template: "cart_recovery_discount" }, reasonCodes: ["RE_ENGAGE_CUSTOMER"] },
-        { action: "INCENTIVE", params: { discountPct: 3 }, reasonCodes: ["APPLY_AUTHORIZED_DYNAMIC_DISCOUNT"] },
-        { action: "CREATE_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["CHECKOUT_RESUME_LINK"] }
+        { id: "act_1", action: "WHATSAPP_MESSAGE", params: { channel: "whatsapp", template: "cart_recovery_discount" }, reasonCodes: ["RE_ENGAGE_CUSTOMER"] },
+        { id: "act_2", action: "INCENTIVE", params: { discountPct: 3 }, reasonCodes: ["APPLY_AUTHORIZED_DYNAMIC_DISCOUNT"] },
+        { id: "act_3", action: "CREATE_PAYMENT_LINK", params: { expiresMinutes: 60 }, reasonCodes: ["CHECKOUT_RESUME_LINK"] }
       ]
     },
     policy_decision: {
@@ -159,40 +183,89 @@ const hdfcUpiCohort = [
     created_at: new Date(Date.now() - 4800000).toISOString()
   },
   {
-    id: "CASE-105",
-    incident_id: "INC-901",
+    id: "CASE-401",
+    incident_id: "INC-903",
     merchant_id: "merchant_razor_01",
-    provider_payment_id: "pay_hdfc_05",
-    customer_name: "Vikram Singh",
-    customer_email: "vikram.s@example.com",
-    customer_phone: "+919866655443",
-    amount_paise: 1220000, // ₹12,200
+    provider_payment_id: "pay_sbi_mandate_01",
+    razorpay_order_id: "order_sbi_mandate_01",
+    customer_name: "Karan Malhotra",
+    customer_email: "karan.m@example.com",
+    customer_phone: "+919822233445",
+    customer_contact: { phone: "+919822233445", email: "karan.m@example.com" },
+    amount_paise: 1240000, // ₹12,400
     currency: "INR",
     status: "PLANNED",
     eligibility: "ELIGIBLE",
     failure_reason: {
-      error_code: "GATEWAY_ERROR",
+      error_code: "BAD_REQUEST_ERROR",
       error_source: "issuer_bank",
-      error_step: "payment_authorization",
-      error_reason: "gateway_technical_error",
-      method: "upi",
-      issuer: "HDFC Bank"
+      error_step: "mandate_debit",
+      error_reason: "insufficient_funds",
+      method: "mandate",
+      issuer: "SBI"
     },
     current_plan: {
-      diagnosis: "HDFC UPI partner PSP degradation.",
-      recoverability: { eligible: true, probability: 0.85, confidenceBand: "HIGH" },
-      expectedEconomics: { grossRecoveryValuePaise: 1220000, actionCostPaise: 50, expectedNetValuePaise: 1219950 },
+      plan_version: "v2.0",
+      planner_source: "RECOVERY_DECISION_BRAIN",
+      diagnosis: "Monthly subscription debit timing deficit (end-of-month). Immediate retry will fail.",
+      diagnosisCategory: "SUBSCRIPTION_MANDATE",
+      optimal_action: "RETRY",
+      recoverability: { eligible: true, probability: 0.89, confidenceBand: "HIGH" },
+      expectedEconomics: { grossRecoveryValuePaise: 1240000, actionCostPaise: 50, expectedNetValuePaise: 1239950 },
       actions: [
-        { action: "SWITCH_METHOD", params: { suggestedMethod: "card_or_netbanking" }, reasonCodes: ["BYPASS_DEGRADED_RAIL"] },
-        { action: "CREATE_LINK", params: { expiresMinutes: 120 }, reasonCodes: ["SEND_RECOVERY_PAYMENT_LINK"] }
+        { id: "act_1", action: "WAIT", params: { waitDays: 2 }, reasonCodes: ["SALARY_CYCLE_COOLDOWN"] },
+        { id: "act_2", action: "RETRY", params: { scheduledDate: "1st of Month" }, reasonCodes: ["SCHEDULE_ON_SALARY_CYCLE"] },
+        { id: "act_3", action: "WHATSAPP_MESSAGE", params: { channel: "whatsapp", template: "mandate_retry_notice" }, reasonCodes: ["ADVANCE_NOTICE"] }
       ]
     },
     policy_decision: {
       decision: "ALLOW",
-      matched_rules: ["Standard auto-execution allowed"],
+      matched_rules: ["Mandate scheduling approved"],
       requires_approval: false
     },
     created_at: new Date(Date.now() - 5400000).toISOString()
+  },
+  {
+    id: "CASE-501",
+    incident_id: "INC-901",
+    merchant_id: "merchant_razor_01",
+    provider_payment_id: "pay_b2b_inv_01",
+    razorpay_order_id: "order_b2b_inv_01",
+    customer_name: "TechCorp Enterprises",
+    customer_email: "billing@techcorp.io",
+    customer_phone: "+919811122334",
+    customer_contact: { phone: "+919811122334", email: "billing@techcorp.io" },
+    amount_paise: 8500000, // ₹85,000
+    currency: "INR",
+    status: "PLANNED",
+    eligibility: "ELIGIBLE",
+    failure_reason: {
+      error_code: "INVOICE_PAST_DUE",
+      error_source: "b2b_receivables",
+      error_step: "invoice_payment",
+      error_reason: "accounts_payable_cycle",
+      method: "netbanking",
+      issuer: "ICICI Corporate"
+    },
+    current_plan: {
+      plan_version: "v2.0",
+      planner_source: "RECOVERY_DECISION_BRAIN",
+      diagnosis: "B2B Accounts Payable batch cycle delay (Net-30 invoice term).",
+      diagnosisCategory: "B2B_RECEIVABLES",
+      optimal_action: "CREATE_PAYMENT_LINK",
+      recoverability: { eligible: true, probability: 0.94, confidenceBand: "HIGH" },
+      expectedEconomics: { grossRecoveryValuePaise: 8500000, actionCostPaise: 50, expectedNetValuePaise: 8499950 },
+      actions: [
+        { id: "act_1", action: "CREATE_PAYMENT_LINK", params: { expiresMinutes: 1440 }, reasonCodes: ["DISPATCH_CORP_INVOICE_LINK"] },
+        { id: "act_2", action: "WHATSAPP_MESSAGE", params: { channel: "whatsapp", template: "b2b_ap_reminder" }, reasonCodes: ["ACCOUNTS_PAYABLE_NUDGE"] }
+      ]
+    },
+    policy_decision: {
+      decision: "ALLOW",
+      matched_rules: ["Corporate receivables workflow"],
+      requires_approval: false
+    },
+    created_at: new Date(Date.now() - 7200000).toISOString()
   }
 ];
 
@@ -342,7 +415,7 @@ const initialData = {
     }
   ],
   recoveryCases: [
-    ...hdfcUpiCohort
+    ...canonicalDemoCohort
   ],
   actionExecutions: [],
   auditEvents: [
@@ -544,6 +617,13 @@ class Database {
     this.data.batchRuns.unshift(batch);
     this.save();
     return batch;
+  }
+
+  resetToCleanDemoState() {
+    this.data = JSON.parse(JSON.stringify(initialData));
+    this.auditLedger = new HashChainedAuditLedger(this.data.auditEvents || []);
+    this.save();
+    return this.data;
   }
 }
 

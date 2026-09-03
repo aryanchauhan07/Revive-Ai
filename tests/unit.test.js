@@ -176,4 +176,7 @@ test('8. Customer STOP / Opt-Out Enforcement', () => {
   const updated = db.getCaseById(caseId);
   assert.equal(updated.status, 'OPTED_OUT_PAUSED');
   assert.equal(updated.opted_out, true);
+
+  // Clean up database state after all tests complete
+  db.resetToCleanDemoState();
 });

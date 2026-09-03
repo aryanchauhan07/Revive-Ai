@@ -132,47 +132,9 @@ export default function RazorpayCheckoutModal({ caseItem, onClose, onCompletePay
     }
   };
 
-  // 2. Direct 1-Click UPI Simulator with Server-Verified Capture
-  const handleQuickUpiPay = async () => {
-    setIsProcessing(true);
-    setErrorMessage(null);
-
-    try {
-      // Create mock payment capture through verified backend pipeline
-      const res = await fetch(`/api/cases/${caseItem.id}/execute`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: {
-            action: 'PAYMENT_CAPTURED',
-            params: { 
-              method: 'upi', 
-              upi_app: selectedUpiApp,
-              amount: finalAmt 
-            }
-          },
-          reviewerId: 'customer_upi_intent'
-        })
-      });
-
-      if (res.ok) {
-        setPaymentDetails({
-          payment_id: `pay_upi_${Date.now()}`,
-          order_id: `order_upi_${Date.now()}`,
-          method: 'UPI (' + selectedUpiApp.toUpperCase() + ')'
-        });
-        setIsSuccess(true);
-        if (onCompletePayment) {
-          onCompletePayment(caseItem.id, 'upi');
-        }
-      } else {
-        setErrorMessage("UPI payment authorization timeout.");
-      }
-    } catch (err) {
-      setErrorMessage(err.message || "UPI transaction failed.");
-    } finally {
-      setIsProcessing(false);
-    }
+  // 2. Direct UPI Pay routes through verified Razorpay Standard Checkout
+  const handleQuickUpiPay = () => {
+    handleLaunchRazorpayCheckout();
   };
 
   return (

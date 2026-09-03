@@ -113,42 +113,37 @@ export async function executeCaseAction(caseId, actionToExecute, reviewerId = nu
   const caseItem = db.getCaseById(caseId);
   if (!caseItem) throw new Error(`Case ${caseId} not found`);
 
-  // Handle Payment Capture (Customer successfully pays via link or checkout)
-  if (actionToExecute.action === 'PAYMENT_CAPTURED') {
-    const isHumanManager = Boolean(
-      reviewerId === 'human_manager' || 
-      caseItem.last_execution?.reviewer_id === 'human_manager' ||
-      caseItem.policy_decision?.requires_approval
-    );
-    const attributionType = isHumanManager ? 'HUMAN_MANAGER_APPROVED' : 'AUTONOMOUS_REVIVE_AI';
+  // 1. STOP ACTION (Customer DND Opt-Out)
+  if (actionToExecute.action === 'STOP') {
+    const phone = caseItem.customer_contact?.phone || caseItem.customer_phone;
+    const email = caseItem.customer_contact?.email || caseItem.customer_email;
+    if (phone) privacyEngine.recordOptOut(phone, "STOP_ACTION_EXECUTED");
+    if (email) privacyEngine.recordOptOut(email, "STOP_ACTION_EXECUTED");
 
-    db.updateCaseStatus(caseId, 'RECOVERED', {
-      recovered_at: new Date().toISOString(),
-      payment_method_used: actionToExecute.params?.method || 'card',
-      attribution: attributionType,
-      recovered_by: isHumanManager ? 'Human Manager' : 'Revive AI (Autonomous)'
+    db.updateCaseStatus(caseId, 'OPTED_OUT_PAUSED', {
+      opted_out: true,
+      opted_out_at: new Date().toISOString(),
+      canceled_queued_actions: true
     });
 
-    const feedback = recordOutcomeFeedback(caseItem, actionToExecute, actionToExecute.params?.method);
-
     db.addAuditEvent({
-      actor_type: isHumanManager ? 'user' : 'system',
-      actor_id: isHumanManager ? 'human_manager' : 'revive_ai_autonomous',
-      action: 'PAYMENT_CAPTURED_RECOVERED',
+      actor_type: reviewerId ? 'user' : 'system',
+      actor_id: reviewerId || 'action_executor_v1',
+      action: 'CASE_STOPPED_OPT_OUT',
       correlation_id: caseId,
-      details: `Payment Captured! Recovered ₹${(caseItem.amount_paise / 100).toLocaleString()} via ${actionToExecute.params?.method || 'card'}. Attribution: ${isHumanManager ? 'Done by Human Manager' : 'Done by Revive AI (Autonomous)'}.`
+      details: `Executed STOP action on ${caseId}. Customer opted out and outreach permanently paused.`
     });
 
     db.save();
-    return { status: 'RECOVERED', case_id: caseId, attribution: attributionType, feedback };
+    return { status: 'OPTED_OUT_PAUSED', case_id: caseId };
   }
 
-  // 1. MONOTONIC TERMINAL STATE CHECK
-  if (caseItem.status === 'RECOVERED' || caseItem.status === 'CANCELLED') {
-    throw new Error(`Cannot execute action on terminal case ${caseId} (${caseItem.status})`);
+  // 2. MONOTONIC TERMINAL STATE CHECK
+  if (caseItem.status === 'RECOVERED' || caseItem.status === 'CANCELLED' || caseItem.status === 'OPTED_OUT_PAUSED') {
+    throw new Error(`Cannot execute action on terminal or opted-out case ${caseId} (${caseItem.status})`);
   }
 
-  // 2. STABLE ACTION IDEMPOTENCY KEY (case_id + plan_version + action_id)
+  // 3. STABLE ACTION IDEMPOTENCY KEY (case_id + plan_version + action_id)
   const planVersion = caseItem.current_plan?.plan_version || 'v2.0';
   const actionId = actionToExecute.id || `action_${actionToExecute.action}`;
   const idempotencyKey = `action:${caseItem.id}:${planVersion}:${actionId}`;
@@ -166,7 +161,7 @@ export async function executeCaseAction(caseId, actionToExecute, reviewerId = nu
     return existingExec;
   }
 
-  // 3. EXECUTION-TIME POLICY & PRIVACY RECHECK (Fail-closed)
+  // 4. EXECUTION-TIME POLICY & PRIVACY RECHECK (Fail-closed)
   const customerPhone = caseItem.customer_contact?.phone || caseItem.customer_phone;
   const customerEmail = caseItem.customer_contact?.email || caseItem.customer_email;
   const privacyCheck = privacyEngine.evaluateCommunicationEligibility({ phone: customerPhone, email: customerEmail }, caseItem);
@@ -178,11 +173,14 @@ export async function executeCaseAction(caseId, actionToExecute, reviewerId = nu
   if (freshPolicyCheck.decision === 'BLOCK') {
     throw new Error(`Execution blocked by fresh policy check: ${freshPolicyCheck.reason}`);
   }
-  if (freshPolicyCheck.decision === 'REVIEW' && !reviewerId) {
+  if (freshPolicyCheck.decision === 'SCHEDULE') {
+    throw new Error(`Action is scheduled for quiet-hours window (08:00 IST), not executable immediately.`);
+  }
+  if (freshPolicyCheck.decision === 'REVIEW' && reviewerId !== 'human_manager') {
     throw new Error(`Action requires human manager approval: ${freshPolicyCheck.reason}`);
   }
 
-  // 4. EXECUTE ADAPTER
+  // 5. EXECUTE ADAPTER
   let executionResult = {};
   const actionType = actionToExecute.action;
 

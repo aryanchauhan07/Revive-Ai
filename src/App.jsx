@@ -178,8 +178,7 @@ export default function App() {
     loadData();
   };
 
-  const handleCompletePayment = async (caseId, method) => {
-    await executeCase(caseId, { action: 'PAYMENT_CAPTURED', params: { method } }, 'customer');
+  const handleCompletePayment = (caseId, method) => {
     setSelectedCheckoutCase(null);
     loadData();
   };
