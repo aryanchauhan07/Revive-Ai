@@ -563,12 +563,49 @@ router.get('/audit-events', (req, res) => {
   res.json(db.getAuditEvents());
 });
 
-// 16. 2,000-Event Benchmark Evaluator
-router.post('/evaluation/run', (req, res) => {
-  const { sampleSize = 2000 } = req.body;
-  const results = runBatchEvaluation(sampleSize);
-  broadcastSSE({ type: 'EVALUATION_COMPLETED', data: results });
-  res.json(results);
+// 17. Razorpay Webhook Ingress (Cryptographic HMAC & Idempotency)
+router.post('/webhooks/razorpay', (req, res) => {
+  const rawBodyBuffer = req.rawBody || Buffer.from(JSON.stringify(req.body));
+  const result = processIncomingWebhook(req.body, req.headers, rawBodyBuffer);
+  
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+  broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
+  broadcastSSE({ type: 'METRICS_UPDATED', data: db.getMetrics() });
+  
+  res.status(result.statusCode || 200).json(result);
+});
+
+// 18. Customer Opt-Out / DND STOP Endpoint
+router.post('/customer/opt-out', (req, res) => {
+  const { phone, email, reason = 'CUSTOMER_REQUESTED_STOP' } = req.body;
+  const target = phone || email;
+  if (!target) return res.status(400).json({ error: 'phone or email is required' });
+
+  privacyEngine.recordOptOut(target, reason);
+
+  db.getCases().forEach(c => {
+    const isMatch = c.customer_phone === target || c.customer_email === target || c.customer_contact?.phone === target;
+    if (isMatch && c.status !== 'RECOVERED') {
+      db.updateCaseStatus(c.id, 'OPTED_OUT_PAUSED', {
+        opted_out: true,
+        opted_out_at: new Date().toISOString(),
+        canceled_queued_actions: true
+      });
+    }
+  });
+
+  db.addAuditEvent({
+    actor_type: 'customer',
+    actor_id: target,
+    action: 'CUSTOMER_OPT_OUT_STOP',
+    correlation_id: 'privacy_engine',
+    details: `Customer opted out (${reason}). All active recovery outreach paused and canceled.`
+  });
+
+  db.save();
+  broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+  broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
+  res.json({ success: true, opted_out: target, status: 'OPTED_OUT_PAUSED' });
 });
 
 export default router;

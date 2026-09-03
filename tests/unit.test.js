@@ -123,3 +123,57 @@ test('6. Seeded PRNG Benchmark Reproducibility - Same Seed Yields Identical Outp
   assert.equal(run1.recovery_rate_pct, run2.recovery_rate_pct);
   assert.equal(run1.policy_violations, 0);
 });
+
+test('7. Webhook Failure to Case Creation to Recovery Plan Flow', () => {
+  const paymentId = `pay_fail_test_${Date.now()}`;
+  const webhookPayload = {
+    event: "payment.failed",
+    payload: {
+      payment: {
+        entity: {
+          id: paymentId,
+          amount: 485000,
+          contact: "+919876543210",
+          email: "ananya.test@example.com",
+          bank: "HDFC Bank",
+          method: "upi",
+          error_code: "BAD_REQUEST_ERROR",
+          error_description: "Bank authorization timeout",
+          notes: { customer_name: "Ananya Test" }
+        }
+      }
+    }
+  };
+
+  const res = processIncomingWebhook(webhookPayload, { 'x-razorpay-event-id': `evt_fail_${Date.now()}` });
+  assert.equal(res.statusCode, 200);
+
+  const createdCase = db.getCases().find(c => c.provider_payment_id === paymentId);
+  assert.ok(createdCase, 'Case should be created from payment.failed webhook');
+  assert.ok(createdCase.current_plan, 'Recovery plan should be automatically generated');
+  assert.equal(createdCase.amount_paise, 485000);
+});
+
+test('8. Customer STOP / Opt-Out Enforcement', () => {
+  const testPhone = "+919999988888";
+  const caseId = `CASE-DND-${Date.now()}`;
+
+  db.addCase({
+    id: caseId,
+    customer_phone: testPhone,
+    customer_contact: { phone: testPhone },
+    amount_paise: 300000,
+    status: "PLANNED"
+  });
+
+  const optOutPayload = {
+    event: "customer.opt_out",
+    contact: testPhone
+  };
+
+  processIncomingWebhook(optOutPayload, { 'x-razorpay-event-id': `evt_optout_${Date.now()}` });
+
+  const updated = db.getCaseById(caseId);
+  assert.equal(updated.status, 'OPTED_OUT_PAUSED');
+  assert.equal(updated.opted_out, true);
+});

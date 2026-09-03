@@ -196,7 +196,7 @@ export function FallbackRecoveryPlanner(caseItem, incidentContext = null) {
   caseItem.status = perActionPolicy.requires_approval ? 'APPROVAL_REQUIRED' : 'PLANNED';
 
   db.save();
-  return caseItem;
+  return plan;
 }
 
 /**

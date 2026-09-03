@@ -1,5 +1,6 @@
 import { db } from '../db/database.js';
 import { reevaluatePolicyAtExecution } from './policyEngine.js';
+import { privacyEngine } from './privacyEngine.js';
 
 /**
  * Real Razorpay Test Mode API Adapter / Mock Sandbox Adapter
@@ -165,7 +166,14 @@ export async function executeCaseAction(caseId, actionToExecute, reviewerId = nu
     return existingExec;
   }
 
-  // 3. EXECUTION-TIME POLICY RECHECK (Fail-closed)
+  // 3. EXECUTION-TIME POLICY & PRIVACY RECHECK (Fail-closed)
+  const customerPhone = caseItem.customer_contact?.phone || caseItem.customer_phone;
+  const customerEmail = caseItem.customer_contact?.email || caseItem.customer_email;
+  const privacyCheck = privacyEngine.evaluateCommunicationEligibility({ phone: customerPhone, email: customerEmail }, caseItem);
+  if (!privacyCheck.eligible) {
+    throw new Error(`Execution blocked by privacy guardrail: ${privacyCheck.reason}`);
+  }
+
   const freshPolicyCheck = reevaluatePolicyAtExecution(caseItem, actionToExecute);
   if (freshPolicyCheck.decision === 'BLOCK') {
     throw new Error(`Execution blocked by fresh policy check: ${freshPolicyCheck.reason}`);

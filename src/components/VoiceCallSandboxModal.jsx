@@ -178,15 +178,15 @@ export default function VoiceCallSandboxModal({ caseItem, onClose, onOpenCheckou
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h4 className="font-extrabold text-sm text-white">Razorpay Hinglish Voice Agent</h4>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  LIVE AUDIO
+                <h4 className="font-extrabold text-sm text-white">AI Voice Agent Simulator</h4>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  SANDBOX SIMULATION
                 </span>
               </div>
               <p className="text-[11px] text-slate-300 font-mono font-semibold mt-0.5">
                 {callState === 'DIALING' && 'Connecting to Customer...'}
-                {callState === 'CONNECTED' && 'Live Hinglish Dialogue in Progress'}
-                {callState === 'COMPLETED' && 'Call Finished • WhatsApp Link Dispatched'}
+                {callState === 'CONNECTED' && 'Interactive Speech Synthesis Demo in Progress'}
+                {callState === 'COMPLETED' && 'Simulation Finished • 1-Click Pay Link Dispatched'}
               </p>
             </div>
           </div>
