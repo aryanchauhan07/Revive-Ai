@@ -20,12 +20,13 @@
 
 ---
 
-### 📍 STEP 1: Command Center & System Overview (0:00 – 0:40)
-* **Tab to Open:** `Command Center` (Dashboard)
+### 📍 STEP 1: Command Center & System Overview (0:00 – 0:50)
+* **Tab to Open:** `Command Center` (Main Dashboard)
 * **🖱️ Mouse Actions:** 
-  1. Hover cursor over the **4 Top Metric Cards** (₹2,41,400 Recovered, 88.4% Success Rate, ₹3.42L Risk Prevented).
-  2. Point to the **Active Bank Outage Warning Banner** at the top.
-  3. Briefly point across the **top navigation bar tabs** to show the 6 integrated modules.
+  1. Hover over the **4 Top Metric Cards** (Revenue Recovered, Recovery Success Rate, Risk Prevented, Pending Approvals).
+  2. Point to the **Active Bank Outage Warning Banner** in the middle.
+  3. Move mouse across the **6 Top Navigation Tabs** (Payment Health $\rightarrow$ Incidents $\rightarrow$ Recovery Cases $\rightarrow$ Approval Queue $\rightarrow$ Autonomy Policy $\rightarrow$ 2k Benchmark).
+  4. Scroll down slightly to show the **Recent Failed Cases Table** on the left and the **Real-Time Audit Stream** on the right.
 
 > **🗣️ WHAT YOU SAY:**
 > 
@@ -35,7 +36,7 @@
 > 
 > What happens next? 8 out of 10 Indian shoppers just close the app and give up.
 > 
-> In India, over **₹10,000 Crores of genuine transactions fail every single day** — not because customers lack funds, but because of temporary bank server crashes, UPI latency, or recurring mandate timing deficits.
+> In India, over **₹10,000 Crores of genuine transactions fail every single day** — not because customers lack money, but because of temporary bank server crashes, UPI latency, or recurring mandate timing deficits.
 > 
 > Today, merchants make two costly mistakes:
 > 1. They blindly hammer broken bank rails with retries that lock customer accounts.
@@ -43,12 +44,19 @@
 > 
 > **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay infrastructure.
 > 
-> Right here on our **Command Center**, we monitor live recovery telemetry:
-> - **₹2.41 Lakhs recovered** with an **88.4% recovery success rate**,
-> - **₹3.42 Lakhs in customer churn prevented** by automatically suppressing failing payment rails,
-> - And a live audit stream tracking every decision.
+> Before we dive in, let me give you a quick tour of our **Command Center Dashboard**:
+> - At the top, we track our core KPIs: **₹2.41 Lakhs in verified recovered revenue**, an **88.4% recovery success rate**, and **₹3.42 Lakhs in risk prevented** by suppressing failing retries.
+> - Below the metrics, we have an **Active Bank Outage Warning Banner** detecting live gateway anomalies.
+> - On the lower left, we have our **Recent Failed Transactions Table**, and on the right, our **Real-Time SHA-256 Audit Stream** logging every decision.
+> - And across the top navigation bar, we have architected **6 specialized modules**:
+>   1. **Payment Health** — Real-time bank SRE monitoring and automated circuit breakers.
+>   2. **Incidents** — Grouping failed transactions into bank outage cohorts.
+>   3. **Recovery Cases** — Individual customer recovery powered by Google Gemini AI and live Razorpay checkout.
+>   4. **Approval Queue** — Human-in-the-loop review for high-ticket VIP orders.
+>   5. **Autonomy & Policy** — Merchant guardrail rules and 1-millisecond Kill Switch.
+>   6. **2k Benchmark** — 2,000-event synthetic scale simulation measuring incremental revenue lift.
 > 
-> Let's see how our detection, AI decisioning, and Razorpay execution work together live."
+> Now, let’s see how each of these technical layers works live!"
 
 ---
 
