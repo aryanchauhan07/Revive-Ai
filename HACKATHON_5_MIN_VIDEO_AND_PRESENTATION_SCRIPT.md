@@ -160,7 +160,7 @@
 > 
 > "Finally, every action taken — from webhook ingress to Gemini's diagnosis to verified payment capture — is cryptographically hashed into an **Append-Only SHA-256 Audit Ledger**. Each block references the previous block's hash, creating an immutable, tamper-evident audit trail for finance teams.
 > 
-> Our codebase is production-ready with **6 passing test suites** covering HMAC verification, idempotency, and policy rules.
+> Our codebase is production-ready with **8 passing automated test suites** covering HMAC verification, idempotency, STOP opt-out enforcement, quiet hours scheduling, and policy safety rules.
 > 
 > In summary, Revive AI delivers:
 > - **49.7% higher revenue recovery** from failed checkouts.
