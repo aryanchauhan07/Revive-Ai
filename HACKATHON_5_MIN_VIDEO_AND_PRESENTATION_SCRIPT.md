@@ -23,44 +23,35 @@
 ### 📍 STEP 1: Command Center & System Overview (0:00 – 0:50)
 * **Tab to Open:** `Command Center` (Main Dashboard)
 * **🖱️ Mouse Actions:** 
-  1. Hover over the **4 Top Metric Cards** (Revenue Recovered, Recovery Success Rate, Risk Prevented, Pending Approvals).
-  2. Point to the **Active Bank Outage Warning Banner** in the middle.
-  3. Move mouse across the **6 Top Navigation Tabs** (Payment Health $\rightarrow$ Incidents $\rightarrow$ Recovery Cases $\rightarrow$ Approval Queue $\rightarrow$ Autonomy Policy $\rightarrow$ 2k Benchmark).
-  4. Scroll down slightly to show the **Recent Failed Cases Table** on the left and the **Real-Time Audit Stream** on the right.
+  1. Hover over the **Top 4 Metric Cards** at the top.
+  2. Point to the **Active Bank Warning Banner**.
+  3. Scroll down slightly and hover across the **Active Recovery Cohort Table** on the left.
+  4. Point to the **Live Audit Stream** on the right.
+  5. Briefly point across the **top navigation bar tabs** to show the 6 integrated modules.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Imagine this: You are booking movie tickets on **BookMyShow**, ordering dinner on **Zomato**, or buying sneakers during a **Diwali flash sale**. 
+> "Imagine this: You are booking movie tickets on **BookMyShow**, ordering food on **Zomato**, or shopping online during a festive flash sale. 
 > 
-> You enter your UPI PIN, the spinner keeps rotating, and suddenly — **'Payment Failed: Bank Server Timeout'**.
+> You enter your UPI PIN, the spinner keeps rotating, and suddenly your screen says **'Payment Failed: Bank Server Timeout'**.
 > 
-> What happens next? 8 out of 10 Indian shoppers just close the app and give up.
+> What happens next? Most shoppers just close the app and give up.
 > 
-> In India, over **₹10,000 Crores of genuine transactions fail every single day** — not because customers lack money, but because of temporary bank server crashes, UPI latency, or recurring mandate timing deficits.
+> In India, over **₹10,000 Crores of valid digital transactions fail every single day** — not because customers lack funds, but because of temporary bank server crashes, UPI network latency, or recurring mandate timing deficits.
 > 
-> Today, merchants make two costly mistakes:
-> 1. They blindly hammer broken bank rails with retries that lock customer accounts.
-> 2. Or they panic and bleed profit margins giving away unnecessary 20% discount coupons.
+> Today, merchants usually make two big mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and give away huge 20% discount coupons that destroy their profit margins.
 > 
 > **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay infrastructure.
 > 
-> Before we dive in, let me give you a quick tour of our **Command Center Dashboard**:
-> - **Top KPI Cards**: We track **₹2.41 Lakhs in verified recovered revenue**, an **88.4% recovery success rate**, and **₹3.42 Lakhs in risk prevented** by suppressing failing retries.
-> - **Active Bank Warning Banner**: Detects real-time gateway degradation and tripped circuit breakers.
-> - **Active Recovery Cohort Table (Lower Left)**: Ingests raw telemetry across 4 key Indian payment failure scenarios:
->   1. *Bank Gateway Outages* (e.g. Ananya Roy's ₹4,850 HDFC UPI timeout),
->   2. *High-Ticket VIP Orders* (e.g. Rajesh Sharma's ₹34,999 transaction requiring manager review),
->   3. *Checkout Drop-Offs* with dynamic 3% incentive links (Sneha Mehta ₹6,499),
->   4. *Recurring Subscriptions & B2B Invoices* (Karan Malhotra ₹12,400 & TechCorp ₹85,000).
->   - Beside each case, you can click **'AI Reason'** for Google Gemini's structured root-cause analysis, or **'Pay Link'** for server-side Razorpay checkout.
-> - **Live Execution Audit Stream (Lower Right)**: Real-time Server-Sent Events stream logging every action, deterministic policy check, and stable idempotency key into an **immutable SHA-256 Hash-Chained Ledger**.
-> - **Top Navigation Bar (6 Core Modules)**:
->   1. **Payment Health** — SRE sliding-window monitoring & circuit breakers.
->   2. **Incidents** — Grouping failures into bank outage blast-radius cohorts.
->   3. **Recovery Cases** — AI decision brain & 8-candidate action matrix.
->   4. **Approval Queue** — Human-in-the-loop review for high-value transactions.
->   5. **Autonomy & Policy** — Runtime modes (`OBSERVE`, `ASSIST`, `AUTOPILOT`) & sub-millisecond Kill Switch.
->   6. **2k Benchmark** — 2,000-event synthetic scale simulation measuring incremental lift.
+> Right here on our main **Command Center**, we give merchants full visibility over their payment operations. 
+> 
+> At the top, we track our core recovery metrics, including total verified recovered revenue, overall recovery success rate, and the financial risk prevented by automatically suppressing failing payment rails.
+> 
+> Below the metrics, our **Active Recovery Cohort Table** tracks every failed payment in real time. For each transaction, our system captures the customer details, the exact failure reason — whether it was a bank technical error, a cancelled checkout, or an insufficient balance — and automatically generates a tailored, step-by-step recovery plan. From this table, we can directly inspect the AI reasoning or launch the recovery checkout link.
+> 
+> On the right, our **Live Audit Stream** uses Server-Sent Events to log every policy check and execution into an immutable SHA-256 ledger.
+> 
+> And across the top navigation bar, we have built six dedicated modules covering payment health monitoring, incident grouping, recovery cases, human approvals, autonomy policies, and our 2,000-event benchmark.
 > 
 > Now, let’s see how each of these technical layers works live!"
 
