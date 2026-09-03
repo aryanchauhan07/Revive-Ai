@@ -31,29 +31,28 @@
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Imagine this: You are booking movie tickets on **BookMyShow**, ordering food on **Zomato**, or shopping online during a festive flash sale. 
+> "Hello everyone and respected judges! This is **Revive AI**, our submission for **Track 03: AI Revenue Recovery — Finding revenue that is slipping away and winning it back**.
 > 
-> You enter your UPI PIN, the spinner keeps rotating, and suddenly your screen says **'Payment Failed: Bank Server Timeout'**.
+> In India, revenue loss rarely happens in one simple step:
+> - A customer enters their UPI PIN on **Zomato** or **BookMyShow**, but a bank server times out.
+> - A shopper abandons their cart during a **Diwali flash sale** due to checkout friction.
+> - A monthly **AutoPay subscription** fails because it was triggered before salary day.
+> - Or a **B2B corporate invoice** goes overdue in accounts payable.
 > 
-> What happens next? Most shoppers just close the app and give up.
+> In India alone, over **₹10,000 Crores of genuine digital transactions slip away every single day**. 
 > 
-> In India, over **₹10,000 Crores of valid digital transactions fail every single day** — not because customers lack funds, but because of temporary bank server crashes, UPI network latency, or recurring mandate timing deficits.
+> When this happens, merchants make two costly mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and give away huge 20% discounts that destroy their profit margins.
 > 
-> Today, merchants usually make two big mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and give away huge 20% discount coupons that destroy their profit margins.
+> **Revive AI closes this entire loop** directly on top of Razorpay infrastructure: from detecting revenue at risk in real time, to diagnosing the root cause with AI, and executing a bounded, policy-governed recovery workflow.
 > 
-> **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay infrastructure.
+> Meeting the Track 03 bar, Revive doesn't just identify problems:
+> - We execute **bounded recovery actions** without wasteful discount spams.
+> - We enforce **compliant escalations and stopping rules** like Quiet Hours and customer opt-outs.
+> - We verify every payment cryptographically with Razorpay before marking it recovered.
+> - We log every step in an **immutable SHA-256 audit trail**.
+> - And we prove true financial lift across a **2,000-event measured batch evaluation**.
 > 
-> Right here on our main **Command Center**, we give merchants full visibility over their payment operations. 
-> 
-> At the top, we track our core recovery metrics, including total verified recovered revenue, overall recovery success rate, and the financial risk prevented by automatically suppressing failing payment rails.
-> 
-> Below the metrics, our **Active Recovery Cohort Table** tracks every failed payment in real time. For each transaction, our system captures the customer details, the exact failure reason — whether it was a bank technical error, a cancelled checkout, or an insufficient balance — and automatically generates a tailored, step-by-step recovery plan. From this table, we can directly inspect the AI reasoning or launch the recovery checkout link.
-> 
-> On the right, our **Live Audit Stream** uses Server-Sent Events to log every policy check and execution into an immutable SHA-256 ledger.
-> 
-> And across the top navigation bar, we have built six dedicated modules covering payment health monitoring, incident grouping, recovery cases, human approvals, autonomy policies, and our 2,000-event benchmark.
-> 
-> Now, let’s see how each of these technical layers works live!"
+> Let's see how our detection, AI decisioning, and Razorpay execution work together live!"
 
 ---
 
