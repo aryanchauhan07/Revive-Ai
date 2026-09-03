@@ -40,10 +40,14 @@
 > **Revive AI closes this entire loop** directly on top of Razorpay infrastructure: from detecting revenue at risk in real time, to diagnosing the root cause with AI, and executing a bounded, policy-governed recovery workflow.
 > 
 > Right here on our main **Command Center Dashboard**, we give merchants full operational control:
-> - At the top, we track our core KPIs: **₹2.41 Lakhs in verified recovered revenue**, an **88.4% recovery success rate**, and **₹3.42 Lakhs in risk prevented** by suppressing failing retries.
-> - Below the metrics, our **Active Bank Warning Banner** alerts operators to live gateway anomalies.
-> - In our **Active Recovery Cohort Table**, we track failed transactions across all verticals, capturing the failure reason and automatically generating a sequenced recovery plan.
-> - On the right, our **Real-Time Audit Stream** logs every action, policy check, and idempotency key into an immutable SHA-256 ledger.
+> - At the top, our KPI telemetry tracks four core metrics computed in real time:
+>   - **Verified Revenue Recovered**, which aggregates only cryptographically settled payments verified via Razorpay HMAC signatures,
+>   - Our **Net Recovery Success Rate**, measuring the percentage of failed checkouts converted into successful transactions,
+>   - **Risk Prevented**, which calculates the monetary exposure and bank penalty fees saved by our automated circuit breaker suppressing failing retries,
+>   - And our **Pending Approvals Counter**, tracking high-value transactions held by our policy engine for manager sign-off.
+> - Below the metrics, our **Active Bank Warning Banner** detects real-time gateway latency spikes and authorization degradation.
+> - In our **Active Recovery Cohort Table**, we ingest raw failure telemetry across all payment verticals, capturing error codes and automatically generating a sequenced recovery plan.
+> - On the right, our **Real-Time Audit Stream** uses Server-Sent Events to log every action, policy check, and idempotency key into an immutable SHA-256 ledger.
 > - And across our top navigation bar, we have built six dedicated modules covering payment health monitoring, incident grouping, recovery cases, human approvals, autonomy policies, and our 2,000-event benchmark.
 > 
 > Let's see how each of these technical layers works live!"
