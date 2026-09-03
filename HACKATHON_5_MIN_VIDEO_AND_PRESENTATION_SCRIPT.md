@@ -20,24 +20,32 @@
 
 ---
 
-### 📍 STEP 1: Command Center & System Overview (0:00 – 0:35)
+### 📍 STEP 1: Command Center & System Overview (0:00 – 0:40)
 * **Tab to Open:** `Command Center` (Dashboard)
 * **🖱️ Mouse Actions:** 
   1. Hover cursor over the **4 Top Metric Cards** (₹2,41,400 Recovered, 88.4% Success Rate, ₹3.42L Risk Prevented).
   2. Point to the **Active Bank Outage Warning Banner** at the top.
-  3. Briefly point across the **top navigation bar tabs** to show the integrated control plane.
+  3. Briefly point across the **top navigation bar tabs** to show the 6 integrated modules.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Every failed payment is not a lost customer. Sometimes a bank rail is down, sometimes a customer abandons checkout, or an AutoPay mandate needs the right salary timing window. 
+> "Imagine this: You are booking movie tickets on **BookMyShow**, ordering dinner on **Zomato**, or buying sneakers during a **Diwali flash sale**. 
 > 
-> But traditional systems either do nothing or blindly spam failing banks with retries that get rate-limited.
+> You enter your UPI PIN, the spinner keeps rotating, and suddenly — **'Payment Failed: Bank Server Timeout'**.
 > 
-> **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay.
+> What happens next? 8 out of 10 Indian shoppers just close the app and give up.
 > 
-> Right here on our **Command Center**, we monitor real-time recovery telemetry:
+> In India, over **₹10,000 Crores of genuine transactions fail every single day** — not because customers lack funds, but because of temporary bank server crashes, UPI latency, or recurring mandate timing deficits.
+> 
+> Today, merchants make two costly mistakes:
+> 1. They blindly hammer broken bank rails with retries that lock customer accounts.
+> 2. Or they panic and bleed profit margins giving away unnecessary 20% discount coupons.
+> 
+> **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay infrastructure.
+> 
+> Right here on our **Command Center**, we monitor live recovery telemetry:
 > - **₹2.41 Lakhs recovered** with an **88.4% recovery success rate**,
-> - **₹3.42 Lakhs in customer churn prevented** by suppressing degraded payment rails,
+> - **₹3.42 Lakhs in customer churn prevented** by automatically suppressing failing payment rails,
 > - And a live audit stream tracking every decision.
 > 
 > Let's see how our detection, AI decisioning, and Razorpay execution work together live."
