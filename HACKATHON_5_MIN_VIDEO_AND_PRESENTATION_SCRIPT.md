@@ -23,36 +23,30 @@
 ### 📍 STEP 1: Command Center & System Overview (0:00 – 0:50)
 * **Tab to Open:** `Command Center` (Main Dashboard)
 * **🖱️ Mouse Actions:** 
-  1. Hover over the **Top 4 Metric Cards** at the top.
-  2. Point to the **Active Bank Warning Banner**.
-  3. Scroll down slightly and hover across the **Active Recovery Cohort Table** on the left.
-  4. Point to the **Live Audit Stream** on the right.
-  5. Briefly point across the **top navigation bar tabs** to show the 6 integrated modules.
+  1. Keep view on the main Command Center dashboard.
+  2. Hover over the **Top 4 Metric Cards** at the top.
+  3. Point to the **Active Bank Warning Banner**.
+  4. Scroll down slightly to show the **Active Recovery Cohort Table** on the left and the **Live Audit Stream** on the right.
+  5. Briefly point across the **top navigation bar tabs** to introduce the 6 modules.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "In India alone, over **₹10,000 Crores of genuine digital transactions slip away every single day**.
+> "In India alone, over **₹10,000 Crores of genuine transactions slip away every single day** — whether it is a UPI server timeout on **Zomato**, cart abandonment during a **Diwali flash sale**, a salary-timing deficit on a recurring **AutoPay mandate**, or an overdue **B2B corporate invoice**.
 > 
-> When this happens, merchants make two costly mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and give away huge 20% discounts that destroy their profit margins.
+> When this happens, merchants make two costly mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and bleed margins giving away unnecessary 20% discounts.
 > 
 > **Hello everyone and respected judges! This is Revive AI, our submission for Track 03: AI Revenue Recovery — Finding revenue that is slipping away and winning it back.**
 > 
-> In India, revenue loss rarely happens in one clean step:
-> - A customer enters their UPI PIN on **Zomato** or **BookMyShow**, but a bank server times out.
-> - A shopper abandons their cart during a **Diwali flash sale** due to checkout friction.
-> - A monthly **AutoPay subscription** fails because it was triggered before salary day.
-> - Or a **B2B corporate invoice** goes overdue in accounts payable.
-> 
 > **Revive AI closes this entire loop** directly on top of Razorpay infrastructure: from detecting revenue at risk in real time, to diagnosing the root cause with AI, and executing a bounded, policy-governed recovery workflow.
 > 
-> Meeting the Track 03 bar, Revive doesn't just identify problems:
-> - We execute **bounded recovery actions** without wasteful discount spams.
-> - We enforce **compliant escalations and stopping rules** like Quiet Hours and customer opt-outs.
-> - We verify every payment cryptographically with Razorpay before marking it recovered.
-> - We log every step in an **immutable SHA-256 audit trail**.
-> - And we prove true financial lift across a **2,000-event measured batch evaluation**.
+> Right here on our main **Command Center Dashboard**, we give merchants full operational control:
+> - At the top, we track our core KPIs: **₹2.41 Lakhs in verified recovered revenue**, an **88.4% recovery success rate**, and **₹3.42 Lakhs in risk prevented** by suppressing failing retries.
+> - Below the metrics, our **Active Bank Warning Banner** alerts operators to live gateway anomalies.
+> - In our **Active Recovery Cohort Table**, we track failed transactions across all verticals, capturing the failure reason and automatically generating a sequenced recovery plan.
+> - On the right, our **Real-Time Audit Stream** logs every action, policy check, and idempotency key into an immutable SHA-256 ledger.
+> - And across our top navigation bar, we have built six dedicated modules covering payment health monitoring, incident grouping, recovery cases, human approvals, autonomy policies, and our 2,000-event benchmark.
 > 
-> Let's see how our detection, AI decisioning, and Razorpay execution work together live!"
+> Let's see how each of these technical layers works live!"
 
 ---
 
