@@ -15,7 +15,9 @@ import {
   Tag,
   Building2,
   RefreshCw,
-  ShoppingCart
+  ShoppingCart,
+  Clock,
+  Filter
 } from 'lucide-react';
 import VoiceCallSandboxModal from '../components/VoiceCallSandboxModal';
 import { Calculator } from 'lucide-react';
@@ -43,9 +45,13 @@ export default function CaseTimeline({
 
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm || '');
   const [categoryFilter, setCategoryFilter] = useState('ALL'); // ALL | DROPOFF | SUBSCRIPTION | B2B | GATEWAY
+  const [statusFilter, setStatusFilter] = useState('ALL'); // ALL | PENDING | RECOVERED
   const [selectedCaseId, setSelectedCaseId] = useState(initialSelectedCaseId || uniqueCases[0]?.id || 'CASE-101');
   const [ptpDateInput, setPtpDateInput] = useState('');
   const [showMatrix, setShowMatrix] = useState(true);
+
+  const pendingCount = uniqueCases.filter(c => c.status !== 'RECOVERED' && c.status !== 'CANCELLED').length;
+  const recoveredCount = uniqueCases.filter(c => c.status === 'RECOVERED').length;
 
   React.useEffect(() => {
     if (initialSelectedCaseId) {
@@ -72,7 +78,7 @@ export default function CaseTimeline({
     return 'GATEWAY';
   };
 
-  // Filtered Cases matching customer, ID, and Bank / Issuer
+  // Filtered Cases matching customer, ID, Bank / Issuer, and Status (Pending vs Recovered)
   const filteredCases = uniqueCases.filter(c => {
     const term = searchTerm.toLowerCase();
     const matchesSearch = 
@@ -83,7 +89,11 @@ export default function CaseTimeline({
       c.failure_reason?.method?.toLowerCase().includes(term) ||
       c.id === selectedCaseId;
     const matchesCat = categoryFilter === 'ALL' || getCaseCategory(c) === categoryFilter;
-    return matchesSearch && matchesCat;
+    const matchesStatus = 
+      statusFilter === 'ALL' ||
+      (statusFilter === 'PENDING' && c.status !== 'RECOVERED') ||
+      (statusFilter === 'RECOVERED' && c.status === 'RECOVERED');
+    return matchesSearch && matchesCat && matchesStatus;
   });
 
   const selectedCase = (selectedCaseId && uniqueCases.find(c => c.id === selectedCaseId)) || filteredCases[0] || uniqueCases[0] || {};
@@ -250,11 +260,47 @@ export default function CaseTimeline({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: List of Cases */}
         <div className="lg:col-span-1 glass-panel rounded-2xl p-4 border border-slate-200 bg-white shadow-card space-y-3">
+          {/* Status Filter Toggle: All vs Pending vs Recovered */}
+          <div className="flex items-center justify-between bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+            <button
+              onClick={() => setStatusFilter('ALL')}
+              className={`flex-1 py-1.5 rounded-lg font-bold transition-all text-center ${
+                statusFilter === 'ALL'
+                  ? 'bg-white text-slate-900 shadow-2xs font-extrabold'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              All ({uniqueCases.length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('PENDING')}
+              className={`flex-1 py-1.5 rounded-lg font-bold transition-all text-center flex items-center justify-center space-x-1 ${
+                statusFilter === 'PENDING'
+                  ? 'bg-amber-500 text-white shadow-2xs font-extrabold'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              <Clock className="w-3 h-3" />
+              <span>Pending ({pendingCount})</span>
+            </button>
+            <button
+              onClick={() => setStatusFilter('RECOVERED')}
+              className={`flex-1 py-1.5 rounded-lg font-bold transition-all text-center flex items-center justify-center space-x-1 ${
+                statusFilter === 'RECOVERED'
+                  ? 'bg-emerald-600 text-white shadow-2xs font-extrabold'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              <span>Recovered ({recoveredCount})</span>
+            </button>
+          </div>
+
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
             <input
               type="text"
-              placeholder="Search customer, ID, or phone..."
+              placeholder="Search customer, ID, or bank..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 font-semibold focus:outline-none focus:border-blue-500"
