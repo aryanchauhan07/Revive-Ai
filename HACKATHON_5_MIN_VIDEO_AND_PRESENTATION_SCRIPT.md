@@ -31,13 +31,13 @@
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "In India alone, over **₹10,000 Crores of genuine transactions slip away every single day** — whether it is a UPI server timeout on **Zomato**, cart abandonment during a **Diwali flash sale**, a salary-timing deficit on a recurring **AutoPay mandate**, or an overdue **B2B corporate invoice**.
+> "In India, over **₹10,000 Crores of valid digital transactions slip away every day** — from UPI bank timeouts and abandoned checkouts to failed AutoPay mandates and overdue invoices.
 > 
-> When this happens, merchants make two costly mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and bleed margins giving away unnecessary 20% discounts.
+> Most merchants either blindly spam retries that fail, or bleed profit margins giving away wasteful 20% discounts.
 > 
-> **Hello everyone and respected judges! This is Revive AI, our submission for Track 03: AI Revenue Recovery — Finding revenue that is slipping away and winning it back.**
+> **Hello judges! This is Revive AI, our submission for Track 03: AI Revenue Recovery — Finding revenue that is slipping away and winning it back.**
 > 
-> **Revive AI closes this entire loop** directly on top of Razorpay infrastructure: from detecting revenue at risk in real time, to diagnosing the root cause with AI, and executing a bounded, policy-governed recovery workflow.
+> Built directly on Razorpay infrastructure, Revive detects revenue at risk in real time, diagnoses root causes with AI, and executes a bounded, policy-governed recovery workflow.
 > 
 > Right here on our main **Command Center Dashboard**, we give merchants full operational control:
 > - At the top, our KPI telemetry tracks four core metrics computed in real time:
