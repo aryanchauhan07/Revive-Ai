@@ -31,17 +31,17 @@
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Hello everyone and respected judges! This is **Revive AI**, our submission for **Track 03: AI Revenue Recovery — Finding revenue that is slipping away and winning it back**.
+> "In India alone, over **₹10,000 Crores of genuine digital transactions slip away every single day**.
 > 
-> In India, revenue loss rarely happens in one simple step:
+> When this happens, merchants make two costly mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and give away huge 20% discounts that destroy their profit margins.
+> 
+> **Hello everyone and respected judges! This is Revive AI, our submission for Track 03: AI Revenue Recovery — Finding revenue that is slipping away and winning it back.**
+> 
+> In India, revenue loss rarely happens in one clean step:
 > - A customer enters their UPI PIN on **Zomato** or **BookMyShow**, but a bank server times out.
 > - A shopper abandons their cart during a **Diwali flash sale** due to checkout friction.
 > - A monthly **AutoPay subscription** fails because it was triggered before salary day.
 > - Or a **B2B corporate invoice** goes overdue in accounts payable.
-> 
-> In India alone, over **₹10,000 Crores of genuine digital transactions slip away every single day**. 
-> 
-> When this happens, merchants make two costly mistakes: they either blindly hammer broken bank rails with retries that lock customer accounts, or they panic and give away huge 20% discounts that destroy their profit margins.
 > 
 > **Revive AI closes this entire loop** directly on top of Razorpay infrastructure: from detecting revenue at risk in real time, to diagnosing the root cause with AI, and executing a bounded, policy-governed recovery workflow.
 > 
