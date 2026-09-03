@@ -1,179 +1,179 @@
-# 🎙️ Revive AI: 5-Minute Hackathon Winning Presentation Script
-
-> **Tone:** Engaging, confident, and conversational, while clearly explaining the **underlying technical architecture, LLM calls, and Razorpay APIs**.  
-> **Total Time:** Exactly 5 Minutes (300 seconds)
+# 🎙️ Revive AI: Hackathon Video & Presentation Master Script
+### ⏱️ Target Duration: 3:00 – 4:30 Minutes | Focus: Action Cues + Deep Technical Architecture
 
 ---
 
-## ⏱️ Presentation Timeline at a Glance
+## 🎬 Screen-by-Screen Action & Spoken Script
 
-| Time | Page to Show | Screen Actions | Technical & Practical Focus |
-| :--- | :--- | :--- | :--- |
-| **0:00 – 1:20** | **Command Center (Dashboard)** | Hover on top 4 metrics, outage banner, and point along the top navigation tabs | **The Hook, Dashboard & Architecture:** The ₹10k Cr daily failed payment problem, real-time metrics, and a quick tour of our 6 core modules. |
-| **1:20 – 2:00** | **Payment Health** | Scroll to HDFC Bank UPI card | **Payment SRE & Telemetry:** 5-minute sliding-window anomaly detection & automated Circuit Breakers. |
-| **2:00 – 3:00** | **Recovery Cases** | Click **"AI Reason"** on Ananya Roy | **Google Gemini 2.5 Flash Backend:** Structured JSON tool-calling, root-cause diagnosis & ₹0 discount optimization. |
-| **3:00 – 3:50** | **Approval Queue & Policy** | Click **"Approve"** on Rajesh Sharma | **Deterministic Policy Engine:** Rule-based safety floors (₹20k VIP check) and sub-millisecond Kill Switch. |
-| **3:50 – 4:35** | **Recovery Cases (Live Checkout)** | Click **"Pay Link"** $\rightarrow$ complete test card | **Razorpay Core Integration:** Server-side Orders API, `checkout.js` client SDK & HMAC-SHA256 signature verification. |
-| **4:35 – 5:00** | **Command Center & Wrap-up** | Point to SHA-256 Ledger & final numbers | **Security & Testing:** Cryptographic append-only ledger and 6/6 passing test suites. |
+```
+                                  PRESENTATION FLOW
+ ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+ │ 1. Command Center│───▶│2. Payment Health │───▶│3. Recovery Cases │───▶│4. Approval Queue │
+ │ (Dashboard & SRE)│    │ (Circuit Breaker)│    │ (AI Brain & Matrix)   │ (Safety & Policy)│
+ └──────────────────┘    └──────────────────┘    └──────────────────┘    └──────────────────┘
+                                                                                   │
+ ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐              │
+ │7. Summary & Wrap │◀───│6. 2k Benchmark   │◀───│5. Razorpay Pay   │◀─────────────┘
+ │ (Audit & SHA-256)│    │ (Batch Engine)   │    │ (HMAC Verification)
+ └──────────────────┘    └──────────────────┘    └──────────────────┘
+```
 
 ---
 
-## 📜 Full Spoken Script (Word-for-Word)
-
----
-
-### 🎬 ACT 1: Introduction, Dashboard & System Overview (0:00 – 1:20)
-📍 **Page:** `Command Center` (Main Dashboard)  
-🖱️ **Actions:** 
-1. Hover cursor over the **4 top metric boxes** (₹2.41L Recovered, 88.4% Success Rate, ₹3.42L Risk Prevented).
-2. Point to the **Active Bank Alert Banner** and the **Live Activity Feed**.
-3. Move mouse across the **top navigation bar tabs** to introduce the 6 core components.
+### 📍 STEP 1: Command Center & System Overview (0:00 – 0:35)
+* **Tab to Open:** `Command Center` (Dashboard)
+* **🖱️ Mouse Actions:** 
+  1. Hover cursor over the **4 Top Metric Cards** (₹2,41,400 Recovered, 88.4% Success Rate, ₹3.42L Risk Prevented).
+  2. Point to the **Active Bank Outage Warning Banner** at the top.
+  3. Briefly point across the **top navigation bar tabs** to show the integrated control plane.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Hello everyone and respected judges!
+> "Every failed payment is not a lost customer. Sometimes a bank rail is down, sometimes a customer abandons checkout, or an AutoPay mandate needs the right salary timing window. 
 > 
-> Imagine you are shopping online. You add something to your cart, click Pay with UPI, but your bank server times out and the transaction fails. 
+> But traditional systems either do nothing or blindly spam failing banks with retries that get rate-limited.
 > 
-> What happens next? Most customers just give up and abandon the purchase.
+> **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay.
 > 
-> In India, over **₹10,000 Crores of valid online transactions fail every single day** due to temporary bank server timeouts, UPI glitches, and checkout drop-offs.
+> Right here on our **Command Center**, we monitor real-time recovery telemetry:
+> - **₹2.41 Lakhs recovered** with an **88.4% recovery success rate**,
+> - **₹3.42 Lakhs in customer churn prevented** by suppressing degraded payment rails,
+> - And a live audit stream tracking every decision.
 > 
-> When this happens, merchants make two major mistakes:
-> 1. They blindly spam the broken bank with retries that get rate-limited.
-> 2. Or they panic and give away huge 20% discounts that eat up their entire profit margin.
-> 
-> **To solve this, we built Revive AI** — an autonomous, policy-bounded revenue recovery engine built directly on top of Razorpay infrastructure.
-> 
-> Right here on our **Command Center Dashboard**, our system aggregates telemetry in real time:
-> - **Total Revenue Recovered (₹2,41,400)** with an 88.4% recovery success rate.
-> - **Net Recovery Rate (49.7%)** across all failed checkout events.
-> - **Bank Outage Risk Prevented (₹3,42,000)** by automatically suppressing failing retries during bank crashes.
-> - **Human Approval Queue** for high-value VIP orders.
-> 
-> Below the metrics, we have an **Active Bank Outage Warning Banner** and a real-time **Activity Feed**.
-> 
-> To solve this problem end-to-end, we architected **6 core interconnected pillars** you can see in our top bar:
-> 1. **Payment Health** — Real-time bank SRE monitoring and automated circuit breakers.
-> 2. **Incidents** — Grouping failed transactions into bank outage cohorts.
-> 3. **Recovery Cases** — Individual customer recovery powered by Google Gemini AI and live Razorpay checkout.
-> 4. **Approval Queue** — Human review for VIP high-ticket orders.
-> 5. **Autonomy & Policy** — 1-click controls for merchant safety rules.
-> 6. **2k Batch Benchmark** — Scale simulation proving algorithmic consistency.
-> 
-> Let’s see how the technical pipeline works live!"
+> Let's see how our detection, AI decisioning, and Razorpay execution work together live."
 
 ---
 
-### 🎬 ACT 2: SRE Telemetry & Automated Circuit Breakers (1:20 – 2:00)
-📍 **Page:** Click on the `Payment Health` tab in the navbar.  
-🖱️ **Action:** Scroll down to the **HDFC Bank UPI Authorization Degradation** card. Point to the red **38% Success Rate** and the green **Circuit Breaker Active** badge.
+### 📍 STEP 2: SRE Telemetry & Circuit Breaker (0:35 – 1:05)
+* **Tab to Open:** Click **`Payment Health`** in the top navigation bar.
+* **🖱️ Mouse Actions:**
+  1. Scroll down to the **HDFC Bank UPI Degradation** card.
+  2. Point to the red **38% Success Rate** (crashed from 88% baseline) and the **Z-Score -4.2**.
+  3. Highlight the green **`CIRCUIT BREAKER: TRIPPED`** badge.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Let’s start with **Payment Health**.
+> "Revive starts with real-time payment telemetry. Over 5-minute sliding windows, our backend monitors error codes across issuers and methods.
 > 
-> In our backend, we aggregate failure telemetry across payment rails over 5-minute sliding windows.
+> Here, our system detected that **HDFC Bank UPI authorization success crashed from 88% down to 38%** with a **-4.2 Z-score anomaly**.
 > 
-> Right here, our monitoring engine detected that **HDFC Bank UPI authorization success rates suddenly crashed from 88% down to 38%**.
-> 
-> An ordinary payment system would keep blindly retrying the failing HDFC UPI rail, which locks customer accounts with penalty fees.
-> 
-> But Revive AI triggers an **Automated Circuit Breaker Pattern**:
-> 1. It automatically suppresses same-rail retries in memory to protect the merchant from bank penalty fees.
-> 2. It groups all affected transactions into an incident cohort.
-> 3. And it automatically switches the recovery recommendation to healthy alternate rails like Cards or Netbanking."
+> Instead of hammering HDFC UPI with blind retries, Revive **automatically tripped a Circuit Breaker**. It suppresses same-rail retries and shifts customers to healthy alternate rails like Cards or Netbanking."
 
 ---
 
-### 🎬 ACT 3: Google Gemini 2.5 Flash LLM Decision Engine (2:00 – 3:00)
-📍 **Page:** Click on the `Recovery Cases` tab.  
-🖱️ **Action:** 
-1. Point to customer **Ananya Roy (₹4,850 - HDFC UPI)**.
-2. Click the blue **"AI Reason"** button to open the Gemini Decision Modal.
-3. Show the 3 clean sections: *1. What Happened*, *2. Recommended Action*, *3. Guardrails Verified*.
+### 📍 STEP 3: AI Decision Brain & Multi-Action Matrix (1:05 – 1:50)
+* **Tab to Open:** Click **`Recovery Cases`** in the top navigation bar.
+* **🖱️ Mouse Actions:**
+  1. Select **`CASE-101 (Ananya Roy - ₹4,850)`**.
+  2. Point to the **AI Root-Cause Diagnosis** badge (*Temporary HDFC UPI auth server timeout*).
+  3. Scroll through the **8-Candidate Action Matrix** and highlight the optimal choice (*SWITCH_PAYMENT_METHOD*).
+  4. (Optional) Click the purple **`AI Reason (Gemini 2.5)`** button to show the structured JSON tool-call schema.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Now let's see how our AI makes recovery decisions under **Recovery Cases**.
+> "Let’s inspect **CASE-101 — Ananya Roy (₹4,850)**.
 > 
-> Here is Ananya Roy, whose ₹4,850 order failed during the HDFC UPI downtime.
+> This is Revive’s **AI Decision Brain**, powered by Google Gemini 2.5 Flash and our deterministic recovery matrix.
 > 
-> Let’s click **'AI Reason'** to inspect how the backend makes its decision.
+> Revive evaluates 8 candidate actions: *Wait, Retry, Switch Payment Method, Create Payment Link, WhatsApp Message, Dynamic Incentive, Human Escalation, or Stop*.
 > 
-> When a failure occurs:
-> 1. Our backend takes the raw failure telemetry — the error code, bank issuer, and transaction amount — and calls **Google Gemini 2.5 Flash** using structured JSON tool definitions.
-> 2. **Root Cause Analysis**: Gemini analyzes the signals and confirms this was a temporary bank server timeout, meaning Ananya's account was not charged.
-> 3. **Expected Value Optimization**: Gemini calculates that sending a **1-Click WhatsApp Pay Link switching her to Cards or Netbanking** has an **88% recovery probability** with **₹0 discount waste**.
-> 4. **Safety Verification**: It automatically verifies merchant guardrails, ensuring the outreach is sent during active daytime hours."
+> Crucially, Revive does **not** simply pick the highest probability action. It optimizes for **Expected Net Recovery**:
+> $$\text{Expected Net} = P(\text{Recovery}) \times \text{Amount} - \text{Intervention Cost} - \text{Policy Penalty}$$
+> 
+> In this case, retrying UPI during an outage has an 84% failure rate. Revive recommends **Switch Payment Method + 1-Click Payment Link** via WhatsApp, delivering **₹4,849.50 in expected net recovery** with ₹0 wasted discounts."
 
 ---
 
-### 🎬 ACT 4: Deterministic Policy Engine & Kill Switch (3:00 – 3:50)
-📍 **Page:** Click on `Approval Queue` tab, then show `Autonomy & Policy` tab.  
-🖱️ **Action:** 
-1. In the **Approval Queue**, point to Rajesh Sharma's high-value order (₹34,999).
-2. Click the green **"Approve & Execute Action"** button (watch it approve live!).
-3. In the top navbar, point to the **Kill Switch** and the **Autonomy Mode Switcher** (`OBSERVE`, `ASSIST`, `AUTOPILOT`).
+### 📍 STEP 4: Approval Queue & Policy Guardrails (1:50 – 2:25)
+* **Tab to Open:** Click **`Approval Queue`** in the top navigation bar.
+* **🖱️ Mouse Actions:**
+  1. Show **`CASE-103 (Rajesh Sharma - ₹34,999)`** flagged for review.
+  2. Point to the yellow alert badge: **`RULE: HIGH_VALUE_FLOOR (₹34,999 ≥ ₹25,000)`**.
+  3. Click the green **`Approve & Execute`** button.
+  4. Notice the green confirmation toast and that the case vanishes from the pending review queue.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "In financial systems, you can never let an LLM execute side-effects without deterministic boundaries. That is why we built a **Policy Gateway**:
+> "Here is our core philosophy: **AI proposes, but Policy governs money movement.**
 > 
-> - In our backend, every decision is evaluated by `evaluateCasePolicy()`. Standard small orders execute on autopilot, but if an order exceeds the ₹20,000 threshold — like Rajesh Sharma's ₹34,999 VIP order — it is held in this **Approval Queue** requiring explicit manager sign-off.
-> - We give merchants 3 runtime autonomy modes:
->   - **`OBSERVE`**: Read-only shadow mode for testing.
->   - **`ASSIST`**: Hybrid mode (AI handles small cases, humans approve high-value).
->   - **`AUTOPILOT`**: 100% autonomous recovery for high-traffic flash sales.
-> - And if anything ever goes wrong, clicking the **Emergency Kill Switch** halts all automated outreach in under 1 millisecond."
+> Before any action executes, Revive runs an **Execution-Time Fail-Closed Policy Check**:
+> - If an order is high-value — like **Rajesh Sharma’s ₹34,999 purchase** — it requires explicit Senior Manager approval.
+> - If the time is within **Quiet Hours (22:00 to 08:00 IST)**, outreach is scheduled for 08:00 IST.
+> - If a customer sends **`STOP`**, outreach is permanently paused in a terminal state.
+> 
+> When I click **'Approve & Execute'**, manager sign-off is logged, and the recovery link is dispatched."
 
 ---
 
-### 🎬 ACT 5: Real Razorpay Orders API & HMAC Verification (3:50 – 4:35)
-📍 **Page:** Back to `Recovery Cases` tab.  
-🖱️ **Action:** 
-1. Click the green **"Pay Link"** button on Ananya Roy.
-2. In the drawer, click **"Launch Razorpay Standard Modal (All Methods)"**.
-3. The official Razorpay modal opens. Enter test card: `4111 1111 1111 1111`, expiry `12/28`, CVV `123`, and click Success.
-4. Watch the green **"Payment Verified & Settled!"** confirmation appear.
+### 📍 STEP 5: Razorpay Checkout & Cryptographic HMAC Verification (2:25 – 3:10)
+* **Tab to Open:** Go back to **`Recovery Cases`** $\rightarrow$ select **`CASE-101 (Ananya Roy)`**.
+* **🖱️ Mouse Actions:**
+  1. Click the blue **`Pay Link`** button to open the checkout modal.
+  2. Click **`Proceed to Razorpay Checkout`** (or open official Razorpay test modal).
+  3. Complete payment with test details.
+  4. Point to the green **`HMAC Signature Verified & Settled`** badge, showing `Payment ID` and `Order ID`.
+  5. Close modal $\rightarrow$ click the **`Recovered`** filter pill to show the case safely settled.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Now let’s look at our **Razorpay Payment Integration**:
+> "Now let’s look at our **Razorpay Integration**:
 > 
-> 1. **Server-Side Order Creation**: 
->    When the checkout opens, our backend calls Razorpay's **`razorpay.orders.create()`** API using our credentials. This locks the exact payable amount on the server, preventing any client-side price manipulation.
-> 2. **Client SDK Integration**: 
->    We dynamically inject Razorpay's official checkout script (`checkout.js`) from CDN and pass the generated `order_id`.
-> 3. **Cryptographic HMAC-SHA256 Signature Verification**: 
->    When payment succeeds, Razorpay returns the payment ID and signature. Our backend re-computes the HMAC-SHA256 hash using our secret, and verifies it with `crypto.timingSafeEqual` to prevent timing attacks.
+> 1. **Server-Side Orders API**: When checkout opens, our backend calls `POST /api/create-order` which invokes `razorpay.orders.create()`. This locks the exact payable amount on the server, preventing client-side price tampering.
+> 2. **Client SDK**: We mount Razorpay’s official `checkout.js` SDK passing the verified `order_id`.
+> 3. **Cryptographic HMAC-SHA256 Verification**: When payment completes, Razorpay returns a cryptographic signature. In `/api/verify-payment`, we recompute the HMAC-SHA256 hash using `crypto.timingSafeEqual` to prevent timing attacks.
 > 
-> Only when cryptographic verification succeeds does the backend mark the order as **`RECOVERED`**."
+> **A case is ONLY marked `RECOVERED` when genuine payment cryptographic proof is validated.**
+> 
+> When verified, Revive automatically cancels all queued outreach actions, ensuring the customer is never spammed after paying."
 
 ---
 
-### 🎬 ACT 6: Append-Only Audit Ledger & Conclusion (4:35 – 5:00)
-📍 **Page:** Click on the `Command Center` tab.  
-🖱️ **Action:** Scroll down to the **Append-Only Audit Ledger** (SHA-256 SEALED) and end on the main overview.
+### 📍 STEP 6: 2k Event Batch Measurement Benchmark (3:10 – 3:45)
+* **Tab to Open:** Click **`2k Benchmark`** in the top navigation bar.
+* **🖱️ Mouse Actions:**
+  1. Click the blue button: **`Run 2,000 Event Benchmark`**.
+  2. Wait 1 second for the benchmark grid to populate.
+  3. Point to the comparison cards:
+     - **Baseline A (No Action)**: Natural self-recovery rate (~12.2%).
+     - **Baseline B (Generic Retries)**: High failure rate (~27.2%).
+     - **Revive AI Agent (Winner)**: **74.9% recovery rate** with **₹2.79 Lakhs incremental net lift**.
+  4. Point to **`0 Policy Violations`** and **`Deterministic Seed 20260828`**.
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Finally, every action taken — from webhook ingress to Gemini's diagnosis to verified payment capture — is cryptographically hashed into an **Append-Only SHA-256 Audit Ledger**. Each block references the previous block's hash, creating an immutable, tamper-evident audit trail for finance teams.
+> "Finally, we prove Revive’s performance with our **2,000-Event Batch Evaluation Engine**.
 > 
-> Our codebase is production-ready with **8 passing automated test suites** covering HMAC verification, idempotency, STOP opt-out enforcement, quiet hours scheduling, and policy safety rules.
+> When I click **'Run 2,000 Event Benchmark'**, the backend executes a reproducible Monte Carlo simulation with a fixed PRNG seed (`20260828`) across 3 control groups:
+> 1. **Baseline A**: Natural customer recovery with zero outreach ($12.2\%$).
+> 2. **Baseline B**: Blind retries and generic reminders ($27.2\%$).
+> 3. **Revive AI**: Achieves a **74.9% recovery rate**, delivering a **+47.6% incremental recovery lift** and **187x ROI** with **zero policy violations**.
 > 
-> In summary, Revive AI delivers:
-> - **49.7% higher revenue recovery** from failed checkouts.
-> - **Zero wasted discounts** by using smart payment rail switching.
-> - **100% enterprise safety** with real Razorpay cryptographic verification.
+> This proves algorithmic consistency across thousands of transactions."
+
+---
+
+### 📍 STEP 7: Conclusion & Wrap-Up (3:45 – 4:00)
+* **Tab to Open:** Click **`Command Center`**.
+* **🖱️ Mouse Actions:** Scroll down to the **Append-Only SHA-256 Audit Stream** showing immutable audit blocks.
+
+> **🗣️ WHAT YOU SAY:**
+> 
+> "To close: every state transition — from webhook ingress to AI reasoning to payment capture — is sealed in our **Append-Only SHA-256 Hash-Chained Audit Ledger**, verified by **8 passing automated test suites**.
+> 
+> **AI proposes. Policy governs. Razorpay executes. And verified outcomes teach the next decision.**
 > 
 > Revive AI turns lost transactions into recovered revenue. Thank you!"
 
 ---
 
-## 💡 Key Highlights Explained in This Script:
-1. **SRE Telemetry**: 5-minute sliding window error rates and automated Circuit Breaker pattern.
-2. **Google Gemini 2.5 Flash**: Structured JSON tool definitions, root-cause diagnosis, and expected value optimization.
-3. **Policy Engine**: Deterministic `evaluateCasePolicy()` rule checks and sub-millisecond Kill Switch.
-4. **Razorpay APIs**: Server-side `razorpay.orders.create()`, official `checkout.js` SDK, and `crypto.timingSafeEqual` HMAC-SHA256 verification.
-5. **Security**: Append-only SHA-256 hash-chained ledger and 100% passing test coverage.
+## 🎯 Quick Rehearsal Cheat-Sheet
+
+| Timestamp | Tab to Click | Key Highlight | Click Action |
+| :--- | :--- | :--- | :--- |
+| **0:00 – 0:35** | `Command Center` | ₹2.41L Recovered, 88.4% Success Rate | Hover metrics & point at top nav |
+| **0:35 – 1:05** | `Payment Health` | HDFC UPI 88% $\rightarrow$ 38% crash | Point at Tripped Circuit Breaker |
+| **1:05 – 1:50** | `Recovery Cases` | $E[\text{Net}]$ Decision Matrix (8 Actions) | Select `CASE-101`, click `AI Reason` |
+| **1:50 – 2:25** | `Approval Queue` | Fail-closed policy & ₹25k VIP floor | Click `Approve & Execute` on Rajesh Sharma |
+| **2:25 – 3:10** | `Recovery Cases` | Server Order + HMAC Verification | Click `Pay Link` $\rightarrow$ Complete test payment |
+| **3:10 – 3:45** | `2k Benchmark` | +47.6% lift vs generic control groups | Click `Run 2,000 Event Benchmark` |
+| **3:45 – 4:00** | `Command Center` | SHA-256 sealed audit ledger | Scroll to Audit Stream & conclude |
