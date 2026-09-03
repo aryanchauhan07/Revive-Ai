@@ -45,16 +45,22 @@
 > **This is Revive AI** — an autonomous, policy-governed revenue recovery engine built directly on top of Razorpay infrastructure.
 > 
 > Before we dive in, let me give you a quick tour of our **Command Center Dashboard**:
-> - At the top, we track our core KPIs: **₹2.41 Lakhs in verified recovered revenue**, an **88.4% recovery success rate**, and **₹3.42 Lakhs in risk prevented** by suppressing failing retries.
-> - Below the metrics, we have an **Active Bank Outage Warning Banner** detecting live gateway anomalies.
-> - On the lower left, we have our **Recent Failed Transactions Table**, and on the right, our **Real-Time SHA-256 Audit Stream** logging every decision.
-> - And across the top navigation bar, we have architected **6 specialized modules**:
->   1. **Payment Health** — Real-time bank SRE monitoring and automated circuit breakers.
->   2. **Incidents** — Grouping failed transactions into bank outage cohorts.
->   3. **Recovery Cases** — Individual customer recovery powered by Google Gemini AI and live Razorpay checkout.
->   4. **Approval Queue** — Human-in-the-loop review for high-ticket VIP orders.
->   5. **Autonomy & Policy** — Merchant guardrail rules and 1-millisecond Kill Switch.
->   6. **2k Benchmark** — 2,000-event synthetic scale simulation measuring incremental revenue lift.
+> - **Top KPI Cards**: We track **₹2.41 Lakhs in verified recovered revenue**, an **88.4% recovery success rate**, and **₹3.42 Lakhs in risk prevented** by suppressing failing retries.
+> - **Active Bank Warning Banner**: Detects real-time gateway degradation and tripped circuit breakers.
+> - **Active Recovery Cohort Table (Lower Left)**: Ingests raw telemetry across 4 key Indian payment failure scenarios:
+>   1. *Bank Gateway Outages* (e.g. Ananya Roy's ₹4,850 HDFC UPI timeout),
+>   2. *High-Ticket VIP Orders* (e.g. Rajesh Sharma's ₹34,999 transaction requiring manager review),
+>   3. *Checkout Drop-Offs* with dynamic 3% incentive links (Sneha Mehta ₹6,499),
+>   4. *Recurring Subscriptions & B2B Invoices* (Karan Malhotra ₹12,400 & TechCorp ₹85,000).
+>   - Beside each case, you can click **'AI Reason'** for Google Gemini's structured root-cause analysis, or **'Pay Link'** for server-side Razorpay checkout.
+> - **Live Execution Audit Stream (Lower Right)**: Real-time Server-Sent Events stream logging every action, deterministic policy check, and stable idempotency key into an **immutable SHA-256 Hash-Chained Ledger**.
+> - **Top Navigation Bar (6 Core Modules)**:
+>   1. **Payment Health** — SRE sliding-window monitoring & circuit breakers.
+>   2. **Incidents** — Grouping failures into bank outage blast-radius cohorts.
+>   3. **Recovery Cases** — AI decision brain & 8-candidate action matrix.
+>   4. **Approval Queue** — Human-in-the-loop review for high-value transactions.
+>   5. **Autonomy & Policy** — Runtime modes (`OBSERVE`, `ASSIST`, `AUTOPILOT`) & sub-millisecond Kill Switch.
+>   6. **2k Benchmark** — 2,000-event synthetic scale simulation measuring incremental lift.
 > 
 > Now, let’s see how each of these technical layers works live!"
 
