@@ -53,7 +53,7 @@
       "title": "HDFC Bank UPI Authorization Degradation",
       "status": "OPEN",
       "severity": "HIGH",
-      "started_at": "2026-09-03T04:43:58.234Z",
+      "started_at": "2026-09-03T04:50:43.930Z",
       "dimensions": {
         "method": "upi",
         "issuer": "HDFC Bank",
@@ -101,7 +101,7 @@
       "title": "ICICI Card 3DS Authentication Timeout",
       "status": "OPEN",
       "severity": "MEDIUM",
-      "started_at": "2026-09-03T02:43:58.234Z",
+      "started_at": "2026-09-03T02:50:43.930Z",
       "dimensions": {
         "method": "card",
         "issuer": "ICICI Bank",
@@ -149,7 +149,7 @@
       "title": "SBI AutoPay e-Mandate Balance Deficit",
       "status": "OPEN",
       "severity": "LOW",
-      "started_at": "2026-09-02T18:43:58.234Z",
+      "started_at": "2026-09-02T18:50:43.930Z",
       "dimensions": {
         "method": "mandate",
         "issuer": "SBI Bank",
@@ -283,7 +283,7 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-03T06:13:58.232Z"
+      "created_at": "2026-09-03T06:20:43.928Z"
     },
     {
       "id": "CASE-102",
@@ -367,7 +367,7 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-03T06:03:58.234Z"
+      "created_at": "2026-09-03T06:10:43.930Z"
     },
     {
       "id": "CASE-103",
@@ -451,7 +451,7 @@
         "requires_approval": true,
         "reason": "High-value transaction requires explicit human manager approval before dispatching recovery link."
       },
-      "created_at": "2026-09-03T05:43:58.234Z"
+      "created_at": "2026-09-03T05:50:43.930Z"
     },
     {
       "id": "CASE-104",
@@ -536,7 +536,7 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-03T05:23:58.234Z"
+      "created_at": "2026-09-03T05:30:43.930Z"
     },
     {
       "id": "CASE-401",
@@ -620,7 +620,7 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-03T05:13:58.234Z"
+      "created_at": "2026-09-03T05:20:43.930Z"
     },
     {
       "id": "CASE-501",
@@ -694,7 +694,7 @@
         ],
         "requires_approval": false
       },
-      "created_at": "2026-09-03T04:43:58.234Z"
+      "created_at": "2026-09-03T04:50:43.930Z"
     }
   ],
   "actionExecutions": [],
@@ -707,7 +707,7 @@
       "action": "INCIDENT_OPENED",
       "correlation_id": "INC-901",
       "details": "HDFC Bank UPI Success Rate dropped below -2.5 Z-score (88% -> 38%). Revenue at risk: ₹59,249.",
-      "occurred_at": "2026-09-03T04:43:58.234Z"
+      "occurred_at": "2026-09-03T04:50:43.930Z"
     },
     {
       "id": "AUDIT-002",
@@ -717,7 +717,7 @@
       "action": "PLAN_PROPOSED",
       "correlation_id": "CASE-101",
       "details": "Proposed plan for Ananya Roy (₹4,850): WAIT 15m -> SWITCH_METHOD -> CREATE_LINK. Expected Net: ₹4,849.50.",
-      "occurred_at": "2026-09-03T06:13:58.234Z"
+      "occurred_at": "2026-09-03T06:20:43.930Z"
     },
     {
       "id": "AUDIT-003",
@@ -727,7 +727,7 @@
       "action": "POLICY_EVALUATED",
       "correlation_id": "CASE-103",
       "details": "Policy Evaluation for Priya Patel (₹28,500): REVIEW required. High-value floor trigger.",
-      "occurred_at": "2026-09-03T06:14:08.234Z"
+      "occurred_at": "2026-09-03T06:20:53.931Z"
     }
   ],
   "strategyLearnings": [
@@ -741,7 +741,7 @@
       "time_to_recover_seconds": 48,
       "prior_confidence": 0.88,
       "posterior_confidence": 0.912,
-      "timestamp": "2026-09-03T05:43:58.234Z"
+      "timestamp": "2026-09-03T05:50:43.931Z"
     }
   ],
   "batchRuns": []

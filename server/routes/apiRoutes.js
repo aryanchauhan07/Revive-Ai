@@ -100,6 +100,8 @@ router.post('/cases/:id/execute', async (req, res) => {
     const { action, reviewerId } = req.body;
     const result = await executeCaseAction(req.params.id, action, reviewerId);
     broadcastSSE({ type: 'ACTION_EXECUTED', data: result });
+    broadcastSSE({ type: 'CASES_UPDATED', data: db.getCases() });
+    broadcastSSE({ type: 'AUDIT_UPDATED', data: db.getAuditEvents() });
     res.json(result);
   } catch (err) {
     res.status(400).json({ error: err.message });

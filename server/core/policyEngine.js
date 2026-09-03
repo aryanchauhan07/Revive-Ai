@@ -196,7 +196,7 @@ export function reEvaluateAllCasesPolicy(merchant = null) {
       reason
     };
 
-    if (caseItem.status !== 'RECOVERED' && caseItem.status !== 'CANCELLED') {
+    if (caseItem.status !== 'RECOVERED' && caseItem.status !== 'CANCELLED' && caseItem.status !== 'CONTACTED' && caseItem.status !== 'OPTED_OUT_PAUSED' && !caseItem.last_execution) {
       if (requiresReview) {
         caseItem.status = 'APPROVAL_REQUIRED';
       } else if (caseItem.status === 'APPROVAL_REQUIRED' && !requiresReview) {
