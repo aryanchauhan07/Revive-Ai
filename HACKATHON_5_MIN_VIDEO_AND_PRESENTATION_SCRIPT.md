@@ -54,20 +54,35 @@
 
 ---
 
-### 📍 STEP 2: SRE Telemetry & Circuit Breaker (0:35 – 1:05)
+### 📍 STEP 2: Payment Health & SRE Rail Intelligence (0:50 – 1:30)
 * **Tab to Open:** Click **`Payment Health`** in the top navigation bar.
 * **🖱️ Mouse Actions:**
-  1. Scroll down to the **HDFC Bank UPI Degradation** card.
-  2. Point to the red **38% Success Rate** (crashed from 88% baseline) and the **Z-Score -4.2**.
-  3. Highlight the green **`CIRCUIT BREAKER: TRIPPED`** badge.
+  1. Point to the top subtitle (*Universal payment ecosystem observability across all Indian banks and rails*).
+  2. Scroll to the **`INC-901: HDFC Bank UPI Authorization Degradation`** card.
+  3. Highlight the red **`CIRCUIT BREAKER: TRIPPED`** badge on the top right of the card.
+  4. Point across the 4 diagnostic boxes:
+     - **Incident Scope** (`SYSTEMIC_ISSUER_OUTAGE`),
+     - **Degraded Rail** (*Success dropped to 38%*),
+     - **Blast Radius** (*5 Users • ₹59,249 at risk*),
+     - **Circuit Breaker Action** (*Same-Rail Retries Suppressed $\rightarrow$ Fallback to Cards & Netbanking*).
+  5. Briefly wave mouse over the other incident cards below (ICICI 3DS Timeout, SBI AutoPay Mandates).
 
 > **🗣️ WHAT YOU SAY:**
 > 
-> "Revive starts with real-time payment telemetry. Over 5-minute sliding windows, our backend monitors error codes across issuers and methods.
+> "Next, let's look at **Payment Health**, our Site Reliability Engineering intelligence layer for payments.
 > 
-> Here, our system detected that **HDFC Bank UPI authorization success crashed from 88% down to 38%** with a **-4.2 Z-score anomaly**.
+> In digital payments, you cannot treat every failure in isolation. If an issuer bank’s core UPI switch is experiencing a server crash, retrying that same UPI rail is guaranteed to fail over 80% of the time, causing customer frustration and triggering bank penalty fees.
 > 
-> Instead of hammering HDFC UPI with blind retries, Revive **automatically tripped a Circuit Breaker**. It suppresses same-rail retries and shifts customers to healthy alternate rails like Cards or Netbanking."
+> Revive solves this by continuously monitoring payment telemetry across Indian banks, card networks, and AutoPay rails over five-minute sliding windows.
+> 
+> Here on **INC-901**, our system detected a **systemic issuer outage on HDFC Bank UPI**, where authorization success rates suddenly collapsed to 38%.
+> 
+> Instead of blindly hammering a broken bank rail, Revive triggers an **Automated Circuit Breaker Pattern**:
+> - **First**, it instantly suppresses same-rail retries to protect customer accounts from repeated lockouts.
+> - **Second**, it measures the business **blast radius** — identifying exactly which users and transaction amounts are at risk.
+> - **And third**, it automatically configures a fallback policy, rerouting upcoming customer recovery links to healthy alternate rails like Credit Cards and Netbanking.
+> 
+> This bridges infrastructure SRE monitoring with automated revenue recovery, ensuring merchants never waste retries on down payment rails."
 
 ---
 
