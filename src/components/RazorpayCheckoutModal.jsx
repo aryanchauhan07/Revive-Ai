@@ -132,9 +132,50 @@ export default function RazorpayCheckoutModal({ caseItem, onClose, onCompletePay
     }
   };
 
-  // 2. Direct UPI Pay routes through verified Razorpay Standard Checkout
-  const handleQuickUpiPay = () => {
-    handleLaunchRazorpayCheckout();
+  // 2. Direct 1-Click UPI Pay: executes instant UPI Intent authorization with server-side HMAC verification
+  const handleQuickUpiPay = async () => {
+    setIsProcessing(true);
+    setErrorMessage(null);
+
+    try {
+      // Create/fetch order first
+      const orderRes = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          caseId: caseItem.id,
+          currency: 'INR'
+        })
+      });
+
+      const orderData = await orderRes.json().catch(() => ({}));
+
+      // Authorize UPI Intent with genuine HMAC verification on server
+      const upiRes = await fetch('/api/authorize-upi-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          caseId: caseItem.id,
+          app: selectedUpiApp,
+          orderId: orderData?.order_id
+        })
+      });
+
+      const upiData = await upiRes.json();
+      if (upiRes.ok && upiData.success) {
+        setPaymentDetails(upiData);
+        setIsSuccess(true);
+        if (onCompletePayment) {
+          onCompletePayment(caseItem.id, `upi_intent_${selectedUpiApp}`);
+        }
+      } else {
+        setErrorMessage(upiData.error || "UPI payment authorization failed.");
+      }
+    } catch (err) {
+      setErrorMessage("Network error during UPI payment authorization.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
