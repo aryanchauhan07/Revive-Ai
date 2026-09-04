@@ -62,7 +62,7 @@ graph TD
 
 ---
 
-### 🎨 SLIDE 3: Thank You & Explore More in Repository
+### 🎨 SLIDE 3: Technical Summary & Thank You
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -71,11 +71,14 @@ graph TD
 │                               Track 03: AI Revenue Recovery                                  │
 │                                                                                              │
 │ ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────┐ │
-│ │ 75% Recovery Lift        │  │ 100% Policy Safety       │  │ Explore More in Repository   │ │
+│ │ 🛠️ CORE TECH STACK      │  │ 🔐 SECURITY & GOVERNANCE │  │ 🧪 VERIFIED SCALE & METRICS  │ │
 │ │                          │  │                          │  │                              │ │
-│ │ • 1-Click Razorpay Links │  │ • High-Value Approvals   │  │ • Hinglish Voice Synthesis   │ │
-│ │ • Zero Discount Waste    │  │ • Quiet Hours DND        │  │ • Signed Webhook Replay      │ │
-│ │ • Real HMAC Verification │  │ • STOP Opt-Out Terminal  │  │ • SHA-256 Audit Chain Check  │ │
+│ │ • Gemini 2.5 Flash Tools │  │ • Constant-Time HMAC     │  │ • 74.9% Recovery Rate        │ │
+│ │ • Razorpay Orders API v1 │  │   (crypto.timingSafe)    │  │ • +47.6% Incremental Lift    │ │
+│ │ • checkout.js Client SDK │  │ • SHA-256 Hash-Chained   │  │ • 0 Policy Violations        │ │
+│ │ • 5-min SRE Sliding      │  │   Audit Ledger           │  │ • 2,000-Event Seeded PRNG    │ │
+│ │   Window Circuit Breaker │  │ • Fail-Closed VIP Floor  │  │   Benchmark Engine           │ │
+│ │ • Hinglish Speech Synth  │  │   (≥ ₹25,000) & STOP DND │  │ • 8 Passing Unit Test Suites │ │
 │ └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────┘ │
 │                                                                                              │
 │ ──────────────────────────────────────────────────────────────────────────────────────────── │
@@ -83,11 +86,11 @@ graph TD
 └──────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-> **🗣️ WHAT TO SAY ON SLIDE 3 (Outro ~10–12 Seconds):**
+> **🗣️ WHAT TO SAY ON SLIDE 3 (Outro ~12–15 Seconds):**
 > 
-> *"In conclusion, Revive AI solves revenue recovery end-to-end with 75% recovery lift, zero discount waste, and 100% policy safety.*
+> *"In summary, Revive AI delivers an end-to-end technical recovery pipeline: from SRE circuit breakers to Google Gemini decision economics, constant-time Razorpay HMAC verification, and an immutable SHA-256 audit ledger with 8 passing automated test suites.*
 > 
-> *You can explore additional features in our repository — including our Hinglish Voice AI calls, signed webhook replay simulator, and cryptographic audit verification.*
+> *You can explore our complete codebase, test suites, and Hinglish voice synthesis on our GitHub repository.*
 > 
 > *Thank you!"*
 
