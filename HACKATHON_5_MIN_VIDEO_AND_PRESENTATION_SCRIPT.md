@@ -62,7 +62,7 @@ graph TD
 
 ---
 
-### 🎨 SLIDE 3: Technical Summary & Thank You
+### 🎨 SLIDE 3: Advanced Repository Features & Thank You
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -71,14 +71,14 @@ graph TD
 │                               Track 03: AI Revenue Recovery                                  │
 │                                                                                              │
 │ ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────┐ │
-│ │ 🛠️ CORE TECH STACK      │  │ 🔐 SECURITY & GOVERNANCE │  │ 🧪 VERIFIED SCALE & METRICS  │ │
+│ │ ⚡ ADVANCED SRE TOOLS    │  │ 🤖 MULTI-AGENT RECOVERY  │  │ 🛡️ ENTERPRISE GOVERNANCE    │ │
 │ │                          │  │                          │  │                              │ │
-│ │ • Gemini 2.5 Flash Tools │  │ • Constant-Time HMAC     │  │ • 74.9% Recovery Rate        │ │
-│ │ • Razorpay Orders API v1 │  │   (crypto.timingSafe)    │  │ • +47.6% Incremental Lift    │ │
-│ │ • checkout.js Client SDK │  │ • SHA-256 Hash-Chained   │  │ • 0 Policy Violations        │ │
-│ │ • 5-min SRE Sliding      │  │   Audit Ledger           │  │ • 2,000-Event Seeded PRNG    │ │
-│ │   Window Circuit Breaker │  │ • Fail-Closed VIP Floor  │  │   Benchmark Engine           │ │
-│ │ • Hinglish Speech Synth  │  │   (≥ ₹25,000) & STOP DND │  │ • 8 Passing Unit Test Suites │ │
+│ │ • Signed Webhook Replay  │  │ • Hinglish Voice Agent   │  │ • 3 Autonomy Runtime Modes   │ │
+│ │   & Tamper Fuzzer        │  │   Interactive Synthesis  │  │   (OBSERVE/ASSIST/AUTOPILOT) │ │
+│ │ • Event Deduplication    │  │ • AutoPay Mandate Retry  │  │ • Sub-ms Kill Switch Pattern │ │
+│ │   on x-razorpay-event-id │  │   Salary Sequencer       │  │ • Promise-to-Pay (PTP) State │ │
+│ │ • Issuer Outage Blast    │  │ • B2B Accounts Payable   │  │   Machine with Auto-Unpause  │ │
+│ │   Radius Cohort Mapper   │  │   Receivables Chaser     │  │ • 8/8 Passing Unit Tests     │ │
 │ └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────┘ │
 │                                                                                              │
 │ ──────────────────────────────────────────────────────────────────────────────────────────── │
@@ -88,9 +88,11 @@ graph TD
 
 > **🗣️ WHAT TO SAY ON SLIDE 3 (Outro ~12–15 Seconds):**
 > 
-> *"In summary, Revive AI delivers an end-to-end technical recovery pipeline: from SRE circuit breakers to Google Gemini decision economics, constant-time Razorpay HMAC verification, and an immutable SHA-256 audit ledger with 8 passing automated test suites.*
+> *"Due to the 5-minute video limit, we couldn't show everything live!*
 > 
-> *You can explore our complete codebase, test suites, and Hinglish voice synthesis on our GitHub repository.*
+> *Our repository includes several advanced production features: signed webhook replay fuzzing, AutoPay mandate retry sequencers, B2B invoice chasers, 3 runtime autonomy modes, and interactive Hinglish voice calls.*
+> 
+> *Feel free to explore our live demo and test suites on GitHub.*
 > 
 > *Thank you!"*
 
