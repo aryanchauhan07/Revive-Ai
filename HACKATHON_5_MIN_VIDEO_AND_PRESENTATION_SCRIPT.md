@@ -62,6 +62,37 @@ graph TD
 
 ---
 
+### 🎨 SLIDE 3: Thank You & Explore More in Repository
+
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                              │
+│                                      🎉 THANK YOU! 🎉                                         │
+│                               Track 03: AI Revenue Recovery                                  │
+│                                                                                              │
+│ ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────┐ │
+│ │ 75% Recovery Lift        │  │ 100% Policy Safety       │  │ Explore More in Repository   │ │
+│ │                          │  │                          │  │                              │ │
+│ │ • 1-Click Razorpay Links │  │ • High-Value Approvals   │  │ • Hinglish Voice Synthesis   │ │
+│ │ • Zero Discount Waste    │  │ • Quiet Hours DND        │  │ • Signed Webhook Replay      │ │
+│ │ • Real HMAC Verification │  │ • STOP Opt-Out Terminal  │  │ • SHA-256 Audit Chain Check  │ │
+│ └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────────┘ │
+│                                                                                              │
+│ ──────────────────────────────────────────────────────────────────────────────────────────── │
+│  🔗 Repository: https://github.com/aryanchauhan07/Revive-Ai  •  Presented by: Aryan Chauhan  │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+> **🗣️ WHAT TO SAY ON SLIDE 3 (Outro ~10–12 Seconds):**
+> 
+> *"In conclusion, Revive AI solves revenue recovery end-to-end with 75% recovery lift, zero discount waste, and 100% policy safety.*
+> 
+> *You can explore additional features in our repository — including our Hinglish Voice AI calls, signed webhook replay simulator, and cryptographic audit verification.*
+> 
+> *Thank you!"*
+
+---
+
 ## 🎬 Screen-by-Screen Action & Spoken Script
 
 ```
