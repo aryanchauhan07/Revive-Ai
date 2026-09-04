@@ -1,5 +1,64 @@
 # 🎙️ Revive AI: Hackathon Video & Presentation Master Script
-### ⏱️ Target Duration: 3:00 – 4:30 Minutes | Focus: Action Cues + Deep Technical Architecture
+### ⏱️ Target Duration: 3:30 – 4:30 Minutes | Track 03: AI Revenue Recovery
+
+---
+
+## 🖼️ SLIDE DECK (Intro Slides Before Screen Recording)
+
+### 🎨 SLIDE 1: Title & Overview
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│                                    ⚡                                       │
+│                                REVIVE AI                                    │
+│                                                                             │
+│               "Turn Failed Payments into Recovered Revenue."                │
+│                                                                             │
+│    An intelligent agent that detects failed checkouts in real time,         │
+│    diagnoses root causes with AI, and executes safe recovery on Razorpay.   │
+│                                                                             │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│  Track 03: AI Revenue Recovery     •     Presented by: Aryan Chauhan        │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 🎨 SLIDE 2: Aesthetic System Architecture & Tech Stack
+
+```mermaid
+graph TD
+    classDef ingress fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef ai fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef policy fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#f8fafc;
+    classDef exec fill:#022c22,stroke:#2dd4bf,stroke-width:2px,color:#f8fafc;
+    classDef ledger fill:#312e81,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
+
+    WH["⚡ Ingress & SRE Layer<br/>Razorpay Webhooks (HMAC) • 5-min Sliding Error Rates • Automated Circuit Breaker"]:::ingress
+    WH -->|"Raw Telemetry"| AI["🧠 AI Intelligence Layer<br/>Google Gemini 2.5 Flash • Expected Net Recovery: E[Net] = P*Amt - Cost • Zero-Discount Switch"]:::ai
+    AI -->|"Proposed Plan"| POL["🛡️ Policy & Safety Gateway<br/>Fail-Closed Rule Checks • High-Value VIP Floor (≥ ₹25,000) • Quiet Hours DND • STOP Opt-Out"]:::policy
+    POL -->|"Authorized Action"| EX["💳 Execution Layer<br/>Razorpay Orders API (orders.create) • Official checkout.js SDK • WhatsApp Links & Hinglish Voice"]:::exec
+    EX -->|"Verified Payment"| LED["🔒 Immutable SHA-256 Audit Ledger<br/>Append-Only Hash-Chained Blocks • 8 Passing Automated Test Suites • Settled RECOVERED State"]:::ledger
+```
+
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                     🛠️ TECH STACK OVERVIEW                                   │
+├──────────────────────┬──────────────────────┬────────────────────────┬───────────────────────┤
+│    AI & LLM LAYER    │   PAYMENTS & RAILS   │    BACKEND & SRE       │   SECURITY & AUDIT    │
+├──────────────────────┼──────────────────────┼────────────────────────┼───────────────────────┤
+│ • Gemini 2.5 Flash   │ • Razorpay Node SDK  │ • Node.js / Express    │ • SHA-256 Hash Chain  │
+│ • JSON Tool Calling  │ • Orders API v1      │ • Server-Sent Events   │ • crypto.timingSafe   │
+│ • Decision Economics │ • checkout.js SDK    │ • Circuit Breakers     │ • 8 Unit Test Suites  │
+│ • Hinglish Synthesis │ • Webhook HMAC-SHA256│ • Sliding Windows      │ • Terminal State Opt  │
+└──────────────────────┴──────────────────────┴────────────────────────┴───────────────────────┘
+```
+
+> **🗣️ WHAT TO SAY ON SLIDE 2 (~12–15 Seconds):**
+> 
+> *"Here is our end-to-end architecture: Razorpay webhooks feed failure telemetry into our SRE circuit breakers. Google Gemini 2.5 Flash diagnoses the root cause and optimizes recovery economics. Our deterministic policy gateway enforces human manager approvals and quiet hours, before dispatching verified Razorpay checkout links and Hinglish voice calls.*
+> 
+> *Now, let's jump into the live platform to see this entire loop in action!"*
 
 ---
 
